@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "dispach-ec": {
+      "hosting": {
+        "despach": [
+          "dispach-ec"
+        ]
+      }
+    }
+  }
+}

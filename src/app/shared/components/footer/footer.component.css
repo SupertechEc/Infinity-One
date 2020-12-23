@@ -1,0 +1,143 @@
+/* Footer Section */
+.footer {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+}
+
+.footer-section1 p {
+    color: rgb(185, 185, 185);
+    opacity: 0;
+    font-size: 16px;
+    animation: iconreveal 1.5s ease-in-out forwards;
+    animation-delay: 6.2s;
+}
+
+.created {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+    border-radius: 50%;
+    transition: .5s;
+}
+
+.created img {
+    transition: .5s;
+    opacity: 0;
+    animation: logo 1.5s ease-in-out forwards;
+    animation-delay: 6s;
+}
+
+.created:hover img {
+    transform: scale(1.2);
+}
+
+.social-icons .fab {
+    color: white;
+    transition: 0.5s;
+    opacity: 0;
+    font-size: 25px;
+    animation: textanimation 1.5s ease-in-out forwards;
+}
+
+@keyframes textanimation {
+    0% {
+        opacity: 0;
+        transform: translateY(100px);
+    }
+
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.social-icons .fab:nth-child(1) {
+    animation-delay: 6.5s;
+}
+
+.social-icons .fab:nth-child(2) {
+    animation-delay: 6.7s;
+}
+
+.social-icons .fab:nth-child(3) {
+    animation-delay: 6.9s;
+}
+
+.youtube {
+    position: relative;
+    opacity: 0;
+    animation: nav 1.5s ease-in-out forwards;
+    animation-delay: 6.5s;
+}
+
+.youtube .play {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    border: 2px solid white;
+}
+
+.youtube .play .fas {
+    font-size: 10px;
+    color: white;
+}
+
+.youtube p {
+    font-size: 16px;
+}
+
+@keyframes iconreveal {
+
+    0%,
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes logo {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+
+@keyframes nav {
+    0% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
