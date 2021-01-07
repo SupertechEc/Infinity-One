@@ -6,18 +6,22 @@ import { HeaderAdminComponent } from './components/header-admin/header-admin.com
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 
 import { MaterialModule } from './../material/material.module';
+import { FooterAdminComponent } from './components/footer-admin/footer-admin.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
-  declarations: [FooterComponent, HeaderComponent, HeaderAdminComponent, SidebarComponent],
+  declarations: [FooterComponent, HeaderComponent, HeaderAdminComponent, SidebarComponent, FooterAdminComponent],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    RouterModule
   ],
   exports: [
     HeaderComponent,
     FooterComponent,
     SidebarComponent,
-    HeaderAdminComponent
+    HeaderAdminComponent,
+    FooterAdminComponent
   ],
 })
 export class SharedModule { }

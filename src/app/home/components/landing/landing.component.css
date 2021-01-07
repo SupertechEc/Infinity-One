@@ -1,15 +1,28 @@
 /* Main Section */
-.main {
-    position: relative;
-    top: 55%;
-    transform: translateY(-50%);
+main {
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+}
+
+.intro {
+    width: 40%;
+}
+
+.main-img {
+    width: 60%;
 }
 
 .maintext h4 {
     opacity: 0;
     font-size: 30px;
     animation: textanimation 1.5s ease-in-out forwards;
-    animation-delay: 3.5s;
+    animation-delay: 1s;
 }
 
 @keyframes textanimation {
@@ -34,14 +47,14 @@
     line-height: 1;
     opacity: 0;
     animation: textanimation 1.5s ease-in-out forwards;
-    animation-delay: 4s;
+    animation-delay: 1s;
 }
 
 .star-icon {
     margin: 20px 0;
     opacity: 0;
     animation: iconreveal 1.5s ease-in-out forwards;
-    animation-delay: 4.5s;
+    animation-delay: 1s;
 }
 
 @keyframes iconreveal {
@@ -68,7 +81,7 @@
     color: rgb(185, 185, 185);
     opacity: 0;
     animation: iconreveal 1.5s ease-in-out forwards;
-    animation-delay: 4.7s;
+    animation-delay: 1s;
 }
 
 .maintext a {
@@ -82,7 +95,7 @@
     transition: .5s;
     opacity: 0;
     animation: textanimation 1.5s ease-in-out forwards;
-    animation-delay: 5.5s;
+    animation-delay: 1s;
 }
 
 .maintext a:hover {
@@ -97,8 +110,54 @@
 
 .img img {
     width: 100%;
+    transition: .5s;
     transform: rotateY(-180deg) rotate(0deg);
     opacity: 0;
     animation: iconreveal 1.5s ease-in-out forwards;
-    animation-delay: 6s;
+    animation-delay: 1s;
+}
+
+@media screen and (max-width: 800px) {
+
+    .intro {
+        width: 80%;
+    }
+
+    .main-img {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    main {
+        padding: 0 30px;
+    }
+
+    .intro {
+        width: 100%;
+    }
+
+    .maintext h1 {
+        font-size: 2.3em;
+    }
+}
+
+@media screen and (max-width: 330px) {
+
+    main {
+        padding: 0 30px;
+    }
+
+    .intro {
+        width: 100%;
+    }
+
+    .maintext h1 {
+        font-size: 1.7em;
+    }
+
+    .maintext h4 {
+        font-size: 24px;
+    }
 }

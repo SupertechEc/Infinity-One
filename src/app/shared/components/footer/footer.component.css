@@ -1,44 +1,92 @@
 /* Footer Section */
-.footer {
+footer {
+    width: 100%;
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px 0px 40px;
 }
 
-.footer-section1 p {
-    color: rgb(185, 185, 185);
-    opacity: 0;
-    font-size: 16px;
-    animation: iconreveal 1.5s ease-in-out forwards;
-    animation-delay: 6.2s;
+.created, .social-icons, .youtube {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
 }
 
-.created {
-    position: relative;
+.created, .youtube {
+    cursor: pointer;
+}
+
+.created-img img {
     width: 50px;
     height: 50px;
-    overflow: hidden;
     border-radius: 50%;
-    transition: .5s;
-}
-
-.created img {
+    margin-right: 10px;
     transition: .5s;
     opacity: 0;
     animation: logo 1.5s ease-in-out forwards;
-    animation-delay: 6s;
+    animation-delay: 1s;
 }
 
-.created:hover img {
+@keyframes logo {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.created:hover {
+    transition: .5s;
     transform: scale(1.2);
 }
 
+.created-text {
+    color: rgb(185, 185, 185);
+    opacity: 0;
+    animation: iconreveal 1.5s ease-in-out forwards;
+    animation-delay: 1s;
+}
+
+@keyframes iconreveal {
+    0%,
+    40%,
+    60% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.social-icons {
+    font-size: 25px;
+}
+
 .social-icons .fab {
-    color: white;
+    cursor: pointer;
     transition: 0.5s;
     opacity: 0;
-    font-size: 25px;
     animation: textanimation 1.5s ease-in-out forwards;
+}
+
+.fa-twitter {
+    margin: 0 40px;
 }
 
 @keyframes textanimation {
@@ -59,71 +107,23 @@
 }
 
 .social-icons .fab:nth-child(1) {
-    animation-delay: 6.5s;
+    animation-delay: 1s;
 }
 
 .social-icons .fab:nth-child(2) {
-    animation-delay: 6.7s;
+    animation-delay: 1.2s;
 }
 
 .social-icons .fab:nth-child(3) {
-    animation-delay: 6.9s;
+    animation-delay: 1.4s;
 }
 
 .youtube {
-    position: relative;
+    transition: 0.5s;
     opacity: 0;
     animation: nav 1.5s ease-in-out forwards;
-    animation-delay: 6.5s;
+    animation-delay: 1s;
 }
-
-.youtube .play {
-    border-radius: 50%;
-    width: 45px;
-    height: 45px;
-    border: 2px solid white;
-}
-
-.youtube .play .fas {
-    font-size: 10px;
-    color: white;
-}
-
-.youtube p {
-    font-size: 16px;
-}
-
-@keyframes iconreveal {
-
-    0%,
-    40%,
-    60% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes logo {
-    0% {
-        opacity: 0;
-        transform: translateX(-50px);
-    }
-
-    40%,
-    60% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-
 
 @keyframes nav {
     0% {
@@ -139,5 +139,46 @@
     100% {
         opacity: 1;
         transform: translateX(0);
+    }
+}
+
+.youtube .play {
+    width: 40px;
+    height: 40px;
+    border: 1px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+@media screen and (max-width: 600px) {
+
+    footer {
+        padding: 0 20px 0 20px;
+    }
+
+    .created {
+        font-size: 16px;
+    }
+
+    .created-img img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .fa-twitter {
+        margin: 0 20px;
+    }
+
+    .youtube {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    .created-text {
+        font-size: 14px;
     }
 }

@@ -1,16 +1,24 @@
-/* navigation Section */
-
-.container-fluid {
+nav {
+    width: 100%;
     position: fixed;
     z-index: 3;
+    margin: 20px 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.navbar-brand img {
-    width: 20%;
-    margin-left: 30px;
+nav .logo {
+    width: 30%;
+}
+
+.logo img {
+    cursor: pointer;
+    width: 50%;
+    padding-left: 20px;
     opacity: 0;
     animation: logo 1.5s ease-in-out forwards;
-    animation-delay: 1.5s;
+    animation-delay: 1s;
 }
 
 @keyframes logo {
@@ -30,28 +38,36 @@
     }
 }
 
-nav ul li {
-    position: relative;
+nav .links {
+    width: 50%;
+    color: white;
+    font-size: 24px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+nav li {
+    cursor: pointer;
+    list-style: none;
     transition: .5s;
-    margin: 10px;
     opacity: 0;
     animation: nav 1.5s ease-in-out forwards;
 }
 
 nav ul li:nth-child(1) {
-    animation-delay: 2.5s;
+    animation-delay: 1s;
 }
 
 nav ul li:nth-child(2) {
-    animation-delay: 2.7s;
+    animation-delay: 1.2s;
 }
 
 nav ul li:nth-child(3) {
-    animation-delay: 2.9s;
-}
-
-nav ul li:nth-child(4) {
-    animation-delay: 3.1s;
+    animation-delay: 1.4s;
 }
 
 @keyframes nav {
@@ -75,7 +91,7 @@ nav ul li:before {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 20px;
     width: 0;
     height: 1px;
     transition: .5s;
@@ -83,7 +99,7 @@ nav ul li:before {
 }
 
 nav ul li:hover:before {
-    width: 60%;
+    width: 65%;
 }
 
 nav ul li a {
@@ -93,4 +109,113 @@ nav ul li a {
 
 nav ul li a:hover {
     color: white;
+}
+
+
+nav a {
+    display: block;
+    padding: 1em;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    text-decoration: none;
+}
+
+#nav-toggle {
+    position: absolute;
+    top: -100px;
+}
+
+nav .icon-burger{
+    display: none;
+    position: absolute;
+    right: 5%;
+    transition: .5s;
+    opacity: 0;
+    animation: nav 1.5s ease-in-out forwards;
+    animation-delay: 1s;
+}
+
+nav .icon-burger .line {
+	width: 30px;
+	height: 5px;
+	background-color: #fff;
+	margin: 5px;
+	border-radius: 3px;
+	transition: all .3s ease-in-out;
+}
+
+@media screen and (max-width: 1024px) {
+    .logo img {
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+
+    nav {
+        margin: 10px 0 0 0;
+    }
+
+    nav .logo {
+        float: none;
+        width: auto;
+        justify-content: center;
+    }
+
+    .logo img {
+        width: 30%;
+    }
+
+    nav .links ul{
+        /* display: none; */
+        float: none;
+        position: fixed;
+        z-index: 9;
+        left: 0;
+        right: 0;
+        top: 90px;
+        bottom: 100%;
+        width: auto;
+        height: auto;
+        flex-direction: column;
+        justify-content: space-evenly;
+        background-color: rgba(0,0,0,.8);
+        overflow: hidden;
+        box-sizing: border-box;
+        transition: all .5s ease-in-out;
+        margin-block-end: 0;
+        padding-inline-start: 0;
+    }
+
+    nav .links a {
+        font-size: 20px;
+    }
+
+    nav :checked ~ .links ul {
+		bottom: 0;
+    }
+
+    nav .icon-burger {
+        display: block;
+    }
+
+    nav :checked ~ .icon-burger .line:nth-child(1) {
+		transform: translateY(10px) rotate(225deg);
+	}
+	nav :checked ~ .icon-burger .line:nth-child(3) {
+		transform: translateY(-10px) rotate(-225deg);
+	}
+	nav :checked ~ .icon-burger .line:nth-child(2) {
+		opacity: 0;
+	}
+
+}
+
+@media screen and (max-width: 600px) {
+    .logo img {
+        width: 45%;
+        padding: 0 0 0 10px;
+    }
+
 }

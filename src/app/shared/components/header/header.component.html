@@ -1,22 +1,18 @@
-<div class="container-fluid">
-    <nav class="navbar navbar-expand-lg mt-4">
-        <a class="navbar-brand" href="#"><img src="../../../../assets/images/LOGO.png" alt=""></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Servicios</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contactos</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</div>
+<nav>
+    <input id="nav-toggle" type="checkbox">
+    <div class="logo">
+        <a (click)="changeHome()"><img src="../../../../assets/images/LOGO.png" alt=""></a>
+    </div>
+    <div class="links">
+        <ul>
+            <li class="nav-item active"><a (click)="changeHome()">Home</a></li>
+            <li class="nav-item"><a>Servicios</a></li>
+            <li class="nav-item"><a>Contactos</a></li>
+        </ul>
+    </div>
+    <label for="nav-toggle" class="icon-burger">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </label>
+</nav>

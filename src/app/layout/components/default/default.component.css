@@ -13,7 +13,7 @@
 .open .layer:nth-child(2) {
     z-index: 1;
     background-color: rgb(0, 0, 0);
-    animation-delay: 1.5s;
+    animation-delay: 1s;
 }
 
 @keyframes slideup {
@@ -49,7 +49,7 @@
     opacity: 0;
     transform: rotate(45deg);
     animation: box-rotate 6s forwards;
-    animation-delay: 3s;
+    animation-delay: 4s;
 }
 
 @keyframes box-rotate {
@@ -72,7 +72,7 @@
     color: rgba(0, 0, 0, 0.109);
     z-index: -1;
     animation: background-text-reveal 1s forwards;
-    animation-delay: 2.5s;
+    animation-delay: 2s;
 }
 
 @keyframes background-text-reveal {
