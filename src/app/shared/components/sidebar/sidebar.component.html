@@ -20,7 +20,7 @@
         <mat-divider></mat-divider>
         <h2 matSubheader>Componentes</h2>
         <div class="links" *ngFor="let menu of menus; index as i">
-            <a mat-list-item routerLinkActive="list-item-active" [routerLink]="[menu.url]">
+            <a mat-list-item routerLinkActive="list-item-active" (click)="sendItem(menu)">
                 <mat-icon>{{menu.icon}}</mat-icon>{{menu.name | titlecase}}
             </a>
         </div>

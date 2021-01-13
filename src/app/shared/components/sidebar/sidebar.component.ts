@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit {
     this.loading = true;
     this.item = this.local.get('user');
     console.log(this.item);
-    this.cf.getItem('usuarios', 'email', this.item.email).subscribe(data => {
+    this.cf.getItemsParm('usuarios', 'email', this.item.email).subscribe(data => {
       this.user = [];
       data.forEach((element: any) => {
         this.user.push({
@@ -49,7 +49,7 @@ export class SidebarComponent implements OnInit {
 
       console.log(this.user);
 
-      this.cf.getItem('perfiles', 'name', this.user[0].profile).subscribe(res => {
+      this.cf.getItemsParm('perfiles', 'name', this.user[0].profile).subscribe(res => {
         this.profile = [];
         res.forEach((item: any) => {
           this.profile.push({
@@ -74,6 +74,15 @@ export class SidebarComponent implements OnInit {
       });
 
     });
+  }
+
+  sendItem(item: any): void {
+    console.log(item);
+    this.local.remove('item');
+    this.local.set('item', item);
+    // window.location.href = '#';
+    // window.location.reload();
+    this.router.navigate([item.url]);
   }
 
   // page(url: string): void {

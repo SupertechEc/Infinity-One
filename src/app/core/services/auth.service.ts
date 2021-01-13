@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,8 @@ export class AuthService {
   // https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[API_KEY]
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private af: AngularFireAuth
   ) {
     this.readToken();
   }
@@ -53,6 +55,10 @@ export class AuthService {
     return this.http.post(
       `${this.url}/accounts:signUp?key=${this.apiKey}`, authData
     );
+  }
+
+  authUser(email: string, password: string): Promise<any> {
+    return this.af.signInWithEmailAndPassword(email, password);
   }
 
   private saveToken(user: any): void {

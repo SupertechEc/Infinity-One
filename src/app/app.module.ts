@@ -19,6 +19,8 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
+import { ToastrModule } from 'ngx-toastr';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,7 +39,8 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     AngularFireStorageModule,
     AngularFireMessagingModule,
     AngularFirestoreModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

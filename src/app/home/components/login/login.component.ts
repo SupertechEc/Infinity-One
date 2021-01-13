@@ -39,7 +39,13 @@ export class LoginComponent implements OnInit {
         this.local.set('user', resp);
         // console.log(resp);
         Swal.close();
-        this.router.navigateByUrl('/dashboard');
+        this.auth.authUser(this.usuario.email, this.usuario.password).then(result => {
+          console.log(result);
+          this.router.navigateByUrl('/dashboard');
+        })
+          .catch(error => {
+            console.error(error);
+          });
       }, (err) => {
         console.log(err.error.error.message);
         Swal.fire({

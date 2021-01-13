@@ -19,7 +19,11 @@ export class ConectionFirebaseService {
     return this.firestore.collection(col).doc(id).collection(subcol).snapshotChanges();
   }
 
-  getItem(coll: string, column: string, parm: string): Observable<any> {
+  getItems(coll: string, ord: string): Observable<any> {
+    return this.firestore.collection(coll, ref => ref.orderBy(ord)).snapshotChanges();
+  }
+
+  getItemsParm(coll: string, column: string, parm: string): Observable<any> {
     return this.firestore.collection(coll,
       ref => ref.where(column, '==', parm)
     ).snapshotChanges();

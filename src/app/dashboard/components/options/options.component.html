@@ -1,0 +1,23 @@
+<main>
+    <div class="tarjetas">
+        <div class="loading" *ngIf="loading else carga">
+            <div class="title">Cargando Datos...</div>
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <ng-template #carga>
+            <div class="tarjeta" *ngFor="let componente of componentes; index as i"
+                [routerLink]="['/dashboard/detalle-opciones']"
+                [queryParams]="{ name: componente.name }">
+                <div class="contenedor">
+                    <img [src]="componente.imageUrl" alt="">
+                </div>
+                <div class="titulo">
+                    {{componente.name}}
+                </div>
+            </div>
+        </ng-template>
+        
+    </div>
+</main>
