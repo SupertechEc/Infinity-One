@@ -1,1 +1,106 @@
-<p>factorcorrecion works!</p>
+<main>
+    <div class="contenedor">
+        <div class="title">FACTOR DE CORRECCIÓN
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="codigo"
+                        [class.is-invalid]="codigoNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Código:</label>
+                </div>
+            </div>
+            <div *ngIf="codigoNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombre"
+                        [class.is-invalid]="nombreNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Nombre:</label>
+                </div>
+            </div>
+            <div *ngIf="nombreNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="select-check">
+                <div class="campo">
+                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                        Estado: </mat-checkbox>
+                </div>
+                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+            </div>
+            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Fecha:</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="fecha">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div *ngIf="fechaNotValid" class="text-danger notification-inbound">Campo invalido.
+            </div>
+
+            <div class="seccion-uno">
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Terminal:</mat-label>
+                            <mat-select formControlName="terminalId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let ter of terminal" [value]="ter.codigo">
+                                    {{ter.codigo}} - {{ter.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="terminalIdNotValid" class="text-danger notification-select">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Producto:</mat-label>
+                            <mat-select formControlName="productoId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let pro of producto" [value]="pro.codigo">
+                                    {{pro.codigo}} - {{pro.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="productoIdNotValid" class="text-danger notification-select">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" "
+                        formControlName="factorCorrecion" [class.is-invalid]="factorCorrecionNotValid"
+                        oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Factor Corrección:</label>
+                </div>
+            </div>
+            <div *ngIf="factorCorrecionNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+
+        </form>
+
+    </div>
+</main>

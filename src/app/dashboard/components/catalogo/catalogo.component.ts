@@ -15,6 +15,7 @@ export class CatalogoComponent implements OnInit {
   parm: any;
   groupName = '';
   loading = false;
+  nameEtiqueta = '';
 
   constructor(
     private router: Router,

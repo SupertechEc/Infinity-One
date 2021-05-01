@@ -3,11 +3,12 @@ import { Routes, RouterModule } from '@angular/router';
 import { DefaultComponent } from './layout/components/default/default.component';
 import { DashboardComponent } from './layout/components/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { MainComponent } from './layout/components/main/main.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DefaultComponent,
+    component: MainComponent,
     children: [
       {
         path: '',

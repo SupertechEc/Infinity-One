@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+}
+
+.mat-raised-button {
+    width: 200px;
+    background: linear-gradient(#00C1D2, #004AC2);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: white;
+}

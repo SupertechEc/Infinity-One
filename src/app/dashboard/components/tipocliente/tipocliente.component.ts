@@ -19,13 +19,19 @@ export class TipoclienteComponent implements OnInit {
   tipo: any[] = [];
   loading = false;
   registro = false;
-  msgImage = 'Imagen no seleccionada';
-  image$!: Observable<any> | null;
-  imageUrl!: string | null;
-  imgUrl = '';
-  id: string | null;
+  // msgImage = 'Imagen no seleccionada';
+  // image$!: Observable<any> | null;
+  // imageUrl!: string | null;
+  // imgUrl = '';
+  id = '';
   btnName = '';
-  groups: any[] = [];
+  codCliente: any[] = [];
+  activo = false;
+  inactivo = false;
+  indeterminate = false;
+  color = '';
+  stylecolor = '';
+  labelPosition = 'after';
 
   constructor(
     private fb: FormBuilder,
@@ -37,86 +43,98 @@ export class TipoclienteComponent implements OnInit {
     private aRoute: ActivatedRoute
   ) {
     this.makeForm();
-    this.id = this.aRoute.snapshot.paramMap.get('id');
-    console.log(this.id);
-    if (this.id !== null) {
-      this.btnName = 'Editar';
-    } else {
-      this.btnName = 'Agregar';
-    }
+    this.aRoute.queryParams.subscribe(params => {
+      this.id = params.id;
+      console.log(this.id);
+      if (this.id !== 'new') {
+        this.btnName = 'Editar';
+      } else {
+        this.btnName = 'Agregar';
+      }
+    });
 
   }
 
   ngOnInit(): void {
     // this.upload();
     this.getDataItem();
-    this.getItems();
+    // this.getItems();
   }
 
-  getItems(): void {
-    // this.cf.getItems('grupos', 'sequence').subscribe(data => {
-    //   this.groups = [];
-    //   data.forEach((element: any) => {
-    //     this.groups.push({
-    //       id: element.payload.doc.id,
-    //       ...element.payload.doc.data()
-    //     });
-    //   });
-    //   // console.log(this.groups);
-    // });
-    this.groups = [
-      {
-        codigo: '0101',
-        name: 'DISTRIBUIDOR OTRAS REDES'
-      },
-      {
-        codigo: '0102',
-        name: 'INDUSTRIAL'
-      },
-      {
-        codigo: '0601',
-        name: 'NAVIERA'
-      },
-    ];
+  setChange(cambio: boolean): any {
+    if (cambio == null) {
+      return;
+    }
+    if (cambio) {
+      this.activo = true;
+      this.inactivo = false;
+      this.color = 'primary';
+      this.indeterminate = false;
+      this.stylecolor = '#66bb6a';
+    } else {
+      this.activo = false;
+      this.inactivo = true;
+      this.color = 'warn';
+      this.indeterminate = true;
+      this.stylecolor = '#ef5350';
+    }
   }
+
+  // getItems(): void {
+  //   // this.cf.getItems('submenús', 'secuencial').subscribe(data => {
+  //   //   this.submenus = [];
+  //   //   data.forEach((element: any) => {
+  //   //     this.submenus.push({
+  //   //       id: element.payload.doc.id,
+  //   //       ...element.payload.doc.data()
+  //   //     });
+  //   //   });
+  //   //   console.log(this.submenus);
+  //   // });
+  //   this.codCliente = [
+  //     { codigo: '0101', nombre: 'DISTRIBUIDOR OTRAS REDES' },
+  //     { codigo: '0102', nombre: 'INDUSTRIAL' },
+  //     { codigo: '0601', nombre: 'ASFALTOS' }
+  //   ];
+  // }
 
   getDataItem(): void {
-    if (this.id !== null) {
+    if (this.id !== 'new') {
       // this.loading = true;
-      this.cf.getItemData('componentes', this.id).subscribe(data => {
+      this.cf.getItemData('tipocliente', this.id).subscribe(data => {
         console.log(data.payload.data());
-        this.imgUrl = data.payload.data().imageUrl;
+        // this.imgUrl = data.payload.data().imagenUrl;
         this.f.setValue({
-          name: data.payload.data().name,
-          groupId: data.payload.data().groupId,
-          sequence: data.payload.data().sequence,
-          status: data.payload.data().status,
-          // height: data.payload.data().height,
-          // weight: data.payload.data().weight,
+          nombre: data.payload.data().nombre,
+          codigo: data.payload.data().codigo,
+          // secuencial: data.payload.data().secuencial,
+          estatus: data.payload.data().estatus,
+          // accion: data.payload.data().accion
         });
+        this.setChange(data.payload.data().estatus);
         // this.loading = false;
       });
     }
   }
 
-  get nameNotValid(): any {
-    return this.f.get('name')?.invalid && this.f.get('name')?.touched;
+  get nombreNotValid(): any {
+    return this.f.get('nombre')?.invalid && this.f.get('nombre')?.touched;
   }
 
-  get groupIdNotValid(): any {
-    return this.f.get('groupId')?.invalid && this.f.get('groupId')?.touched;
+  get codigoNotValid(): any {
+    return this.f.get('codigo')?.invalid && this.f.get('codigo')?.touched;
   }
 
-  get sequenceNotValid(): any {
-    return this.f.get('sequence')?.invalid && this.f.get('sequence')?.touched;
+  // get secuencialNotValid(): any {
+  //   return this.f.get('secuencial')?.invalid && this.f.get('secuencial')?.touched;
+  // }
+
+  get estatusNotValid(): any {
+    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
   }
 
-  get statusNotValid(): any {
-    return this.f.get('status')?.invalid && this.f.get('status')?.touched;
-  }
-
-  // get heightNotValid(): any {
-  //   return this.f.get('height')?.invalid && this.f.get('height')?.touched;
+  // get accionNotValid(): any {
+  //   return this.f.get('accion')?.invalid && this.f.get('accion')?.touched;
   // }
 
   // get weightNotValid(): any {
@@ -125,16 +143,20 @@ export class TipoclienteComponent implements OnInit {
 
   makeForm(): void {
     this.f = this.fb.group({
-      name: ['', [
+      nombre: ['', [
         Validators.required,
         Validators.minLength(3)
       ]],
-      groupId: ['', Validators.required],
-      sequence: ['', [
+      codigo: ['', [
         Validators.required,
-        Validators.min(0)
+        Validators.minLength(4)
       ]],
-      status: ['', [Validators.required]],
+      // secuencial: ['', [
+      //   Validators.required,
+      //   Validators.min(0)
+      // ]],
+      estatus: ['', [Validators.required]],
+      // accion: [false, [Validators.required]],
       // height: ['', [
       //   Validators.required,
       //   Validators.min(0)
@@ -148,8 +170,8 @@ export class TipoclienteComponent implements OnInit {
   }
 
   close(): void {
-    console.log('Salir de Grupos');
-    this.router.navigate(['/dashboard/lista-grupos']);
+    console.log('Salir de Tipo Cliente');
+    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'TIPO CLIENTE' } });
   }
 
   save(): void {
@@ -161,41 +183,41 @@ export class TipoclienteComponent implements OnInit {
       // if (this.imageUrl === undefined) {
 
       //   if (this.id !== null) {
-      //     value.imageUrl = this.imgUrl;
+      //     value.imagenUrl = this.imgUrl;
       //   } else {
-      //     value.imageUrl = '';
+      //     value.imagenUrl = '';
       //   }
 
       // } else {
-      //   value.imageUrl = this.imageUrl;
+      //   value.imagenUrl = this.imageUrl;
       // }
 
       console.log(value);
 
       this.registro = true;
 
-      if (this.id !== null) {
+      if (this.id !== 'new') {
         value.fechaActualizacion = new Date();
-        this.cf.editItem('componentes', this.id, value).then(() => {
+        this.cf.editItem('tipocliente', this.id, value).then(() => {
           console.log('Item editado con exito');
           this.toastr.success('Item editado con exito', 'Item Editado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
-          this.router.navigate(['/dashboard/lista-componentes']);
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'TIPO CLIENTE' } });
         }).catch(error => {
           this.loading = false;
           console.log(error);
         });
       } else {
         value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'componentes').then(() => {
+        this.cf.agregarItem(value, 'tipocliente').then(() => {
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
-          this.router.navigate(['/dashboard/lista-componentes']);
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'TIPO CLIENTE' } });
         }).catch(error => {
           this.loading = false;
           console.log(error);
@@ -212,8 +234,10 @@ export class TipoclienteComponent implements OnInit {
   // uploadFile(event: any): void {
   //   this.loading = true;
   //   const file = event.target.files[0];
-  //   console.log(file);
-  //   const fileName = this.f.get('name')?.value;
+
+  //   const numram = Math.random() * this.f.get('secuencial')?.value;
+  //   const fileName = 'TERMINAL-' + this.f.get('nombre')?.value + '' + numram;
+  //   console.log(fileName);
 
   //   const fileRef = this.afs.ref(fileName);
   //   const task = this.afs.upload(fileName, file);

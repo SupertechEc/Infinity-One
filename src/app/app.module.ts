@@ -20,12 +20,14 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 import { ToastrModule } from 'ngx-toastr';
+import { MainComponent } from './layout/components/main/main.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DefaultComponent,
-    DashboardComponent
+    DashboardComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,

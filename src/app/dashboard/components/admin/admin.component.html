@@ -1,6 +1,28 @@
 <main>
-    <div class="container">
+    <!-- <div class="container">
         <h1>Sistema de gestión de Comercializadoras</h1>
         <img src="assets/images/IMGADMIN.png" alt="">
+    </div> -->
+
+    <div class="loading" *ngIf="loading else carga">
+        <div class="title">Cargando Datos...</div>
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden"></span>
+        </div>
     </div>
+
+    <ng-template #carga>
+
+        <div class="contenedor">
+            <div id="title" class="main-title"> <span>Sistema de gestión de Comercializadoras</span> </div>
+            <div [id]="label+item.secuencial" class="tarjetas" *ngFor="let item of items; index as i"
+                (click)="goPage(item)">
+                <div [id]="card+item.secuencial" class="tarjeta">
+                    <img [src]="item.imagenUrl" alt="">
+                    <p>{{item.nombre}}</p>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
 </main>

@@ -1,0 +1,86 @@
+<div class="title">PRODUCTOS</div>
+<form [formGroup]="f" (ngSubmit)="save()">
+    <div class="form__div">
+        <div class="campo">
+            <mat-form-field appearance="outline">
+                <mat-label>Producto:</mat-label>
+                <mat-select formControlName="productoId" required>
+                    <mat-option>Opciones</mat-option>
+                    <mat-option *ngFor="let pro of producto" [value]="pro.id" (click)="cathProducto(pro)">
+                        {{pro.codigo}} - {{pro.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="productoIdNotValid" class="text-danger notification-select">
+            Campo no seleccionado.
+        </div>
+    </div>
+
+    <div class="form__div">
+        <div class="campo">
+            <mat-form-field appearance="outline">
+                <mat-label>Medida:</mat-label>
+                <mat-select formControlName="medidaId" required>
+                    <mat-option>Opciones</mat-option>
+                    <mat-option *ngFor="let med of medida" [value]="med.id" (click)="cathMedida(med)">
+                        {{med.codigo}} - {{med.nombre}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="medidaIdNotValid" class="text-danger notification-select">
+            Campo no seleccionado.
+        </div>
+    </div>
+
+    <div class="campos_producto">
+        <div class="margen">
+            <mat-form-field appearance="outline">
+                <mat-label>Margen:</mat-label>
+                <input type="number" matInput formControlName="margen">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="pepp">
+            <mat-form-field appearance="outline">
+                <mat-label>Precio EPP:</mat-label>
+                <input type="number" matInput formControlName="precioEPP">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="psugerido">
+            <mat-form-field appearance="outline">
+                <mat-label>Precio Sugerido:</mat-label>
+                <input type="number" matInput formControlName="precioSugerido">
+                <mat-hint></mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="soloiva">
+            <fieldset class="check">
+                <mat-checkbox formControlName="soloIVA">Solo IVA</mat-checkbox>
+            </fieldset>
+        </div>
+    </div>
+
+    <div class="check">
+        <div class="select-check">
+            <div class="campo">
+                <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                    [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                    Estado: </mat-checkbox>
+            </div>
+            <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+            <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+        </div>
+        <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+    </div>
+
+    <div class="btn-container">
+        <button mat-raised-button type="button" (click)="close()">Regresar</button>
+        <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btname}}</button>
+    </div>
+</form>

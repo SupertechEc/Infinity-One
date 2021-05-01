@@ -15,8 +15,11 @@ export class OptionsComponent implements OnInit {
   parm: any;
   groupName = '';
   loading = false;
-  id: string | null;
-  name = '';
+  id = '';
+  coleccion = '';
+  columna = '';
+  label = 'etiqueta';
+  card = 'tarjeta';
 
   constructor(
     private router: Router,
@@ -24,25 +27,23 @@ export class OptionsComponent implements OnInit {
     private local: LocalstorageService,
     private aRoute: ActivatedRoute
   ) {
-    this.id = this.aRoute.snapshot.paramMap.get('id');
-    console.log(this.id);
-    this.getNameGroup(this.id);
+    this.aRoute.queryParams.subscribe(params => {
+      this.loading = true;
+      this.id = params.id;
+      this.coleccion = params.coleccion;
+      this.columna = params.columna;
+      console.log(this.id);
+      console.log(this.coleccion);
+      console.log(this.columna);
+      this.getItems(this.id, this.coleccion, this.columna);
+    });
   }
 
   ngOnInit(): void {
   }
 
-  getNameGroup(id: any): void {
-    this.loading = true;
-    this.cf.getItemData('componentes', id).subscribe(data => {
-      this.name = data.payload.data().name;
-      console.log(this.name);
-      this.getGroups(this.name);
-    });
-  }
-
-  getGroups(name: any): void {
-    this.cf.getItemsParm('grupos', 'name', name).subscribe(data => {
+  getItems(id: any, coll: any, col: any): void {
+    this.cf.getItemsParm(coll, col, id).subscribe(data => {
       this.items = [];
       data.forEach((element: any) => {
         this.items.push({
@@ -50,27 +51,24 @@ export class OptionsComponent implements OnInit {
           ...element.payload.doc.data()
         });
       });
+      this.items.sort((a, b) => {
+        return a.secuencial - b.secuencial;
+      });
       console.log(this.items);
-      this.getComponentes(this.items[0].id);
+      this.loading = false;
     });
   }
 
-  getComponentes(groupId: any): void {
-    console.log(groupId);
-    this.cf.getItemsParm('componentes', 'groupId', groupId).subscribe(data => {
-      this.componentes = [];
-      data.forEach((element: any) => {
-        this.componentes.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      this.componentes.sort((a, b) => {
-        return a.sequence - b.sequence;
-      });
-      this.loading = false;
-      console.log(this.componentes);
-    });
+  goPage(item: any): void {
+    if (item.accion) {
+      if (item.nombre === 'PRECIO') {
+        this.router.navigate(['/dashboard/detalle-lista-precios'], { queryParams: { nombre: item.nombre } });
+      } else {
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: item.nombre } });
+      }
+    } else {
+      this.router.navigate(['/dashboard/opciones'], { queryParams: { id: item.id, coleccion: 'acciones', columna: 'submenuId' } });
+    }
   }
 
 }

@@ -22,6 +22,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @NgModule({
     declarations: [],
@@ -49,6 +54,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatDividerModule,
         MatAutocompleteModule,
         MatCheckboxModule,
+        MatTabsModule,
+        MatExpansionModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ScrollingModule,
     ],
     exports: [
         MatButtonModule,
@@ -73,6 +83,11 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
         MatDividerModule,
         MatAutocompleteModule,
         MatCheckboxModule,
+        MatTabsModule,
+        MatExpansionModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        ScrollingModule,
     ]
 })
 export class MaterialModule { }

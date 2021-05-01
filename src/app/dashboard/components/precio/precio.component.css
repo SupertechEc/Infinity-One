@@ -1,0 +1,305 @@
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+}
+
+.componentes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    width: 100%;
+}
+
+/* ::ng-deep .mat-tab-group .mat-tab-header {
+    background-color: #424242;
+    color: white !important;
+} */
+
+.campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.mattab {
+    width: 100%;
+    padding: 10px 10px 0 10px;
+}
+
+.fecha {
+    width: 100%;
+    padding: 10px 10px 0 10px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+.campo-observacion {
+    padding: 0 10px;
+}
+
+.fas {
+    margin: 0 0 0 10px;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.contenedor-opciones {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: 10px;
+    padding: 0 10px;
+}
+
+.subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    margin: 5px 10px 20px;
+}
+
+.opciones {
+    margin: 10px;
+}
+
+.scroll-opciones {
+  height: 200px;
+  width: 200px;
+  border: 1px solid black;
+}
+
+.check-opciones {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+}
+
+.btn-opciones {
+    margin: 10px;
+}
+
+.mat-raised-button {
+    margin-right: 10px;
+    width: 150px;
+}
+
+.mat-radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.table-container {
+    margin: auto;
+    padding: 10px 15px;
+}
+
+.heading {
+    font-size: 40px;
+    text-align: center;
+    color: #f1f1f1;
+    margin-bottom: 40px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: rgba(0, 0, 0, 0.16) 3px 4px 8px;
+}
+
+.table thead {
+    /* background-color: #ee2828; */
+    background: linear-gradient(#bdbdbd, #424242);
+}
+
+.table thead tr th {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .35px;
+    color: #ffffff;
+    opacity: 1;
+    padding: 12px;
+    vertical-align: top;
+    border: 1px solid #dee2e685;
+    text-align: center;
+}
+
+.table tbody tr td {
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: .35px;
+    /* color: #f1f1f1; */
+    background-color: white;
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #b1b2b385
+}
+
+table textarea {
+    width: 100px;
+}
+
+table input {
+    width: 80px;
+    text-align: center;
+}
+
+table .mat-form-field {
+    width: 100px;
+}
+
+table td .check {
+    padding: 30px 0 0 0;
+}
+
+table td .producto {
+    padding: 6px 0 0 0;
+}
+
+table td .medida {
+    padding: 18px 0 0 0;
+}
+
+.td-mat-cell {
+    text-align: center;
+}
+
+/* .table .text_open {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: .35px;
+    color: #ff1046;
+}
+
+.table tbody tr td .btn {
+    width: 130px;
+    text-decoration: none;
+    line-height: 35px;
+    display: block;
+    background-color: #ff1046;
+    font-weight: medium;
+    color: #ffffff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    font-size: 14px;
+    opacity: 1;
+} */
+
+/* table .mat-checkbox {
+    margin: 0 20px;
+} */
+/* table th {
+    padding: 0 0 0 11px;
+}
+
+table td {
+    padding: 0 10px;
+}
+
+table .mat-form-field {
+    width: 100px;
+} */
+
+.btn-back {
+    background: linear-gradient(#ffa726, #e65100);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: white;
+}
+
+.btn-next {
+    background: linear-gradient(#00C1D2, #004AC2);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: white;
+}
+
+/* Tab 2 */
+
+.mensaje {
+    margin: 10px 20px;
+}
+
+.datos-contenido {
+    margin: 10px 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+}
+
+.etiqueta {
+    margin: 0 20px 10px;
+}
+
+.table-contenido {
+    margin: 0 10px 20px;
+    border: 2px solid white;
+}
+
+table {
+    width: 100%;
+}
+
+tr.mat-header-row {
+    background: linear-gradient(#bdbdbd, #424242);
+    font-weight: 600;
+}
+
+th {
+    color: white;
+}
+
+.mat-paginator {
+    background-color: #eeeeee;
+}
+
+.td-icon, .th-icon {
+    width: 10%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.th-icon {
+    padding: 0 5px;
+}
+
+.btn-edit {
+    color: #EF893A;
+}
+
+.btn-delete {
+    color: #DC3545;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color:#1A73E8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-underline {
+/*change color of underline*/
+    background-color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+    background-color: #1A73E8;
+}

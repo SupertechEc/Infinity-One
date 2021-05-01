@@ -1,55 +1,73 @@
 <main>
     <div class="contenedor">
-        <div class="title">Formulario
+        <div class="title">INGRESE EL TIPO CLIENTE
             <div class="spinner-border text-primary" role="status" *ngIf="registro">
                 <span class="visually-hidden"></span>
             </div>
         </div>
         <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
 
+            <div class="form__div form-group">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="codigo"
+                        [class.is-invalid]="codigoNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Código:</label>
+                </div>
+            </div>
+            <div *ngIf="codigoNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+            <div class="form__div form-group">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombre"
+                        [class.is-invalid]="nombreNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Nombre:</label>
+                </div>
+            </div>
+            <div *ngIf="nombreNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+            <div class="select-check form-group">
+                <div class="campo">
+                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                        Estado: </mat-checkbox>
+                </div>
+                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+            </div>
+            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+
+            <!-- <div class="section-one">
+                <div class="form__div form-group">
+                    <div class="campo">
+                        <input type="number" class="form__input form-control" placeholder=" " formControlName="secuencial"
+                            [class.is-invalid]="secuencialNotValid">
+                        <label for="" class="form__label">Secuencial:</label>
+                    </div>
+                    <div *ngIf="secuencialNotValid" class="text-danger notification-outbound">Campo invalido.</div>
+                </div>
+                <div class="select-check form-group">
+                    <div class="campo">
+                        <mat-checkbox class="mat-check" formControlName="estatus">Estatus</mat-checkbox>
+                    </div>
+                    <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+                    <mat-checkbox class="mat-check">Estatus</mat-checkbox>
+                </div>
+            </div>
+
             <div class="section-two">
                 <mat-form-field appearance="outline">
-                    <mat-label>Código Tipo Cliente:</mat-label>
-                    <mat-select formControlName="groupId" required>
+                    <mat-label>Código del Cliente:</mat-label>
+                    <mat-select formControlName="codigo" required>
                         <mat-option>Opciones</mat-option>
-                        <mat-option *ngFor="let group of groups" [value]="group.codigo">
-                            {{group.name}}
+                        <mat-option *ngFor="let cod of codCliente" [value]="cod.codigo">
+                            {{cod.nombre}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
             </div>
-            <div *ngIf="groupIdNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+            <div *ngIf="codClienteNotValid" class="text-danger notification-inbound">Campo invalido.</div> -->
 
-            <div class="form__div form-group">
-                <div class="campo">
-                    <input type="text" class="form__input form-control" placeholder=" " formControlName="name"
-                        [class.is-invalid]="nameNotValid" oninput="this.value = this.value.toUpperCase()">
-                    <label for="" class="form__label">Nombre:</label>
-                </div>
-            </div>
-            <div *ngIf="nameNotValid" class="text-danger notification-inbound">Campo invalido.</div>
-
-            <div class="section-one">
-                <div class="form__div form-group">
-                    <div class="campo">
-                        <input type="number" class="form__input form-control" placeholder=" " formControlName="sequence"
-                            [class.is-invalid]="sequenceNotValid">
-                        <label for="" class="form__label">Secuencia:</label>
-                    </div>
-                    <div *ngIf="sequenceNotValid" class="text-danger notification-outbound">Campo invalido.</div>
-                </div>
-                <div class="select-check form-group">
-                    <div class="campo">
-                        <mat-checkbox class="mat-check" formControlName="status">Estatus</mat-checkbox>
-                    </div>
-                    <div *ngIf="statusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
-                    <!-- <mat-checkbox class="mat-check">Estatus</mat-checkbox> -->
-                </div>
-            </div>
-
-            <!-- 
-
-            <div class="file-upload">
+            <!-- <div class="file-upload">
                 <div class="file-upload-btn">
                     <button type="button" (click)="fileInput.click()" class="file-upload-button">
                         <span>Cargar Imagen</span>

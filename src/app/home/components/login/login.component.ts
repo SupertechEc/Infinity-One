@@ -14,6 +14,7 @@ import { LocalstorageService } from '../../../core/services/localstorage.service
 export class LoginComponent implements OnInit {
 
   usuario: any = {};
+  hide = true;
 
   constructor(
     private router: Router,
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.auth.login(this.usuario)
       .subscribe(resp => {
         this.local.set('user', resp);
-        // console.log(resp);
+        console.log(resp);
         Swal.close();
         this.auth.authUser(this.usuario.email, this.usuario.password).then(result => {
           console.log(result);

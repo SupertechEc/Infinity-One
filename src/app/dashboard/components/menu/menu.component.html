@@ -1,0 +1,112 @@
+<main>
+    <div class="contenedor">
+        <div class="title">INGRESE MENÚ
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+
+            <div class="form__div form-group">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombre"
+                        [class.is-invalid]="nombreNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Nombre:</label>
+                </div>
+            </div>
+            <div *ngIf="nombreNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+            <div class="form__div form-group">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="icono"
+                        [class.is-invalid]="iconoNotValid">
+                    <label for="" class="form__label">Icono:</label>
+                </div>
+            </div>
+            <div *ngIf="iconoNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+            <div class="section-one">
+                <div class="form__div form-group">
+                    <div class="campo">
+                        <input type="number" class="form__input form-control" placeholder=" "
+                            formControlName="secuencial" [class.is-invalid]="secuencialNotValid">
+                        <label for="" class="form__label">Secuencial:</label>
+                    </div>
+                    <div *ngIf="secuencialNotValid" class="text-danger notification-outbound">Campo invalido.</div>
+                </div>
+                <div class="select-check form-group">
+                    <div class="campo">
+                        <mat-checkbox class="mat-check" formControlName="estatus">Estatus</mat-checkbox>
+                    </div>
+                    <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+                    <!-- <mat-checkbox class="mat-check">Estatus</mat-checkbox> -->
+                </div>
+            </div>
+
+            <div class="file-upload">
+                <div class="file-upload-btn">
+                    <button type="button" (click)="fileInput.click()" class="file-upload-button">
+                        <span>Cargar Imagen</span>
+                        <input #fileInput type="file" (change)="uploadFile($event)" class="file-upload-input" />
+                    </button>
+                </div>
+
+                <div class="loading" *ngIf="loading else carga">
+                    <div class="title">Cargando Imagen...</div>
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
+
+                <ng-template #carga>
+                    <div class="file-upload-label">{{msgImage}}</div>
+                </ng-template>
+
+            </div>
+
+            <!-- <div class="section-two">
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo de grupos:</mat-label>
+                    <mat-select formControlName="groupId" required>
+                        <mat-option>Opciones</mat-option>
+                        <mat-option *ngFor="let group of groups" [value]="group.id">
+                            {{group.name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div *ngIf="groupIdNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+            
+
+            <div class="img-dimension">
+                <div class="img-title">Dimensión de la Imagen:</div>
+                <div class="img-content">
+                    <div class="form__div form-group">
+                        <div class="campo">
+                            <input type="number" class="form__input form-control" placeholder=" "
+                                formControlName="height" [class.is-invalid]="heightNotValid">
+                            <label for="" class="form__label">Altura:</label>
+                        </div>
+                        <div *ngIf="heightNotValid" class="text-danger notification-outbound">Campo invalido.</div>
+                    </div>
+                    <div class="form__div form-group">
+                        <div class="campo">
+                            <input type="number" class="form__input form-control" placeholder=" "
+                                formControlName="weight" [class.is-invalid]="weightNotValid">
+                            <label for="" class="form__label">Ancho:</label>
+                        </div>
+                        <div *ngIf="weightNotValid" class="text-danger notification-outbound">Campo invalido.</div>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+
+        </form>
+
+    </div>
+</main>

@@ -1,0 +1,299 @@
+<main>
+    <div class="componentes">
+        <div class="title">CREACIÓN DE NUEVO PRECIO</div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="changeMatTab('siguiente')">
+            <mat-tab-group class="example-stretched-tabs mat-elevation-z4" [backgroundColor]="'primary'"
+                [color]="'accent'" [selectedIndex]="selected.value" (selectedIndexChange)="selected.setValue($event)">
+                <mat-tab>
+                    <ng-template mat-tab-label>Paso 1 <i class="fas fa-caret-square-right"></i></ng-template>
+                    <div class="campos">
+                        <div class="mattab">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comercializadoras:</mat-label>
+                                <mat-select formControlName="comercializadoraCodigo">
+                                    <mat-option *ngFor="let com of comercializadora" [value]="com.codigo"
+                                        (click)="getProductos(com.id)">{{com.codigo}} -
+                                        {{com.nombre}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="fecha">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Fecha Inicio Vigencia:</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="fechaInicio">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="campo-observacion">
+                        <mat-form-field appearance="outline">
+                            <mat-label>OBSERVACIÓN:</mat-label>
+                            <textarea matInput placeholder="Ej: Motivo de asignación del precio..."
+                                formControlName="comentario"></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="contenedor-opciones">
+                        <div class="opciones-terminal">
+                            <div class="subtitle">Elija la configuración del Terminal.</div>
+                            <div class="opciones">
+                                <mat-radio-group formControlName="configTerminal">
+                                    <mat-radio-button value="Para todos los terminales" (click)="changeRadioButton(1)">
+                                        Para todos los terminales.
+                                    </mat-radio-button>
+                                    <mat-radio-button value="Configuración por terminal" (click)="changeRadioButton(2)">
+                                        Configuración por terminal.
+                                    </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container" *ngIf="tabla1">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Producto</th>
+                                    <th>Medida</th>
+                                    <th>Margen Total:</th>
+                                    <th>Precio EPP</th>
+                                    <th>Precio Sugerido</th>
+                                    <th>Solo IVA</th>
+                                </tr>
+                            </thead>
+                            <tbody formArrayName="datosPrecios">
+                                <tr *ngFor="let control of datosPrecios.controls; let i = index" [formGroupName]="i">
+                                    <td data-label="select">
+                                        <fieldset class="check">
+                                            <mat-checkbox formControlName="select"></mat-checkbox>
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Producto">
+                                        <fieldset [disabled]=true class="producto">
+                                            <textarea formControlName="productoNombre"></textarea>
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Medida">
+                                        <fieldset [disabled]=true class="medida">
+                                            <input formControlName="medidaAbreviacion">
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Margen" class="margen">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Margen</mat-label>
+                                            <input type="number" matInput formControlName="margen">
+                                            <mat-hint></mat-hint>
+                                        </mat-form-field>
+                                    </td>
+                                    <td data-label="Precio EPP" class="pepp">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Precio EPP</mat-label>
+                                            <input type="number" matInput formControlName="precioEPP">
+                                            <mat-hint></mat-hint>
+                                        </mat-form-field>
+                                    </td>
+                                    <td data-label="Precio Sugerido" class="psugerido">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Precio Sugerido</mat-label>
+                                            <input type="number" matInput formControlName="precioSugerido">
+                                            <mat-hint></mat-hint>
+                                        </mat-form-field>
+                                    </td>
+                                    <td data-label="Solo IVA">
+                                        <fieldset class="check">
+                                            <mat-checkbox formControlName="soloIVA"></mat-checkbox>
+                                        </fieldset>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>Paso 2 <i class="fas fa-caret-square-right"></i></ng-template>
+                    <div class="mensaje">Por favor, verificar los valores PV Cliente final y Precio EPP deben ser los
+                        correctos para este período</div>
+                    <div class="datos-contenido" *ngIf="comflag">
+                        <div class="dato-comercializadora">- {{compro[0].comercializadoraNombre}}</div>
+                        <div class="dato-terminales">- {{mrb}}</div>
+                        <div class="dato-fecha">- Fecha Inicio: <span>{{f.value.fechaInicio | date:'yyyy/MM/dd'}}</span>
+                        </div>
+                        <!-- <div class="dato-fecha">- Fecha Inicio: <span>2021/03/06</span></div> -->
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Medida</th>
+                                    <th>Lista Precio</th>
+                                    <th>Precio Sugerido</th>
+                                    <th>Precio EPP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let lt of listTable">
+                                    <td>{{lt.productoNombre}}</td>
+                                    <td>{{lt.medidaAbreviacion}}</td>
+                                    <td>{{lt.listaPrecioNombre}}</td>
+                                    <td>{{lt.precioSugerido}}</td>
+                                    <td>{{lt.precioEPP}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>Paso 3 <i class="fas fa-caret-square-right"></i></ng-template>
+                    <div class="mensaje">Por favor, verificar los valores PV Cliente final y Precio EPP deben ser los
+                        correctos para este periodo</div>
+                    <div class="datos-contenido" *ngIf="comflag">
+                        <div class="dato-comercializadora">- {{compro[0].comercializadoraNombre}}</div>
+                        <div class="dato-terminales">- {{mrb}}</div>
+                        <div class="dato-fecha">- Fecha Inicio: <span>{{f.value.fechaInicio | date:'yyyy/MM/dd'}}</span>
+                        </div>
+                    </div>
+                    <div class="etiqueta">LISTA PRECIO PRODUCTO:</div>
+                    <div class="table-contenido">
+                        <table mat-table [dataSource]="listTable" class="mat-elevation-z8">
+
+                            <ng-container matColumnDef="position">
+                                <th mat-header-cell *matHeaderCellDef> No. </th>
+                                <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="producto">
+                                <th mat-header-cell *matHeaderCellDef> Producto </th>
+                                <td mat-cell *matCellDef="let row"> {{row.productoNombre}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="medida">
+                                <th mat-header-cell *matHeaderCellDef> Medida </th>
+                                <td mat-cell *matCellDef="let row"> {{row.medidaAbreviacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="precio">
+                                <th mat-header-cell *matHeaderCellDef> Lista Precio </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.listaPrecioNombre}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="pvc">
+                                <th mat-header-cell *matHeaderCellDef> PVCliente Final </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.precioSugerido}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="pepp">
+                                <th mat-header-cell *matHeaderCellDef> Precio EPP </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.precioEPP}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg1">
+                                <th mat-header-cell *matHeaderCellDef> PRECIO TERMINAL EPP </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg1}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg2">
+                                <th mat-header-cell *matHeaderCellDef> IVA </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg2}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg4">
+                                <th mat-header-cell *matHeaderCellDef> MARGEN X CLIENTE </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg4}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg5">
+                                <th mat-header-cell *matHeaderCellDef> IVA PRESUNTIVO </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg5}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg6">
+                                <th mat-header-cell *matHeaderCellDef> TRES POR MIL </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg6}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="dpcg9">
+                                <th mat-header-cell *matHeaderCellDef> PRECIO PRODUCTO </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.dpcg9}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dcp1"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcp1;"></tr>
+                        </table>
+                    </div>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>Paso 4 <i class="fas fa-caret-square-right"></i></ng-template>
+                    <!-- <div class="mensaje">Por favor, verificar los valores PV Cliente final y Precio EPP deben ser los
+                        correctos para este periodo</div> -->
+                    <div class="datos-contenido" *ngIf="comflag">
+                        <div class="dato-comercializadora">- {{compro[0].comercializadoraNombre}}</div>
+                        <div class="dato-terminales">- {{mrb}}</div>
+                        <div class="dato-fecha">- Fecha Inicio: <span>{{f.value.fechaInicio | date:'yyyy/MM/dd'}}</span>
+                        </div>
+                    </div>
+                    <div class="etiqueta">LISTA PRECIO PRODUCTO:</div>
+                    <div class="table-contenido">
+                        <table mat-table [dataSource]="dspaso2" matSort>
+
+                            <ng-container matColumnDef="terminal">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Terminal </th>
+                                <td mat-cell *matCellDef="let row"> {{row.terminalNombre}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="producto">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
+                                <td mat-cell *matCellDef="let row"> {{row.productoNombre}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="medida">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Medida </th>
+                                <td mat-cell *matCellDef="let row"> {{row.medidaAbreviacion}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="precio">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Lista Precio </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.listaPrecioNombre}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="valor">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor Final </th>
+                                <td mat-cell *matCellDef="let row" class="td-mat-cell"> {{row.precioProducto}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="dcp2"></tr>
+                            <tr mat-row *matRowDef="let row; columns: dcp2;"></tr>
+
+                        </table>
+
+                        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                    </div>
+                </mat-tab>
+            </mat-tab-group>
+            <div class="btn-opciones">
+                <button mat-raised-button (click)="back()">Cancelar</button>
+                <button type="button" mat-raised-button class="btn-back" *ngIf="btnflag"
+                    (click)="changeMatTab('atras')">Atras</button>
+                <button mat-raised-button class="btn-next" type="submit">{{btnNext}}</button>
+            </div>
+        </form>
+
+        <hr>
+        <pre>
+        Estado del formulario: {{ f.valid }}
+        <br>
+        Status: {{ f.status }}
+        </pre>
+
+        <pre>
+
+        {{ f.value | json }}
+
+        </pre>
+    </div>
+</main>
