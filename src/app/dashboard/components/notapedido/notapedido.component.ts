@@ -37,9 +37,9 @@ export class NotapedidoComponent implements OnInit {
   tn = '';
   np = '';
   coltn: any[] = [];
-  abastecedora: any[] = [];
-  comercializadora: any[] = [];
-  cliente: any[] = [];
+  abastecedoras: any[] = [];
+  comercializadoras: any[] = [];
+  clientes: any[] = [];
   bancos: any[] = [];
   terminales: any[] = [];
   autotanques: any[] = [];
@@ -49,6 +49,14 @@ export class NotapedidoComponent implements OnInit {
   clipro: any[] = [];
   numnp: any[] = [];
   ondp: any[] = [];
+
+  abastecedora: any;
+  comercializadora: any;
+  cliente: any;
+  banco: any;
+  terminal: any;
+  producto: any;
+  medida: any;
 
   numeroNotaPedido = 0;
   nnp = 54000000;
@@ -99,49 +107,52 @@ export class NotapedidoComponent implements OnInit {
 
   getAbastecedora(): void {
     this.cf.getItems('abastecedora', 'nombre').subscribe(data => {
-      this.abastecedora = [];
+      this.abastecedoras = [];
       data.forEach((element: any) => {
-        this.abastecedora.push({
+        this.abastecedoras.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      console.log(this.abastecedora);
-      this.getComercializadora(this.abastecedora[0]);
+      console.log(this.abastecedoras);
+      this.abastecedora = this.abastecedoras[0];
+      this.getComercializadora(this.abastecedora);
     });
   }
 
   getComercializadora(item: any): void {
     console.log(item.codigo);
     this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
-      this.comercializadora = [];
+      this.comercializadoras = [];
       data.forEach((element: any) => {
-        this.comercializadora.push({
+        this.comercializadoras.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      console.log(this.comercializadora);
-      this.comercializadora = this.comercializadora.filter(r => r.estatus === true);
-      this.comercializadora = this.comercializadora.filter(r => r.abastecedoraId === item.codigo);
-      this.getCliente(this.comercializadora[0]);
+      console.log(this.comercializadoras);
+      this.comercializadoras = this.comercializadoras.filter(r => r.estatus === true);
+      this.comercializadoras = this.comercializadoras.filter(r => r.abastecedoraId === item.codigo);
+      this.comercializadora = this.comercializadoras[0];
+      this.getCliente(this.comercializadora);
     });
   }
 
   getCliente(item: any): void {
     console.log(item.codigo);
     this.cf.getItems('cliente', 'nombre').subscribe(data => {
-      this.cliente = [];
+      this.clientes = [];
       data.forEach((element: any) => {
-        this.cliente.push({
+        this.clientes.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      console.log(this.cliente);
-      this.cliente = this.cliente.filter(r => r.estatus === true);
-      this.cliente = this.cliente.filter(r => r.comercializadoraId === item.codigo);
-      this.getProductos(this.cliente[0]);
+      console.log(this.clientes);
+      this.clientes = this.clientes.filter(r => r.estatus === true);
+      this.clientes = this.clientes.filter(r => r.comercializadoraId === item.codigo);
+      this.cliente = this.clientes[0];
+      this.getProductos(this.cliente);
     });
   }
 
@@ -182,6 +193,7 @@ export class NotapedidoComponent implements OnInit {
       });
       this.terminales = this.terminales.filter(r => r.estatus === true);
       this.terminales = this.terminales.filter(r => r.codigo === item.terminalPorDefecto);
+      this.terminal = this.terminales[0];
       console.log(this.terminales);
     });
   }
@@ -212,6 +224,19 @@ export class NotapedidoComponent implements OnInit {
       this.bancos = this.bancos.filter(r => r.estatus === true);
       console.log(this.bancos);
     });
+  }
+
+  getBanco(banco: any): void {
+    this.banco = banco;
+
+  }
+
+  getProducto(producto: any): void {
+    this.producto = producto;
+  }
+
+  getMedida(medida: any): void {
+    this.medida = medida;
   }
 
   setChange(cambio: boolean): any {
@@ -392,11 +417,17 @@ export class NotapedidoComponent implements OnInit {
           ...element.payload.doc.data()
         });
       });
-      this.numnp.sort((a, b) => {
-        return b.codigo - a.codigo;
+      console.log(this.numnp);
+      if (this.numnp.length !== 0) {
+        this.numnp.sort((a, b) => {
+          return b.codigo - a.codigo;
+        });
+        console.log(this.numnp[0].codigo);
+      }
+    },
+      err => {
+        console.log(err);
       });
-      console.log(this.numnp[0].codigo);
-    });
   }
 
   save(): void {
@@ -408,6 +439,27 @@ export class NotapedidoComponent implements OnInit {
       // value.nombre = 'NOTA PEDIDO' + a.numero;
 
       this.registro = true;
+
+      // console.log(this.abastecedora);
+      // console.log(this.comercializadora);
+      // console.log(this.cliente);
+      // console.log(this.banco);
+      // console.log(this.terminal);
+      // console.log(this.producto);
+      // console.log(this.medida);
+
+      value.nombreAbastecedora = this.abastecedora.nombre;
+      value.nombreComercializadora = this.comercializadora.nombre;
+      value.rucComercializadora = this.comercializadora.ruc;
+      value.direccionComercializadora = this.comercializadora.direccion;
+      value.nombreCliente = this.cliente.nombre;
+      value.rucCliente = this.cliente.ruc;
+      value.emailCliente = this.cliente.datosContactos[0].correo;
+      value.telefonoCliente = this.cliente.datosContactos[0].telefono;
+      value.direccionCliente = this.cliente.direccion;
+      value.formaPagoCliente = this.cliente.formaPago;
+      value.tipoDiasPlazoCliente = this.cliente.tipoDiasPlazo;
+      value.claveSTCCliente = this.cliente.claveSTC;
 
       if (this.id !== 'new') {
         value.fechaActualizacion = new Date();
@@ -427,6 +479,7 @@ export class NotapedidoComponent implements OnInit {
         value.terminalId = this.terminales[0].codigo;
         value.fechaVenta = new Date();
         value.fechaCreacion = new Date();
+        value.numeroFactura = '0';
         console.log(value);
         console.log((value.fechaDespacho - value.fechaVenta) / 86400000);
         if (value.fechaDespacho < value.fechaVenta) {
@@ -441,8 +494,13 @@ export class NotapedidoComponent implements OnInit {
           });
         } else {
           this.numero();
-          this.nnp = this.numnp[0].codigo + 1;
-          value.codigo = this.nnp;
+          if (this.numnp.length !== 0) {
+            this.nnp = this.numnp[0].codigo + 1;
+            value.codigo = this.nnp;
+          } else {
+            value.codigo = this.nnp;
+          }
+          console.log(value);
           this.cf.agregarItem(value, 'notadepedido').then(() => {
             console.log('Item registrado con exito');
             this.toastr.success('Item registrado con exito', 'Item Registrado', {

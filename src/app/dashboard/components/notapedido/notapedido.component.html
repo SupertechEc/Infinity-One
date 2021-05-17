@@ -14,7 +14,7 @@
                             <mat-label>Abastecedora:</mat-label>
                             <mat-select formControlName="abastecedoraId" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let abas of abastecedora" [value]="abas.codigo"
+                                <mat-option *ngFor="let abas of abastecedoras" [value]="abas.codigo"
                                     (click)="getComercializadora(abas)">
                                     {{abas.codigo}} - {{abas.nombre}}
                                 </mat-option>
@@ -31,7 +31,7 @@
                             <mat-label>Comercializadora:</mat-label>
                             <mat-select formControlName="comercializadoraId" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let comer of comercializadora" [value]="comer.codigo"
+                                <mat-option *ngFor="let comer of comercializadoras" [value]="comer.codigo"
                                     (click)="getCliente(comer)">
                                     {{comer.codigo}} - {{comer.nombre}}
                                 </mat-option>
@@ -48,7 +48,7 @@
                             <mat-label>Cliente:</mat-label>
                             <mat-select formControlName="clienteId" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let cli of cliente" [value]="cli.codigo"
+                                <mat-option *ngFor="let cli of clientes" [value]="cli.codigo"
                                     (click)="getProductos(cli)">
                                     {{cli.codigo}} - {{cli.nombre}}
                                 </mat-option>
@@ -112,7 +112,8 @@
                                 <mat-label>Banco:</mat-label>
                                 <mat-select formControlName="bancoId" required>
                                     <mat-option>Opciones</mat-option>
-                                    <mat-option *ngFor="let banco of bancos" [value]="banco.codigo">
+                                    <mat-option *ngFor="let banco of bancos" [value]="banco.codigo"
+                                        (click)="getBanco(banco)">
                                         {{banco.codigo}} - {{banco.nombre}}
                                     </mat-option>
                                 </mat-select>
@@ -170,7 +171,8 @@
                             <mat-label>Producto:</mat-label>
                             <mat-select formControlName="productoId" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let prod of productos" [value]="prod.productoCodigo">
+                                <mat-option *ngFor="let prod of productos" [value]="prod.productoCodigo"
+                                    (click)="getProducto(prod)">
                                     {{prod.productoCodigo}} - {{prod.productoNombre}}
                                 </mat-option>
                             </mat-select>
@@ -186,7 +188,8 @@
                             <mat-label>Medida:</mat-label>
                             <mat-select formControlName="medidaId" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let medi of medidas" [value]="medi.codigo">
+                                <mat-option *ngFor="let medi of medidas" [value]="medi.codigo"
+                                    (click)="getMedida(medi)">
                                     {{medi.codigo}} - {{medi.nombre}}
                                 </mat-option>
                             </mat-select>

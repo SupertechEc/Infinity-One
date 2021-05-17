@@ -41,6 +41,7 @@ import { PrecioComponent } from './components/precio/precio.component';
 import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @NgModule({
@@ -88,7 +89,8 @@ import { AdministracionnotapedidoComponent } from './components/administracionno
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    DataTablesModule
   ]
 })
 export class DashboardModule { }

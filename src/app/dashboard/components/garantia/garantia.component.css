@@ -11,10 +11,18 @@ main {
     place-items: center center;
 }
 
+.componentes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    max-width: 1024px;
+    width: 70%;
+}
+
 .title {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
     margin: 0 0 20px 0;
+    text-align: center;
 }
 
 .mat-raised-button {
@@ -23,4 +31,71 @@ main {
     border: 1px solid #bdbdbd;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     color: white;
+}
+
+.detalle-valores {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
+}
+
+.campo-center {
+    font-size: 20px;
+    font-weight: bold;
+    height: 40px;
+    text-align: center;
+    padding: 10px 0 0 0;
+}
+
+.fondo {
+    background-color: #cfd8dc;
+}
+
+.etiqueta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 40px;
+    padding: 12px 0 0 10px;
+}
+
+.subetiqueta {
+    font-weight: bold;
+}
+
+.valor {
+    padding-left: 20px;
+}
+
+.btn-container {
+    padding-left: 20px;
+}
+
+@media screen and (max-width: 1024px) {
+    .componentes {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .componentes {
+        width: 100%;
+    }
+
+    .campo-center {
+        font-size: 16px;
+    }
+
+    .subetiqueta {
+        font-size: 12px;
+    }
+
+    .reduce {
+        padding: 1px 0 0 10px;
+    }
+
+    .aumenta {
+        padding: 11px 0 0 20px;
+    }
 }

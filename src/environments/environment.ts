@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  urlGarantia: '/ConsumidorWS_SOAP',
   firebase: {
     apiKey: 'AIzaSyANKklM4lBcbY37zku61cC9PSgVpHLRSrw',
     authDomain: 'dispach-ec.firebaseapp.com',

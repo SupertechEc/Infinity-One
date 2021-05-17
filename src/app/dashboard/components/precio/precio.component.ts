@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConectionFirebaseService } from 'src/app/core/services/conection-firebase.service';
+import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { NullTemplateVisitor } from '@angular/compiler';
 import Swal from 'sweetalert2';
@@ -310,7 +310,8 @@ export class PrecioComponent implements OnInit {
                         soloIVA: dp.soloIVA,
                       };
                       console.log(dp);
-                      this.cf.editSubItem('comercializadoraproducto', r.comercializadoraProductoId, 'productos', r.poductosId, comproductos);
+                      this.cf.editSubItem('comercializadoraproducto',
+                        r.comercializadoraProductoId, 'productos', r.poductosId, comproductos);
                       this.gravamen.forEach((g: any) => {
                         if (g.codigo === '0001') {
                           // console.log(dp.precioEPP);
@@ -364,10 +365,10 @@ export class PrecioComponent implements OnInit {
                             this.detallePrecio.push({ ...r });
                             console.log('Formula ' + g.codigo + ':' + r.dpcg5);
                           } else {
-                            dpcg5 = Number(((r.precioSugerido - dpcg9) * g.valorDefecto).toFixed(6));
+                            dpcg5 = Number((((r.precioSugerido / 1.12) - dpcg9) * g.valorDefecto).toFixed(6));
                             r.gravamenCodigo5 = g.codigo;
                             r.gravamenNombre = g.nombre;
-                            r.dpcg5 = Number(((r.precioSugerido - dpcg9) * g.valorDefecto).toFixed(6));
+                            r.dpcg5 = Number((((r.precioSugerido / 1.12) - dpcg9) * g.valorDefecto).toFixed(6));
                             this.detallePrecio.push({ ...r });
                             console.log('Formula ' + g.codigo + ':' + r.dpcg5);
                           }

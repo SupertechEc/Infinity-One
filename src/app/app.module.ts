@@ -22,6 +22,9 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { ToastrModule } from 'ngx-toastr';
 import { MainComponent } from './layout/components/main/main.component';
 
+import { DataTablesModule } from 'angular-datatables';
+import { DatePipe } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,9 +45,12 @@ import { MainComponent } from './layout/components/main/main.component';
     AngularFireMessagingModule,
     AngularFirestoreModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    DataTablesModule
   ],
-  providers: [],
+  providers: [
+    DatePipe
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

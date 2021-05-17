@@ -1,8 +1,36 @@
 <main>
     <div class="componentes">
-        <div class="title">CONSULTA GARANTÍA</div>
+        <div class="title">MONITOR DE GARANTÍA</div>
         <div class="btn-container">
             <button mat-raised-button (click)="getData()">Obtener Datos</button>
+        </div>
+        <div class="detalle-valores">
+            <div class="campo-center fondo">0002 - {{ comercializadora }}</div>
+            <div class="etiqueta">
+                <div class="subetiqueta">ACTUALIZADO AL: </div>
+                <div class="valor">{{actualizadoal}}</div>
+            </div>
+            <div class="etiqueta fondo">
+                <div class="subetiqueta">VALOR TOTAL:</div>
+                <div class="valor">$ {{valoratresdias}}</div>
+            </div>
+            <div class="etiqueta">
+                <div class="subetiqueta">VALOR A TRES DÍAS:</div>
+                <div class="valor">$ {{valortotal}}</div>
+            </div>
+            <div class="etiqueta fondo reduce">
+                <div class="subetiqueta">VALOR MÁXIMO ALCANZABLE (98 %):</div>
+                <div class="valor aumenta">{{noventayocho}}</div>
+            </div>
+            <div class="campo-center">USO ACTUAL: {{porcentajeusado}} %</div>
+            <div class="etiqueta fondo">
+                <div class="subetiqueta">VALOR UTILIZADO:</div>
+                <div class="valor">$ {{saldo}}</div>
+            </div>
+            <div class="etiqueta">
+                <div class="subetiqueta">SALDO DISPONIBLE:</div>
+                <div class="valor">$ {{saldodisponible}}</div>
+            </div>
         </div>
     </div>
 </main>

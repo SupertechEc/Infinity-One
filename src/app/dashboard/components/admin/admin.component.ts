@@ -10,7 +10,8 @@ import { LocalstorageService } from '../../../core/services/localstorage.service
 })
 export class AdminComponent implements OnInit {
 
-  items: any[] = [];
+  item: any;
+  menus: any[] = [];
   componentes: any[] = [];
   parm: any;
   groupName = '';
@@ -20,6 +21,7 @@ export class AdminComponent implements OnInit {
   columna = '';
   label = 'etiqueta';
   card = 'tarjeta';
+  flag = true;
 
   constructor(
     private router: Router,
@@ -27,6 +29,7 @@ export class AdminComponent implements OnInit {
     private local: LocalstorageService,
     private aRoute: ActivatedRoute
   ) {
+    this.item = this.local.get('user');
     this.getItems();
   }
 
@@ -36,21 +39,25 @@ export class AdminComponent implements OnInit {
   getItems(): void {
     this.loading = true;
     this.cf.getItems('menús', 'nombre').subscribe(data => {
-      this.items = [];
+      this.menus = [];
       data.forEach((element: any) => {
-        this.items.push({
+        this.menus.push({
           id: element.payload.doc.id,
           ...element.payload.doc.data()
         });
       });
-      console.log(this.items);
+      console.log(this.menus);
+      if (this.item.email === 'p&sprueba@gmail.com') {
+        this.flag = false;
+        this.menus = this.menus.filter(d => d.nombre === 'MONITOR COMERCIAL');
+      }
       this.loading = false;
     });
   }
 
   goPage(item: any): void {
     console.log(item);
-    if (item.nombre === 'GARANTÍAS') {
+    if (item.nombre === 'MONITOR COMERCIAL') {
       this.router.navigate(['/dashboard/garantia']);
     } else {
       this.router.navigate(['/dashboard/opciones'], { queryParams: { id: item.id, coleccion: 'submenús', columna: 'menuId' } });

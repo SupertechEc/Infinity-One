@@ -4,11 +4,7 @@
             {{title}}
         </div>
 
-        <div class="admin-buttons" *ngIf="comer">
-            <div class="button-admin">
-                <button mat-raised-button (click)="changePage()" *ngIf="flag">Administrar Notas de
-                    Pedido</button>
-            </div>
+        <div class="admin-buttons" *ngIf="ndp">
             <div class="mattab">
                 <mat-form-field appearance="outline">
                     <mat-label>Comercializadoras:</mat-label>
@@ -96,6 +92,12 @@
             </table>
 
             <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+        <div class="admin-buttons" *ngIf="ndp">
+            <div class="button-admin">
+                <button mat-raised-button (click)="changePage()" *ngIf="flag">Administrar Notas de
+                    Pedido</button>
+            </div>
         </div>
     </div>
 </main>

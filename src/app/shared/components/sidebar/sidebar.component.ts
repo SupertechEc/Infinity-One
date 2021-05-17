@@ -63,7 +63,10 @@ export class SidebarComponent implements OnInit {
           ...element.payload.doc.data()
         });
       });
-      // console.log(this.menus);
+      console.log(this.menus);
+      if (this.item.email === 'p&sprueba@gmail.com') {
+        this.menus = this.menus.filter(d => d.nombre === 'MONITOR COMERCIAL');
+      }
       this.loading = false;
     });
   }
@@ -81,7 +84,7 @@ export class SidebarComponent implements OnInit {
     console.log(menu);
     // [routerLink]="['/dashboard/opciones']"
     //         [queryParams]="{ id: menu.id, coleccion: 'submenús', columna: 'menuId' }" (click)="toggleSideBar()"
-    if (menu.nombre === 'GARANTÍAS') {
+    if (menu.nombre === 'MONITOR COMERCIAL') {
       this.router.navigate(['/dashboard/garantia']);
     } else {
       this.router.navigate(['/dashboard/opciones'], { queryParams: { id: menu.id, coleccion: 'submenús', columna: 'menuId' } });

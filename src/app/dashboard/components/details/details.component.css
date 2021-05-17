@@ -48,14 +48,14 @@ main {
 }
 
 .admin-buttons {
-    display: grid;
+    /* display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
-    margin: 20px 0 0 0;
+    margin: 20px 0 0 0; */
 }
 
 .mattab {
-    text-align: end;
+    /* text-align: end; */
 }
 
 .mattab .mat-form-field {
@@ -135,7 +135,7 @@ th {
 }
 
 .mat-elevation-z8 {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 @media screen and (max-width: 800px) {

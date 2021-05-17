@@ -24,7 +24,7 @@ nav .logo {
 
 .logo img {
     cursor: pointer;
-    width: 50px;
+    width: 100px;
     height: 60px;
     opacity: 0;
     animation: logo 1.5s ease-in-out forwards;
