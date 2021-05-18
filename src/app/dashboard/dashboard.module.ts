@@ -42,6 +42,7 @@ import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
 import { DataTablesModule } from 'angular-datatables';
+import { DialogFacturasComponent } from './components/dialog-facturas/dialog-facturas.component';
 
 
 @NgModule({
@@ -81,7 +82,8 @@ import { DataTablesModule } from 'angular-datatables';
     PrecioComponent,
     GarantiaComponent,
     NumeracionComponent,
-    AdministracionnotapedidoComponent
+    AdministracionnotapedidoComponent,
+    DialogFacturasComponent
   ],
   imports: [
     CommonModule,

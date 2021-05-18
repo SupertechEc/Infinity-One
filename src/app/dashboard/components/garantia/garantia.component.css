@@ -15,7 +15,18 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
     max-width: 1024px;
-    width: 70%;
+    width: 50%;
+}
+
+.componentesD {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    max-width: 1024px;
+    width: 50%;
+}
+
+#pantalla-dividida {
+    display: flex;
 }
 
 .title {
@@ -41,6 +52,16 @@ main {
     background-color: white;
 }
 
+.detalle-valoresD {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    bottom: 72px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: white;
+}
+
 .campo-center {
     font-size: 20px;
     font-weight: bold;
@@ -56,19 +77,63 @@ main {
 .etiqueta {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 40px;
+    height: 50px;
+    padding: 12px 0 0 10px;
+}
+
+.etiquetaD {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    height: 50px;
     padding: 12px 0 0 10px;
 }
 
 .subetiqueta {
-    font-weight: bold;
+    font-weight: bold;      
+}
+
+.subetiquetaF{
+    font-weight: bold;  
+    padding-left: 55px;
 }
 
 .valor {
     padding-left: 20px;
 }
 
+.valorD {
+    padding-left: 10px;
+}
+
+.datosF{
+    padding-left: 40px;
+}
+
+.consulta-doc {
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+.numeroDoc{
+    font-weight: bold;
+    padding-left: 75px;
+}
+
+.fecha-consulta{
+    font-weight: bold; 
+    padding-left: 40px;
+}
+
+.editar{
+    padding-left: inherit;
+}
+
 .btn-container {
+    padding-left: 20px;
+}
+.btn-containerD {
+    position: relative;
+    bottom: 25px;
     padding-left: 20px;
 }
 

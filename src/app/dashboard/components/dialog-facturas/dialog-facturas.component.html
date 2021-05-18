@@ -1,0 +1,54 @@
+<main>
+    <div class="contenedor">
+        <div class="title">FACTURAS</div>
+        <form [formGroup]="f">
+            <table mat-table [dataSource]="facturasServicio" matSort
+                class="table table-stripped table-bordered row-border hover">
+                <!-- ID Column -->
+                <ng-container matColumnDef="numFactura">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Número Factura</th>
+                    <td mat-cell *matCellDef="let row">{{ row.numFactura }}</td>
+                </ng-container>
+                <!-- Name Column -->
+                <ng-container matColumnDef="fechaEmi">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Emisión</th>
+                    <td mat-cell *matCellDef="let row">{{ row.fechaEmi }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaVmto" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Emisión</th>
+                    <td mat-cell *matCellDef="let row">{{ row.fechaVmto }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaGuia" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Emisión</th>
+                    <td mat-cell *matCellDef="let row">{{ row.fechaGuia }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="estadoFac" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Emisión</th>
+                    <td mat-cell *matCellDef="let row">{{ row.estadoFac }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="estadoPago" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Emisión</th>
+                    <td mat-cell *matCellDef="let row">{{ row.estadoPago }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="ValorAnuladas" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Valor</th>
+                    <td mat-cell *matCellDef="let row">{{ row.ValorAnuladas }}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </table>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()"> Regresar </button>
+            </div>
+        </form>
+
+    </div>
+</main>
