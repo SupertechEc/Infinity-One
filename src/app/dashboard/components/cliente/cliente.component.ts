@@ -484,7 +484,7 @@ export class ClienteComponent implements OnInit {
       comercializadoraId: ['', [Validators.required]],
       // segmentoOperacion: ['', [Validators.required]],
       tipoDiasPlazo: [''],
-      diasPlazoCredito: [''],
+      diasPlazoCredito: [0],
       cuentaDebitar: [''],
       codigoBancoDebitar: [''],
       tasaInteresCreditoDias: [''],
