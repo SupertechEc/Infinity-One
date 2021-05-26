@@ -1,0 +1,185 @@
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+}
+
+.componentes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    max-width: 1024px;
+    width: 80%;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0 10px 0;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 20px 0;
+}
+
+.actions .btn1 {
+    display: none;
+}
+
+.mat-raised-button {
+    width: 150px;
+    background: linear-gradient(#00C1D2, #004AC2);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    color: white;
+}
+
+.button-admin .mat-raised-button {
+    width: 250px;
+    margin: 10px 0 0 0;
+}
+
+.admin-buttons {
+    /* display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    margin: 20px 0 0 0; */
+}
+
+.mattab {
+    /* text-align: end; */
+}
+
+.mattab .mat-form-field {
+    width: 250px;
+}
+
+table {
+    width: 100%;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+.btn:hover {
+    font-weight: bold;
+    color: #004AC2 !important;
+}
+
+.mat-form-field {
+    font-size: 14px;
+}
+
+.td-icon, .th-icon {
+    width: 10%;
+    cursor: pointer;
+    text-align: center;
+}
+
+.th-icon {
+    padding: 0 5px;
+}
+
+.btn-edit {
+    color: #EF893A;
+}
+
+.btn-delete {
+    color: #DC3545;
+}
+
+tr.mat-header-row {
+    background: linear-gradient(#bdbdbd, #424242);
+    font-weight: 600;
+}
+
+th {
+    color: white;
+}
+
+.mat-paginator {
+    background-color: #eeeeee;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color:#1A73E8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-underline {
+/*change color of underline*/
+    background-color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+    background-color: #1A73E8;
+}
+
+.mat-elevation-z8 {
+    margin-bottom: 20px;
+}
+
+@media screen and (max-width: 800px) {
+
+    .componentes {
+        width: 100%;
+    }
+
+    .actions {
+        flex-direction: column;
+        margin: 0 0 10px 0;
+    }
+
+    .actions .btn1 {
+        display: block;
+        margin: 0 0 20px 0;
+    }
+
+    .actions .btn2 {
+        display: none;
+    }
+
+    .button-admin {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .admin-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .mattab {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 400px) {
+
+    main {
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 20px;
+    }
+    
+}

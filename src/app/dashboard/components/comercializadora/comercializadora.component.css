@@ -1,0 +1,545 @@
+/*===== GOOGLE FONTS =====*/
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+/*===== VARIABLES CSS =====*/
+:root {
+    /*===== Colores =====*/
+    --first-color: #1A73E8;
+    --input-color: #80868B;
+    --border-color: #DADCE0;
+  
+    /*===== Fuente y tipografia =====*/
+    --body-font: 'Roboto', sans-serif;
+    --normal-font-size: 1rem;
+    --small-font-size: .75rem;
+}
+    
+/*===== BASE =====*/
+*,::before,::after{
+    box-sizing: border-box;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.accordion {
+    margin-bottom: 1.5rem;
+}
+
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.example-headers-align .mat-form-field + .mat-form-field {
+  margin-left: 8px;
+}
+
+.notification-inbound {
+    font-size: 12px;
+    margin: -20px 0 15px 27px;
+}
+
+.notification-check {
+    font-size: 12px;
+}
+
+.notification-outbound {
+    font-size: 12px;
+    margin: 48px 0 15px 27px;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    max-width: 1024px;
+    width: 50%;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+}
+
+.mat-tab-group {
+    margin-bottom: 1.5rem;
+    background-color: #EEEEEE;
+}
+
+::ng-deep .mat-tab-header {
+    
+    border-radius: 10px 10px 0 0 !important;
+}
+
+::ng-deep .mat-tab-label {
+    background: linear-gradient(#00C1D2, #004AC2);
+    color: white;
+    padding: 0 12px !important;
+    border-radius: 10px 10px 0 0;
+}
+
+::ng-deep .mat-tab-body-content {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #E1E1E1;
+    box-shadow: rgba(77, 73, 73, 0.16) 0px 1px 4px;
+}
+
+.form__div{
+    position: relative;
+    height: 48px;
+    margin-bottom: 1.5rem;
+    background-color: white;
+    border-radius: .5rem;
+}
+
+.so {
+    margin: 0;
+}
+
+.form__input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: 1px solid  #DADCE0;
+    border-radius: .5rem;
+    outline: none;
+    padding: 1rem;
+    background: none;
+    z-index: 1;
+}
+
+.form__label{
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 0 .75rem;
+    background-color: #fff;
+    color: #80868B;
+    font-size: 1rem;
+    transition: .3s;
+    border-radius: 5px;
+}
+
+.form__button{
+    display: block;
+    margin-left: auto;
+    padding: .75rem 2rem;
+    outline: none;
+    border: none;
+    background-color:  #1A73E8;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.form__button:hover{
+    box-shadow: 0 10px 36px rgba(0,0,0,.15);
+}
+  
+/*Input focus move up label*/
+.form__input:focus + .form__label{
+    top: -.5rem;
+    left: .8rem;
+    color: #1A73E8;
+    font-size: .9rem;
+    font-weight: 500;
+    padding: 0 5px;
+    z-index: 10;
+}
+
+/*Input focus sticky top label*/
+.form__input:not(:placeholder-shown).form__input:not(:focus)+ .form__label{
+    top: -.5rem;
+    left: .8rem;
+    font-size: .75rem;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/*Input focus*/
+.form__input:focus{
+    border: 1.5px solid  #1A73E8;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color:#1A73E8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-underline {
+/*change color of underline*/
+    background-color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+    background-color: #1A73E8;
+}
+
+.form_select {
+    width: 100%;
+    height: 50px;
+    padding: 8px 24px;
+    color: #333333;
+    background-color: white;
+    border: 1px solid #dddddd;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+
+    /* Remplece default styling (arrow) */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("../../../../assets/images/ARROW.svg");
+    background-position: right 15px top 50%;
+    background-repeat: no-repeat;
+    background-size: 10px;
+
+}
+
+.form_select:focus, .form_select:hover {
+    outline: none;
+    border: 1px solid #1A73E8;
+}
+
+.form_select option {
+    background: #fff;
+    padding: 15px 24px;
+}
+
+/* Cargar Imagenes */
+
+.file-upload{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    width: 100%;
+    font-size: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.file-upload-btn {
+    width: 48%;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.file-upload-button {
+    -webkit-appearance: none;
+    background: #1A73E8;
+    border: 2px solid #133C5D;
+    border-radius: 4px;
+    outline: none;
+    padding: 0.5em 0.8em;
+    color: white;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.file-upload-button:active {
+    background: #133C5D;
+}
+
+.file-upload-label {
+    width: 48%;
+    /* text-align: center; */
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /* white-space: nowrap; */
+    word-wrap: break-word;
+    padding: 0 0 0 10px;
+}
+
+.loading {
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading .title {
+    font-size: 14px;
+    margin: 0 20px 0 0;
+}
+
+.img-dimension {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.separacion{
+    margin-bottom: 25px;
+}
+
+.img-title{
+    margin-bottom: .8rem;
+}
+
+.img-content, .section-one {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:space-between;
+    width: 100%;
+}
+
+.img-content-com {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    width: 100%;
+}
+
+.img-content .form__div {
+    width: 48%;
+}
+
+.section-one .form__div {
+    width: 48%;
+}
+
+.grupo-campos {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.select-check {
+    width: 45%;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 0 2.8rem;
+}
+
+.select-check .campo {
+    width: 20%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.campo-seleccion {
+    width: 48%;
+    /* height: 48px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin: 0 0 1.5rem 0; */
+}
+
+::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+
+/* .mat-check {
+    width: 50%;
+    padding: 0 10px;
+    
+} */
+
+.check-name {
+    width: 80%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    margin: -8px 0 0 30px;
+    font-size: 18px;
+    font-weight: 500;
+} 
+
+.btn-container {
+    display: flex;
+    align-items: center;
+}
+
+.mat-raised-button {
+    width: 150px;
+    background: linear-gradient(#dddddd, #80868B);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.btn-save {
+    color: white;
+    background: linear-gradient(#00C1D2, #004AC2);
+    margin: 0 0 0 20px;
+}
+
+
+button {
+    width: 100%;
+}
+
+.campo-seleccion-full {
+    width: 100%;
+    /* height: 48px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* margin: 0 0 1.5rem 0; */
+}
+
+.separacion-full{
+    margin-bottom: 35px;
+}
+
+@media screen and (max-width: 1024px) {
+    .contenedor {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .contenedor {
+        width: 100%;
+    }
+
+    .select-check .campo {
+        width: 40%;
+    }
+    
+    .check-name {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+
+    main {
+        padding: 20px 10px;
+    }
+
+    .mat-expansion-panel-header-title {
+        font-size: 0.8rem;
+    }
+
+    .example-headers-align .mat-expansion-panel-header-title,
+    .example-headers-align .mat-expansion-panel-header-description {
+        flex-basis: unset;
+    }
+
+    .form-fecha{
+        margin-bottom: 2rem;
+    }
+
+    .form__label {
+        font-size: 0.75rem;
+        padding: 0;
+    }
+
+    .form__input:focus + .form__label {
+        font-size: 0.75rem;
+        padding: 0 5px;
+    }
+
+    .table td{
+        vertical-align: 0;
+    }
+
+    .check-name {
+        margin: -8px 0 0 15px;
+        font-size: 16px;
+    }
+
+    .select-check {
+        margin: -13px 0 0 1.5rem;
+    }
+
+    .notification-inbound {
+        margin: -20px 0 15px 15px;
+    }
+    
+    .notification-outbound {
+        margin: 48px 0 15px 15px;
+    }
+
+    .datocontacto {
+        width: 100%;
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+        padding: 0 15px 15px !important;
+    }
+
+    .btn-container {
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+}
+
+@media screen and (max-width: 330px) {
+    main {
+        padding: 10px 0;
+    }
+
+    .contenedor {
+        width: 95%;
+    }
+
+    .form__label {
+        font-size: 0.7rem;
+        padding: 0;
+    }
+
+    .form__input:focus + .form__label {
+        font-size: 0.7rem;
+        padding: 0 5px;
+    }
+
+    .notification-outbound {
+        margin: 48px 0 15px 15px;
+    }
+
+    ::ng-deep .mat-expansion-panel-body {
+        padding: 0 10px !important;
+    }
+
+    .btn-primary {
+        margin-bottom: 10px;
+    }
+}

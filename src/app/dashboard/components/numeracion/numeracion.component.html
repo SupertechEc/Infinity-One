@@ -1,0 +1,74 @@
+<main>
+    <div class="contenedor">
+        <div class="title">INGRESE NUMERACIÓN
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Comercializadora:</mat-label>
+                        <mat-select formControlName="comercializadoraId" required>
+                            <mat-option>Opciones</mat-option>
+                            <mat-option *ngFor="let com of comercializadora" [value]="com.codigo">
+                                {{com.codigo}} - {{com.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="comercializadoraIdNotValid" class="text-danger notification-select">
+                    Campo no seleccionado.
+                </div>
+            </div>
+
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo Documento:</mat-label>
+                        <mat-select formControlName="tipoDocumento" required>
+                            <mat-option>Opciones</mat-option>
+                            <mat-option *ngFor="let td of tds" [value]="td.codigo">
+                                {{td.codigo}} - {{td.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="tipoDocumentoNotValid" class="text-danger notification-select">
+                    Campo no seleccionado.
+                </div>
+            </div>
+
+            <div class="select-check form-group">
+                <div class="campo">
+                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                        Estado: </mat-checkbox>
+                </div>
+                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+            </div>
+            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Último Número:</mat-label>
+                        <input type="number" matInput formControlName="ultimoNumero">
+                        <!-- <mat-hint>Hint</mat-hint> -->
+                    </mat-form-field>
+                </div>
+            </div>
+            <div *ngIf="ultimoNumeroNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+
+        </form>
+
+    </div>
+</main>

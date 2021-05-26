@@ -1,0 +1,242 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+}
+
+.contenedor {
+    max-width: 1024px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1.2fr 1.2fr 1.5fr;
+    grid-template-areas:
+    "et1 et1 et2"
+    "et3 et4 et2"
+    "et3 et5 et5";
+    /* "et6 et7 et8" */
+    justify-content: center;
+    grid-gap: 0.2rem;
+    padding: 20px;
+}
+
+#etiqueta1 {
+    background: #6fffd2;
+    grid-area: et1;
+}
+#etiqueta2 {
+    background: #6fff;
+    grid-area: et2;
+}
+#etiqueta3 {
+    background: #6fff16;
+    grid-area: et3;
+}
+#etiqueta4 {
+    background: #6fffba;
+    grid-area: et4;
+}
+#etiqueta5 {
+    background: #9fc449;
+    grid-area: et5;
+}
+#etiqueta6 {
+    background: #9a6fff;
+    /* grid-area: et6; */
+}
+#etiqueta7 {
+    background: #455fd3;
+    /* grid-area: et7; */
+}
+#etiqueta8 {
+    background: #ff6f6f;
+    /* grid-area: et8; */
+}
+
+#tarjeta1, #tarjeta5 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.contenedor .tarjetas img {
+    position: relative;
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.contenedor .tarjetas {
+    background: #333;
+    padding: 20px;
+    display: grid;
+    font-size: 20px;
+    place-items: center;
+    text-align: center;
+    color: #fff;
+    transition: 0.5s;
+}
+
+@media only screen and (max-width: 800px) {
+    .contenedor {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 0.5fr 0.5fr 0.5fr;
+        grid-template-areas:
+        "et1 et1"
+        "et2 et3"
+        "et2 et4"
+        "et5 et5";
+    }
+
+    
+
+    /* #tarjeta1 p {
+        width: 50%;
+    } */
+}
+
+/* .contenedor {
+    position: relative;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-rows: minmax(100px, auto);
+    margin: 20px;
+    grid-auto-flow: dense;
+    grid-gap: 10px;
+}
+
+.contenedor .tarjetas {
+    background: #333;
+    padding: 20px;
+    display: grid;
+    font-size: 20px;
+    place-items: center;
+    text-align: center;
+    color: #fff;
+    transition: 0.5s;
+}
+
+.contenedor .tarjetas:hover {
+    background: #e91e63;
+}
+
+.contenedor .tarjetas img {
+    position: relative;
+    max-width: 100px;
+    margin-bottom: 10px;
+}
+
+.contenedor .tarjetas:nth-child(1){
+    grid-column: span 2;
+    grid-row: span 1;
+}
+
+.contenedor .tarjetas:nth-child(2){
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+.contenedor .tarjetas:nth-child(4){
+    grid-column: span 1;
+    grid-row: span 2;
+}
+
+.contenedor .tarjetas:nth-child(5){
+    grid-column: span 3;
+    grid-row: span 1;
+}
+
+@media (max-width: 1100px) {
+    .contenedor {
+        grid-template-columns: repeat(auto-fill, minmax(50%, 1fr));
+        grid-template-rows: minmax(auto, auto);;
+    }
+
+    .contenedor .tarjetas:nth-child(1){
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+
+    .contenedor .tarjetas {
+        grid-column: unset !important;
+        grid-row: unset !important;
+    }
+} */
+
+/* .loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading .title {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 20px 0 0;
+}
+
+.tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    padding: 20px;
+    grid-gap: 40px;
+} 
+
+.tarjeta {
+    background-color: #1c1b29;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.18);
+    cursor: pointer;
+} */
+
+/* .contenedor {
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.contenedor img {
+    width: 100%;
+    height: 80%;
+    display: block;
+    border-radius: 20px 20px 0 0;
+}
+
+.contenedor:after{
+    content: "";
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 20px 20px 0 0;
+    opacity: 0.7;
+}
+
+.tarjeta:hover{
+    background-image: linear-gradient(
+        135deg,
+        #ffab1d,
+        #f8501c
+    );
+}
+
+.titulo {
+    padding: 20px 10px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 10px 0 15px 0;
+    text-align: center;
+    letter-spacing: 2px;
+} */

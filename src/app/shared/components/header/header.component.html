@@ -1,0 +1,18 @@
+<nav>
+    <input id="nav-toggle" type="checkbox">
+    <div class="logo" (click)="changeHome()">
+        <img src="../../../../assets/images/PYSLOGO.svg" alt="">
+    </div>
+    <div class="links">
+        <ul>
+            <li class="nav-item active"><a (click)="changeHome()">Home</a></li>
+            <li class="nav-item"><a>Servicios</a></li>
+            <li class="nav-item"><a>Contactos</a></li>
+        </ul>
+    </div>
+    <label for="nav-toggle" class="icon-burger">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+    </label>
+</nav>

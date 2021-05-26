@@ -1,0 +1,96 @@
+/* Layer Section */
+.open .layer {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(243, 243, 243);
+    z-index: 2;
+    animation: slideup 1.5s forwards;
+    animation-delay: 0.5s;
+}
+
+.open .layer:nth-child(2) {
+    z-index: 1;
+    background-color: rgb(0, 0, 0);
+    animation-delay: 1s;
+}
+
+@keyframes slideup {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* background Section */
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #2c2c40;
+    overflow: hidden;
+}
+
+.triangle {
+    position: absolute;
+    bottom: -3%;
+    left: 55%;
+    width: 150px;
+    height: 150px;
+    background-color: transparent;
+    border: 10px solid rgba(24, 24, 24, 0.514);
+    z-index: 0;
+    opacity: 0;
+    transform: rotate(45deg);
+    animation: box-rotate 6s forwards;
+    animation-delay: 4s;
+}
+
+@keyframes box-rotate {
+    0% {
+        opacity: 0;
+        transform: rotate(45deg);
+    }
+
+    100% {
+        opacity: 1;
+        transform: rotate(320deg);
+    }
+}
+
+
+.background-text h1 {
+    opacity: 0;
+    font-size: 35em;
+    margin-top: 22%;
+    color: rgba(0, 0, 0, 0.109);
+    z-index: -1;
+    animation: background-text-reveal 1s forwards;
+    animation-delay: 2s;
+}
+
+@keyframes background-text-reveal {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.background-red {
+    position: absolute;
+    top: -40%;
+    right: -19%;
+    width: 50%;
+    height: 160%;
+    background: linear-gradient(rgba(236, 42, 101, 0.75), rgb(234, 39, 39));
+    transform: rotate(-26deg);
+}

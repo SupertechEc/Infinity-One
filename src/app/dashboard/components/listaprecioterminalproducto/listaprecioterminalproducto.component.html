@@ -1,0 +1,125 @@
+<main>
+    <div class="contenedor">
+        <div class="title">LISTA PRECIO TERMINAL PRODUCTO
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+
+            <div class="campos">
+                <div class="campos-listaprecios">
+                    <div class="campo-title">Código Comercializadora:</div>
+                    <div class="campo-valor" *ngIf="flag == 1">{{comercializadora[0].comercializadoraCodigo}} -
+                        {{comercializadora[0].comercializadoraNombre}}</div>
+                </div>
+                <div class="campos-listaprecios">
+                    <div class="campo-title">Código Lista Precio:</div>
+                    <div class="campo-valor" *ngIf="flag2 == 1">{{listaPrecio[0].codigo}} - {{listaPrecio[0].nombre}}
+                    </div>
+                </div>
+                <div class="campos-listaprecios">
+                    <div class="campo-title">Tipo Lista Precio:</div>
+                    <div class="campo-valor" *ngIf="tipo === 'MPO'">MARGEN DEL PORCENTAJE</div>
+                    <div class="campo-valor" *ngIf="tipo === 'MCO'">MARGEN DEL VALOR DE COMERCIALIZACIÓN</div>
+                </div>
+            </div>
+
+            <div class="opciones">
+                <mat-radio-group aria-label="Select an option" formControlName="radioButton">
+                    <mat-radio-button (click)="changeselection(1)">Por
+                        terminal.</mat-radio-button>
+                    <mat-radio-button value="2" (click)="changeselection(2)">Todos los
+                        terminales.</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
+            <div class="opcion-campos">
+                <div class="opcion-uno" *ngIf="selection === 1">
+                    <div class="campo">Sección no definida</div>
+                </div>
+                <div class="opcion-uno" *ngIf="selection === 2">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Producto</th>
+                                    <th>Medida</th>
+                                    <th>Margen</th>
+                                </tr>
+                            </thead>
+                            <tbody formArrayName="datosProductos">
+                                <tr *ngFor="let control of datosProductos.controls; let i = index" [formGroupName]="i">
+                                    <td data-label="Código" class="codigo">
+                                        <fieldset [disabled]=true>
+                                            <input formControlName="productoCodigo">
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Producto" class="producto">
+                                        <fieldset [disabled]=true>
+                                            <textarea formControlName="productoNombre"></textarea>
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Medida" class="medida">
+                                        <fieldset [disabled]=true>
+                                            <input formControlName="medidaAbreviacion">
+                                        </fieldset>
+                                    </td>
+                                    <td data-label="Margen" class="margen">
+                                        <div class="opcion-uno-campo">
+                                            <div class="form-div-input" *ngIf="tipo === 'MPO'">
+                                                <div class="campo">
+                                                    <input type="number" class="form__input form-control"
+                                                        placeholder=" " formControlName="margenporcentaje"
+                                                        [class.is-invalid]="margenporcentajeNotValid">
+                                                    <label for="" class="form__label">Margen Porcentaje:</label>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="margenporcentajeNotValid" class="text-danger notification">Campo
+                                                invalido.</div>
+
+                                            <div class="form-div-input" *ngIf="tipo === 'MCO'">
+                                                <div class="opcion-uno-campo">
+                                                    <input type="number" class="form__input form-control"
+                                                        placeholder=" " formControlName="margenvalorcomercializadora"
+                                                        [class.is-invalid]="margenvalorcomercializadoraNotValid">
+                                                    <label for="" class="form__label">Margen Valor
+                                                        Comer.:</label>
+                                                </div>
+                                            </div>
+                                            <div *ngIf="margenvalorcomercializadoraNotValid"
+                                                class="text-danger notification">Campo
+                                                invalido.</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+        </form>
+
+        <!-- <hr>
+        <pre>
+        Estado del formulario: {{ f.valid }}
+        <br>
+        Status: {{ f.status }}
+        </pre>
+
+        <pre>
+
+        {{ f.value | json }}
+
+        </pre> -->
+
+    </div>
+</main>

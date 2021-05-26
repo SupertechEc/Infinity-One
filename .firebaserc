@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "dispach-ec": {
+      "hosting": {
+        "despach": [
+          "dispach-ec"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "dispach-ec"
+  }
+}

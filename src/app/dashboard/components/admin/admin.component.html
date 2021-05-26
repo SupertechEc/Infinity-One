@@ -1,0 +1,40 @@
+<main>
+    <!-- <div class="container">
+        <h1>Sistema de gestión de Comercializadoras</h1>
+        <img src="assets/images/IMGADMIN.png" alt="">
+    </div> -->
+
+    <div class="loading" *ngIf="loading else carga">
+        <div class="title">Cargando Datos...</div>
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden"></span>
+        </div>
+    </div>
+
+    <ng-template #carga>
+        <div *ngIf="flag else otheruser">
+            <div class="contenedor">
+                <div id="title" class="main-title"> <span>Sistema de gestión de Comercializadoras</span> </div>
+                <div [id]="label+item.secuencial" class="tarjetas" *ngFor="let item of menus; index as i"
+                    (click)="goPage(item)">
+                    <div [id]="card+item.secuencial" class="tarjeta">
+                        <img [src]="item.imagenUrl" alt="">
+                        <p>{{item.nombre}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #otheruser>
+            <div class="group-other">
+                <div class="title"> <span>INFINITY - ONE</span> </div>
+                <div class="cuadro">
+                    <a (click)="goPage(menus[0])">
+                        <img [src]="menus[0].imagenUrl" alt="">
+                        <p>{{menus[0].nombre}}</p>
+                    </a>
+                </div>
+            </div>
+        </ng-template>
+    </ng-template>
+
+</main>
