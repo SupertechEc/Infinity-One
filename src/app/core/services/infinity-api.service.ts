@@ -3,7 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { InfinityTokenService } from './infinity-token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,11 @@ import { map } from 'rxjs/operators';
 export class InfinityApiService {
 
   url = '';
+  urlToken = '';
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private its: InfinityTokenService,
   ) { }
 
   public getDataInfinity(): Observable<any> {
@@ -70,5 +73,32 @@ export class InfinityApiService {
           });
         })
       );
+  }
+
+  public getTokenInfinity(): Observable<any> {
+    console.log('tokenInfinity');
+    this.urlToken = environment.urlToken;
+    return this.http.get(`${this.urlToken}/resources/usuario/login?user=paul&password=paul123`)
+      .pipe(
+        tap((data: any) => {
+          const token = data;
+          console.log(token);
+          this.its.saveToken(token);
+        })
+      );
+  }
+
+  public getTableInfinity(nombre: string): Observable<any> {
+    this.urlToken = environment.urlToken;
+    const tokenInfinity = localStorage.getItem('tokenInfinity');
+    console.log(tokenInfinity);
+    let headers = new HttpHeaders();
+    if (tokenInfinity) {
+      headers = headers.set('Authorization', tokenInfinity);
+    }
+    return this.http.get<any>(
+      `${this.urlToken}/resources/ec.com.infinity.modelo.${nombre}`,
+      { headers }
+    );
   }
 }

@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   urlGarantia: 'https://www.supertech.ec:8443/ConsumidorWS_SOAP',
+  urlToken: 'https://www.supertech.ec:8443/infinityone-rest-1-1.0-SNAPSHOT',
   firebase: {
     apiKey: 'AIzaSyANKklM4lBcbY37zku61cC9PSgVpHLRSrw',
     authDomain: 'dispach-ec.firebaseapp.com',

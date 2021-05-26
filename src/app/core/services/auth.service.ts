@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { InfinityApiService } from './infinity-api.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,13 +22,15 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private af: AngularFireAuth
+    private af: AngularFireAuth,
+    private api: InfinityApiService,
   ) {
     this.readToken();
   }
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('tokenInfinity');
     localStorage.removeItem('email');
   }
 
@@ -68,6 +71,7 @@ export class AuthService {
     const hoy = new Date();
     hoy.setSeconds(3600);
     localStorage.setItem('expira', hoy.getTime().toString());
+    this.api.getTokenInfinity();
   }
 
   readToken(): string {

@@ -11,7 +11,7 @@ import { LocalstorageService } from '../../../core/services/localstorage.service
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogListaprecioComponent } from '../dialog-listaprecio/dialog-listaprecio.component';
 import Swal from 'sweetalert2';
-import { stringify } from '@angular/compiler/src/util';
+import { InfinityApiService } from '../../../core/services/infinity-api.service';
 
 @Component({
   selector: 'app-details',
@@ -54,6 +54,7 @@ export class DetailsComponent implements AfterViewInit {
     private aRoute: ActivatedRoute,
     private es: ElementosService,
     private dialog: MatDialog,
+    private ias: InfinityApiService,
   ) {
 
     // this.id = this.aRoute.snapshot.paramMap.get('id');
@@ -65,6 +66,11 @@ export class DetailsComponent implements AfterViewInit {
       this.nameCol = this.nameCol.replace(' ', '');
       this.nameCol = this.nameCol.replace(' ', '');
       this.nameCol = this.nameCol.toLocaleLowerCase();
+
+      this.ias.getTableInfinity('areamercadeo').subscribe(d => {
+        console.log(d);
+      });
+
       console.log(this.nameCol);
       if (this.nameCol === 'notadepedido') {
         this.getComercializadora();

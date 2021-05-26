@@ -24,6 +24,8 @@ import { MainComponent } from './layout/components/main/main.component';
 
 import { DataTablesModule } from 'angular-datatables';
 import { DatePipe } from '@angular/common';
+// import { HTTP_INTERCEPTORS } from '@angular/common/http';
+// import { AuthInterceptor } from './core/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,12 @@ import { DatePipe } from '@angular/common';
     DataTablesModule
   ],
   providers: [
-    DatePipe
+    DatePipe,
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptor,
+    //   multi: true,
+    // }
   ],
   bootstrap: [AppComponent]
 })
