@@ -1,0 +1,107 @@
+<main>
+    <div class="contenedor">
+        <div class="title">INGRESE EL RUBRO
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="codigo"
+                        [class.is-invalid]="codigoNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Código:</label>
+                </div>
+            </div>
+            <div *ngIf="codigoNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombre"
+                        [class.is-invalid]="nombreNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Nombre:</label>
+                </div>
+            </div>
+            <div *ngIf="nombreNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="select-check">
+                <div class="campo">
+                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                        Estado: </mat-checkbox>
+                </div>
+                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+            </div>
+            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+
+            <div class="seccion-uno">
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Comercializadora:</mat-label>
+                            <mat-select formControlName="comercializadoraId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let com of comercializadora" [value]="com.codigo">
+                                    {{com.codigo}} - {{com.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="comercializadoraIdNotValid" class="text-danger notification-select">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Imprime:</mat-label>
+                            <mat-select formControlName="imprime" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let imp of catImprime" [value]="imp.codigo">
+                                    {{imp.codigo}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="imprimeNotValid" class="text-danger notification-select">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="formula"
+                        [class.is-invalid]="formulaNotValid" oninput="this.value = this.value.toUpperCase()">
+                    <label for="" class="form__label">Fórmula:</label>
+                </div>
+            </div>
+            <div *ngIf="formulaNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="number" class="form__input form-control" placeholder=" " formControlName="valorDefecto"
+                        [class.is-invalid]="valorDefectoNotValid">
+                    <label for="" class="form__label">Valor Defecto:</label>
+                </div>
+            </div>
+            <div *ngIf="valorDefectoNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="form-div-input">
+                <div class="campo">
+                    <input type="number" class="form__input form-control" placeholder=" " formControlName="secuencial"
+                        [class.is-invalid]="secuencialNotValid">
+                    <label for="" class="form__label">Secuencial:</label>
+                </div>
+            </div>
+            <div *ngIf="secuencialNotValid" class="text-danger notification">Campo invalido.</div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+        </form>
+    </div>
+</main>
