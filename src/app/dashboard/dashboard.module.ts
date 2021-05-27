@@ -44,6 +44,8 @@ import { AdministracionnotapedidoComponent } from './components/administracionno
 import { DataTablesModule } from 'angular-datatables';
 import { DialogFacturasComponent } from './components/dialog-facturas/dialog-facturas.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
+import { PruebasComponent } from './components/pruebas/pruebas.component';
+
 
 @NgModule({
   declarations: [
@@ -84,7 +86,8 @@ import { RubrosComponent } from './components/rubros/rubros.component';
     NumeracionComponent,
     AdministracionnotapedidoComponent,
     DialogFacturasComponent,
-    RubrosComponent
+    RubrosComponent,
+    PruebasComponent,
   ],
   imports: [
     CommonModule,

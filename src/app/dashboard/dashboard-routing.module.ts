@@ -35,6 +35,7 @@ import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
+import { PruebasComponent } from './components/pruebas/pruebas.component';
 const routes: Routes = [
   {
     path: '',
@@ -187,6 +188,10 @@ const routes: Routes = [
   {
     path: 'rubros',
     component: RubrosComponent,
+  },
+  {
+    path: 'pruebas',
+    component: PruebasComponent,
   },
 ];
 

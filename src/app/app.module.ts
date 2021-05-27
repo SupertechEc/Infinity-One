@@ -25,12 +25,13 @@ import { MainComponent } from './layout/components/main/main.component';
 import { DataTablesModule } from 'angular-datatables';
 import { DatePipe } from '@angular/common';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     DefaultComponent,
     DashboardComponent,
-    MainComponent
+    MainComponent,
   ],
   imports: [
     BrowserModule,

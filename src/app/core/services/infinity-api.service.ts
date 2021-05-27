@@ -54,4 +54,8 @@ export class InfinityApiService {
     return this.http.get(`${this.url}/webresources/consultarfacturaunica`, { headers, params });
   //  return this.http.get(this.direcc, { headers: headers, params: params });
   }
+
+  public consultasPrueba(): Observable<any>{
+    return this.http.get<any>('https://www.supertech.ec:8443/WebApplication2/api/holaMundo');
+  }
 }
