@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { map, tap } from 'rxjs/operators';
+import { catchError, delayWhen, map, retry, retryWhen, shareReplay, tap } from 'rxjs/operators';
 import { InfinityTokenService } from './infinity-token.service';
 
 @Injectable({
@@ -75,17 +75,50 @@ export class InfinityApiService {
       );
   }
 
-  public getTokenInfinity(): Observable<any> {
+  public getTokenInfinity(): void {
     console.log('tokenInfinity');
     this.urlToken = environment.urlToken;
-    return this.http.get(`${this.urlToken}/resources/usuario/login?user=paul&password=paul123`)
+    this.url = environment.urlGarantia;
+
+    const urlext = `${this.urlToken}/resources/usuario/login?user=paul&password=paul123`;
+    // const urlext = `https://www.supertech.ec:8443/infinity_one/resources/usuario/login?user=paul&password=paul123`;
+
+    console.log(urlext);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Authorization: '',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': 'true'
+    });
+
+    // return this.http.get(urlext)
+    //   .pipe(
+    //     tap((data: any) => {
+    //       const token = data;
+    //       console.log(token);
+    //       this.its.saveToken(token);
+    //     })
+    //   );
+
+    // this.http.get(`${this.url}/resources/usuario/login?user=paul&password=paul123`, { headers }).subscribe(
+    //   data => console.log('success', data),
+    //   error => console.log('oops', error)
+    // );
+
+    this.http.get(urlext, { headers })
       .pipe(
-        tap((data: any) => {
-          const token = data;
-          console.log(token);
-          this.its.saveToken(token);
-        })
+        tap(() => console.log('HTTP request executed')),
+        map(res => console.log(res)),
+        shareReplay(),
+        retry(3)
+      ).subscribe(
+        res => console.log('HTTP response', res),
+        err => console.log('HTTP Error', err),
+        () => console.log('HTTP request completed.')
       );
+
+
   }
 
   public getTableInfinity(nombre: string): Observable<any> {

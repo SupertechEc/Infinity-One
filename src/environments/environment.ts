@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   urlGarantia: '/ConsumidorWS_SOAP',
-  urlToken: '/infinityone-rest-1-1.0-SNAPSHOT',
+  urlToken: '/infinity_one',
   firebase: {
     apiKey: 'AIzaSyANKklM4lBcbY37zku61cC9PSgVpHLRSrw',
     authDomain: 'dispach-ec.firebaseapp.com',
