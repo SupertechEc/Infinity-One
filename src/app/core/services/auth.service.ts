@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { InfinityApiService } from './infinity-api.service';
+import { LocalstorageService } from './localstorage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,7 @@ export class AuthService {
     private http: HttpClient,
     private af: AngularFireAuth,
     private api: InfinityApiService,
+    private ls: LocalstorageService
   ) {
     this.readToken();
   }
@@ -95,6 +97,7 @@ export class AuthService {
     if (expiraDate > new Date()) {
       return true;
     } else {
+      this.ls.clear();
       return false;
     }
   }

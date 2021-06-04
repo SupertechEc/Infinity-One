@@ -34,6 +34,7 @@ import { PrecioComponent } from './components/precio/precio.component';
 import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
+import { TestComponent } from './components/test/test.component';
 
 const routes: Routes = [
   {
@@ -183,6 +184,10 @@ const routes: Routes = [
   {
     path: 'anp',
     component: AdministracionnotapedidoComponent,
+  },
+  {
+    path: 'test',
+    component: TestComponent,
   },
 ];
 

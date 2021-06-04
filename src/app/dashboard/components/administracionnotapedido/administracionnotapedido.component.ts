@@ -534,6 +534,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             precioProducto: 0,
             subTotal: 0,
             usuarioActual: this.user.email,
+            usuario: 'dgm'
           };
 
           const notaPedido = {
@@ -583,16 +584,19 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
               console.log('Opción 1');
               factura.fechaCreacion = new Date();
               this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              return;
             } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
               au++;
               console.log('Opción 2');
               factura.fechaCreacion = new Date();
               this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              return;
             } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
               au++;
               console.log('Opción 3');
               factura.fechaCreacion = new Date();
               this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              return;
             }
 
           });
@@ -613,10 +617,10 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
 
   actionFactura(factura: any, e: any, notaPedido: any, num: any, numChange: any, facturaDetalle: any, d: any): void {
     factura.fechaCreacion = new Date();
-    this.cf.agregarItem(factura, 'factura').then(c => {
+    this.cf.agregarItem(factura, 'facturas').then(c => {
       this.cf.editItem('notadepedido', e.notaPedidoId, notaPedido);
       this.cf.editItem('numero', num.id, numChange);
-      this.cf.agregarSubItem('factura', c.id, 'detalleFactura', facturaDetalle).then(sc => {
+      this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facturaDetalle).then(sc => {
         console.log('Item registrado con exito');
         this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
           positionClass: 'toast-bottom-right'
@@ -648,6 +652,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             seImprime: '',
             valorDefecto: 0,
             fechaCreacion: new Date(),
+            usuario: 'dgm'
           };
           // console.log(facDet);
           // console.log(key);
@@ -662,7 +667,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             h++;
             console.log(h);
             if (key < r.length) {
-              this.cf.agregarSubItem('factura', c.id, 'detalleFactura', facDet).then(sc => {
+              this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facDet).then(sc => {
                 // console.log('Item registrado con exito');
                 // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
                 //   positionClass: 'toast-bottom-right'
@@ -672,7 +677,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           });
 
         });
-
+        return;
       });
 
     });

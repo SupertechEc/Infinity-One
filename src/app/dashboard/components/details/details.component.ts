@@ -67,10 +67,6 @@ export class DetailsComponent implements AfterViewInit {
       this.nameCol = this.nameCol.replace(' ', '');
       this.nameCol = this.nameCol.toLocaleLowerCase();
 
-      this.ias.getTableInfinity('areamercadeo').subscribe(d => {
-        console.log(d);
-      });
-
       console.log(this.nameCol);
       if (this.nameCol === 'notadepedido') {
         this.getComercializadora();
@@ -160,19 +156,33 @@ export class DetailsComponent implements AfterViewInit {
   }
 
   getItems(col: any, columna: string): void {
-    this.cf.getItems(col, columna).subscribe(data => {
-      this.items = [];
-      data.forEach((element: any) => {
-        this.items.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
+    if (col === 'áreamercadeo') {
+      this.ias.getTableInfinity('areamercadeo').subscribe(
+        d => {
+          console.log(d.retorno);
+          this.showitems(d.retorno);
+        },
+        err => console.log('HTTP Error', err),
+      );
+    } else {
+      this.cf.getItems(col, columna).subscribe(data => {
+        this.items = [];
+        data.forEach((element: any) => {
+          this.items.push({
+            id: element.payload.doc.id,
+            ...element.payload.doc.data()
+          });
         });
+        console.log(this.items);
+        this.showitems(this.items);
       });
-      console.log(this.items);
-      this.dataSource = new MatTableDataSource(this.items);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    }
+  }
+
+  showitems(items: any): void {
+    this.dataSource = new MatTableDataSource(items);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   newItem(): void {
