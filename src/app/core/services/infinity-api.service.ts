@@ -115,30 +115,30 @@ export class InfinityApiService {
   public getItemInfinity(nombre: string, item: any): Observable<any> {
     console.log(this.tokenInfinity);
     this.tokenInfinity = localStorage.getItem('tokenInfinity');
-    // console.log(this.tokenInfinity);
-    // let headers = new HttpHeaders();
-    // headers = headers.set('Content-Type', 'application/json');
-    // headers = headers.set('Authorization', this.tokenInfinity);
-    // headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
+    console.log(this.tokenInfinity);
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', this.tokenInfinity);
+    headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
 
-    // const raw = JSON.stringify(item);
+    const raw = JSON.stringify(item);
 
-    // const requestOptions = {
-    //   headers,
-    //   body: JSON.stringify(item)
-    // };
-
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: this.tokenInfinity,
-        'Access-Control-Allow-Headers': 'Authorization'
-      }),
-      body: item,
+    const requestOptions = {
+      headers,
+      body: JSON.stringify(item)
     };
 
+    // const options = {
+    //   headers: new HttpHeaders({
+    //     'Content-Type': 'application/json',
+    //     Authorization: this.tokenInfinity,
+    //     'Access-Control-Allow-Headers': 'Authorization'
+    //   }),
+    //   body: item,
+    // };
+
     return this.http.get<any>(
-      `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/porId`, options
+      `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/porId`, requestOptions
     ).pipe(
       tap((data: any) => {
         console.log(data);
