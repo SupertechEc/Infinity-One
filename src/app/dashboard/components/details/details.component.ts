@@ -324,6 +324,5 @@ export class DetailsComponent implements AfterViewInit {
       this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.id } });
     }
   }
-
 }
 
