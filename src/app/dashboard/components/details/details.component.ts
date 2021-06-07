@@ -156,8 +156,10 @@ export class DetailsComponent implements AfterViewInit {
   }
 
   getItems(col: any, columna: string): void {
-    if (col === 'áreamercadeo') {
-      this.ias.getTableInfinity('areamercadeo').subscribe(
+    const table = this.es.quitarAcentos(col);
+    console.log(table);
+    if (table === 'areamercadeo') {
+      this.ias.getTableInfinity(table).subscribe(
         d => {
           console.log(d.retorno);
           this.showitems(d.retorno);
@@ -259,6 +261,7 @@ export class DetailsComponent implements AfterViewInit {
   }
 
   editItem(item: any): void {
+    console.log(item);
     if (this.nameCol === 'clienteproducto') {
       this.cliente.clienteId = item.id;
       this.cliente.clienteCodigo = item.codigo;
@@ -314,7 +317,11 @@ export class DetailsComponent implements AfterViewInit {
         }
       });
     } else {
-      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.id } });
+      if (this.nameCol === 'áreamercadeo') {
+        this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.codigo } });
+      } else {
+        this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.id } });
+      }
     }
   }
 

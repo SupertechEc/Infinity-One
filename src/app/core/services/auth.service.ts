@@ -73,6 +73,8 @@ export class AuthService {
     const hoy = new Date();
     hoy.setSeconds(3600);
     localStorage.setItem('expira', hoy.getTime().toString());
+    localStorage.removeItem('tokenInfinity');
+    console.log(localStorage.getItem('tokenInfinity'));
     this.api.getTokenInfinity();
   }
 
