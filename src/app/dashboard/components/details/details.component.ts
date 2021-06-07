@@ -39,6 +39,7 @@ export class DetailsComponent implements AfterViewInit {
   nameCol = '';
   flag = true;
   ndp = false;
+  cli = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -72,18 +73,22 @@ export class DetailsComponent implements AfterViewInit {
       if (this.nameCol === 'clienteproducto') {
         this.getItems('cliente', 'nombre');
         this.flag = false;
+        this.cli = false;
         this.displayedColumns = ['codigo', 'name', 'editar'];
       } else if (this.nameCol === 'comercializadoraproducto') {
         this.getItems('comercializadora', 'nombre');
         this.flag = false;
+        this.cli = false;
         this.displayedColumns = ['codigo', 'name', 'editar'];
       } else if (this.nameCol === 'notadepedido') {
         this.ndp = true;
         this.getItems('notadepedido', 'fechaVenta');
         this.flag = true;
+        this.cli = false;
         this.displayedColumns = ['codigo', 'fecha', 'editar'];
       } else if (this.nameCol === 'rubros'){
         this.flag = true;
+        this.cli = true;
         this.displayedColumns = ['codigo', 'name', 'editar', 'borrar', 'cliente'];
       } else {
         this.getItems(this.nameCol, 'nombre');

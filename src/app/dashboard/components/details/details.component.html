@@ -24,7 +24,7 @@
                 <input matInput (keyup)="applyFilter($event)" placeholder="Ej: MENÚS" #input>
             </mat-form-field>
             <button class="btn2" mat-raised-button (click)="newItem()" *ngIf="flag">Agregar</button>
-            <button class="btn2" mat-raised-button (click)="verCliente()" *ngIf="flag">Cliente</button>
+            <button class="btn2" mat-raised-button (click)="verCliente()" *ngIf="cli">Cliente</button>
         </div>
         <div class="mat-elevation-z8">
             <table mat-table [dataSource]="dataSource" matSort>
