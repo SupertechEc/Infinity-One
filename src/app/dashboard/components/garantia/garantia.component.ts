@@ -103,7 +103,7 @@ export class GarantiaComponent implements OnInit {
       let valorNoPagado = 0.0;
       let valorPagado = 0.0;
       let valorAnulado = 0.0;
-      if(data.length!==0){
+      if (data.length !== 0){
         data.forEach((element: any) => {
             if (element.estadoPago === 'SIN PAGO') {
               sumaNoPago += 1;

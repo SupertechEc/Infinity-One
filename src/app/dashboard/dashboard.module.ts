@@ -45,6 +45,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { DialogFacturasComponent } from './components/dialog-facturas/dialog-facturas.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
 import { PruebasComponent } from './components/pruebas/pruebas.component';
+import { ClienteRubrosComponent } from './components/cliente-rubros/cliente-rubros.component';
+import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-cliente.component';
 
 
 @NgModule({
@@ -88,6 +90,8 @@ import { PruebasComponent } from './components/pruebas/pruebas.component';
     DialogFacturasComponent,
     RubrosComponent,
     PruebasComponent,
+    ClienteRubrosComponent,
+    CuotasClienteComponent,
   ],
   imports: [
     CommonModule,

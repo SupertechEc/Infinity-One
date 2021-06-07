@@ -82,6 +82,9 @@ export class DetailsComponent implements AfterViewInit {
         this.getItems('notadepedido', 'fechaVenta');
         this.flag = true;
         this.displayedColumns = ['codigo', 'fecha', 'editar'];
+      } else if (this.nameCol === 'rubros'){
+        this.flag = true;
+        this.displayedColumns = ['codigo', 'name', 'editar', 'borrar', 'cliente'];
       } else {
         this.getItems(this.nameCol, 'nombre');
         this.displayedColumns = ['codigo', 'name', 'editar', 'borrar'];
@@ -218,6 +221,20 @@ export class DetailsComponent implements AfterViewInit {
     }
   }
 
+  verCliente(): void{
+    this.nameCol = 'clienteRubros';
+    Swal.fire({
+      icon: 'info',
+      showConfirmButton: false,
+      text: 'Espere por favor...',
+    });
+    Swal.showLoading();
+    console.log(this.nameCol);
+    Swal.close();
+    this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new' } });
+
+  }
+
   delItem(item: any, id: string): void {
 
     console.log(item);
@@ -243,6 +260,7 @@ export class DetailsComponent implements AfterViewInit {
   }
 
   editItem(item: any): void {
+    debugger;
     if (this.nameCol === 'clienteproducto') {
       this.cliente.clienteId = item.id;
       this.cliente.clienteCodigo = item.codigo;

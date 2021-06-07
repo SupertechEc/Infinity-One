@@ -65,6 +65,7 @@ main {
     height: 60px;
     margin-bottom: 1.8rem;
     border-radius: .5rem;
+    margin-top: 0.25rem;
     background-color: white;
 }
 

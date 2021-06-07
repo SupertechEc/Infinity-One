@@ -1,0 +1,227 @@
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+}
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px 0 10px 0;
+}
+.componentesD {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    width: 70%;
+    position: relative;
+
+}
+.detalle-valoresD {
+    margin: 20px;
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: rgb(226, 226, 226);
+}
+
+.etiquetaD {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    height: 50px;
+    padding: 12px 0 0 10px;
+}
+
+.form__div{
+    position: relative;
+    height: 60px;
+    margin-bottom: 1.5rem;
+    border-radius: .5rem;
+    font-size: 1rem;    
+    padding: 12px 10px 10px 20px;
+}
+
+.select-check {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+
+.select-check .campo {
+    width: 20%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+.mat-form-field {
+    width: 49%;
+}
+
+.seccion-uno {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+    margin-bottom: 1rem;
+    padding: 12px 10px 10px 20px;
+}
+.form-div-input {
+    position: relative;
+    height: 60px;
+    margin-bottom: 1.8rem;
+    border-radius: .5rem;
+    background-color: white;
+}
+
+.form-div-radio {
+    position: relative;
+    height: 60px;
+    margin-bottom: 1.8rem;
+    border-radius: .5rem;
+}
+
+.form__input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: 1px solid  #DADCE0;
+    border-radius: .5rem;
+    outline: none;
+    padding: 1rem;
+    background: none;
+    z-index: 1;
+}
+
+.form__label{
+    position: absolute;
+    left: 0.08rem;
+    top: 0.8rem;
+    padding: 0 .75rem;
+    background-color: #fff;
+    color: #80868B;
+    font-size: 1rem;
+    transition: .3s;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/*Input focus move up label*/
+.form__input:focus + .form__label{
+    top: -.9rem;
+    left: .8rem;
+    color: #1A73E8;
+    font-size: .9rem;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/*Input focus sticky top label*/
+.form__input:not(:placeholder-shown).form__input:not(:focus)+ .form__label{
+    top: -.5rem;
+    left: .8rem;
+    font-size: .75rem;
+    font-weight: 500;
+    z-index: 10;
+}
+
+
+/*Input focus*/
+.form__input:focus{
+    border: 1.5px solid  #1A73E8;
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 12px 10px 10px 20px;
+}
+
+.btn-save {
+    color: white;
+    background: linear-gradient(#00C1D2, #004AC2);
+    margin: 0 0 0 20px;
+}
+
+
+button {
+    width: 100%;
+}
+
+.mat-raised-button {
+    width: 150px;
+    background: linear-gradient(#dddddd, #80868B);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+@media screen and (max-width: 1024px) {
+    .componentesD {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+
+    .componentesD {
+        width: 100%;
+    }
+    .form__div{
+        width: 100%;
+    }
+    .seccion-uno {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    
+    .btn-container {
+        justify-content: space-between;
+    }
+    .btn-save {
+        color: white;
+        background: linear-gradient(#00C1D2, #004AC2);
+        margin: 0;
+    }
+    .title {
+        font-size: 20px;
+    }
+    
+}
+
+@media screen and (max-width: 340px) {
+    .mat-raised-button {
+        width: 130px;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .mat-raised-button {
+        width: 130px;
+    }
+}
+table {
+    width: 90%;
+    margin: auto;
+}
+.btn-edit {
+    text-align: right;
+}

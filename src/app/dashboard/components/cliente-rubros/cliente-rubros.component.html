@@ -1,0 +1,108 @@
+<main>
+    <div class="componentesD">
+        <div class="title">RUBROS CLIENTE</div>
+        <div class="detalle-valoresD">
+            <div class="etiquetaD fondo">
+                <div class="subetiquetaF">Comercializadora</div>
+                <div class="consulta-doc">Descripción</div>
+                <div class="fecha-consulta">Tipo</div>
+            </div>
+        </div> 
+        <form autocomplete="off" [formGroup]="f">
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Clientes:</mat-label>
+                            <mat-select formControlName="imprime" required>
+                            <mat-option>Opciones</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="seccion-uno">
+                <div class="form-div-input">
+                    <div class="campoR">
+                        <input type="text" class="form__input form-control" placeholder=" " formControlName="valor"
+                        [class.is-invalid]="valorNotValid"  (change) = "mostrarModalidadCobroV()">
+                        <label for="" class="form__label">Valor Total:</label>
+                    </div>
+                    <div *ngIf="valorNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+                </div>
+                
+                <div class="form-div-input">
+                    <div class="campoR">
+                        <input type="text" class="form__input form-control" placeholder=" " formControlName="cuota"
+                        [class.is-invalid]="cuotaNotValid" (change) = "mostrarModalidadCobroV()">
+                        <label for="" class="form__label">Cuota:</label>
+                    </div>
+                    <div *ngIf="cuotaNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+                </div>
+                <div class="form-div-radio" *ngIf="modalidad">
+                    <div class="campoR">
+                        <p>Modalidad De Cobro</p>
+                        <br>
+                        <mat-radio-group aria-label="Select an option">
+                            <mat-radio-button value="1" (change)="autorizar($event)"> Factura </mat-radio-button>
+                            <mat-radio-button value="2" (change)="autorizar($event)"> Libre</mat-radio-button>
+                            <mat-radio-button value="3" (change)="autorizar($event)"> Mensual</mat-radio-button>
+                        </mat-radio-group>
+                    </div>
+                </div>
+                <div class="form-div-radio" *ngIf="flag">
+                    <div class="campoR">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Fecha de Emisión:</mat-label>
+                            <input matInput [matDatepicker]="picker">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <article>
+            <br>
+            <table mat-table [dataSource]="dataSource" *ngIf="radio">
+                <ng-container [matColumnDef]="col" *ngFor="let col of displayedColumns">
+                    <th mat-header-cell *matHeaderCellDef>
+                        <span *ngIf="col !== 'edit'">
+                            {{col}}
+                        </span>
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <div *ngIf="!element.isEdit">
+                            <div class="btn-edit" *ngIf="col === 'edit'; spanHeader" >
+                                <button (click)="element.isEdit = !element.isEdit">Edit</button>
+                            </div>
+                            <span #spanHeader>
+                                {{element[col]}}
+                            </span>
+                        </div>
+                        <div [ngSwitch]="dataSchema[col]" *ngIf="element.isEdit">
+                            <div class="btn-edit" *ngSwitchCase="'edit'">
+                                <button (click)="element.isEdit = !element.isEdit">Done</button>
+                            </div>
+                            <mat-form-field *ngSwitchCase="'date'" appearance="fill">
+                                <mat-label>Elegir Fecha</mat-label>
+                                <input matInput [matDatepicker]="picker" [(ngModel)]="element[col]">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field *ngSwitchDefault>
+                                <mat-label>{{col}}</mat-label>
+                                <input [type]="dataSchema[col]" matInput [(ngModel)]="element[col]">
+                            </mat-form-field>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </article>
+        <div class="btn-container">
+            <button mat-raised-button type="button">Regresar</button>
+            <button mat-raised-button class="btn-save" type="submit">Agregar</button>
+            <button mat-raised-button class="btn-save" type="submit" (click)="verCuotasCliente()">Cliente</button>
+        </div>
+    </div>
+</main>

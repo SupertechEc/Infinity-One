@@ -11,6 +11,7 @@ import { map } from 'rxjs/operators';
 export class InfinityApiService {
 
   url = '';
+  direccion = '';
   constructor(
     private http: HttpClient
   ) { }
@@ -55,7 +56,22 @@ export class InfinityApiService {
   //  return this.http.get(this.direcc, { headers: headers, params: params });
   }
 
-  public consultasPrueba(): Observable<any>{
-    return this.http.get<any>('https://www.supertech.ec:8443/WebApplication2/api/holaMundo');
+  public consultasPrueba(): Promise<string>{
+    const response = this.http.get('https://www.supertech.ec:8443/WebApplication2/api/holaMundo', { responseType: 'text'}).toPromise();
+    return response;
+  }
+  public consultasPrueba2(): Promise<string>{
+    this.direccion = 'https://www.supertech.ec:8443/infinityone/resources/prueba';
+    const prueba = this.http.get(`${this.direccion}`, { responseType: 'text'}).toPromise();
+    return prueba;
+  }
+
+  getDataPrueba(): Observable<any> {
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', 'Infinity eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXVsIiwiaXNzIjoiZWMuY29tLmluZmluaXR5b25lIiwiaWF0IjoxNjIyNjU2NzU3LCJleHAiOjE2MjI2NjAzNTd9.MSNl4EhUwhAg0O8cGktqTIlKvCZPTxDRwkqzwi2o7YFcxMNmptSJMz4RJZd8sxJ6WzOhb8b-kiwGgzPwSxjraQ');
+    headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
+    return this.http.get('https://www.supertech.ec:8443/infinityone1/resources/ec.com.infinity.modelo.areamercadeo', { headers});
+    //return this.http.get('http://localhost:8082/infinityone1/resources/ec.com.infinity.modelo.areamercadeo', { headers});
   }
 }

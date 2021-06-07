@@ -168,7 +168,7 @@ export class RubrosComponent implements OnInit {
 
   close(): void {
     console.log('Salir de Tipo Cliente');
-    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
+    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'RUBROS' } });
   }
 
   save(): void {
