@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
@@ -10,56 +10,134 @@ import { Subject } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { InfinityApiService } from '../../../core/services/infinity-api.service';
+class FacturasServicio {
+  numSRI: any;
+  numFactura: any;
+  fechaEmi: any;
+  fechaVmto: any;
+  fechaGuia: any;
+  estadoFac: any;
+  estadoPago: any;
+  ValorAnuladas: any;
+  valorEmitidasConPago: any;
+  valorEmitidasSinPago: any;
+}
 
 @Component({
   selector: 'app-dialog-facturas',
   templateUrl: './dialog-facturas.component.html',
   styleUrls: ['./dialog-facturas.component.css']
 })
-export class DialogFacturasComponent implements OnDestroy, AfterViewInit, OnInit {
+export class DialogFacturasComponent implements OnDestroy, OnInit {
   facturas = new FormGroup({});
+  // dtOptions: DataTables.Settings = {};
+  // dtTrigger= new Subject();
 
-  displayedColumns: string[] = ['numFactura', 'fechaEmi', 'fechaVmto', 'fechaGuia', 'estadoFac', 'estadoPago', 'valorEmitidasSinPago'];
-  dataSource!: MatTableDataSource<any>;
+  displayedColumns: string[] = ['numFactura', 'fechaEmi', 'fechaVmto', 'fechaGuia', 'estadoFac', 'estadoPago', 'ValorAnuladas'];
+  // dataSource!: MatTableDataSource<any>;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  fechaEmision: any;
-  tipo: any;
-  facturasServicio: any;
+  fechaEmision = '20210512';
+  tipo = 'SIN PAGO';
 
   f: FormGroup = this.fb.group({});
+
+  /*fechaEmision :string="";
+  tipo: string="";
+  numFactura = '';
+  fechaVencimiento = '';
+  fechaDespacho = '';
+  estadoFactura ='';
+  estadoPago = '';
+  valorAnuladas = '';
+  valorEmitidasConPago = '';
+  valorEmitidasSinPago = '';
+  facts: any[] = [];*/
+
+  public facturasServicio = new MatTableDataSource<FacturasServicio>();
+
 
   constructor(
     private fb: FormBuilder,
     private api: InfinityApiService,
     private dialogRef: MatDialogRef<DialogFacturasComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any,
+    @Inject(MAT_DIALOG_DATA) data: any
   ) {
-    this.dataSource = new MatTableDataSource(data);
-    console.log(data);
-    this.facturasServicio = data,
-    this.fechaEmision= data.dateFactura,
-    this.tipo= data.item;
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    // this.fechaEmision = data.fechaEmision,
+    this.tipo = data.tipo;
   }
 
   ngOnInit(): void {
-  }
+    /*this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 5,
+      language:{
+        url: '//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json'
+      }
+    };*/
+    // debugger
+    // this.getDatosFactura();
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+    this.ConsultaCorreoElectronicoTodos(this.fechaEmision, this.tipo);
+    // console.log('facturas',this.facturasServicio.data);
+    // onsole.log("facturasDatos"+ this.fechaEmision);
+    console.log('facturas', this.tipo);
   }
 
   ngOnDestroy(): void {
+    // this.dtTrigger.unsubscribe();
+  }
+
+  /*getDatosFactura(){
+    debugger
+    this.api.getDataF().subscribe(data => {
+      console.log(data);
+      data.forEach((element: any) => {
+        if(element.estadoFac==='ANULADA'){
+         //this.numeroFactura = element.numFactura;
+          this.fechaEmision = element.fechaEmi;
+          this.fechaVencimiento = element.fechaVmto;
+          this.fechaDespacho = element.fechaGuia;
+          this.estadoFactura = element.estadoFac;
+          this.estadoPago = element.estadoPago;
+          this.valorAnuladas = element.valorAnuladas;
+        }else if(element.estadoFac==='ACTIVA'){
+          if(element.estadoPago==='CANCELADA'){
+          // this.numeroFactura = element.numFactura;
+            this.fechaEmision = element.fechaEmi;
+            this.fechaVencimiento = element.fechaVmto;
+            this.fechaDespacho = element.fechaGuia;
+            this.estadoFactura = element.estadoFac;
+            this.estadoPago = element.estadoPago;
+            this.valorEmitidasConPago = element.valorEmitidasConPago;
+          }else if(element.estadoPago==='SIN PAGO'){
+            //this.numeroFactura = element.numFactura;
+            this.fechaEmision = element.fechaEmi;
+            this.fechaVencimiento = element.fechaVmto;
+            this.fechaDespacho = element.fechaGuia;
+            this.estadoFactura = element.estadoFac;
+            this.estadoPago = element.estadoPago;
+            this.valorEmitidasSinPago = element.valorEmitidasSinPago;
+          }
+        }
+        this.dataSource = element;
+      });
+    });
+  }*/
+
+  public ConsultaCorreoElectronicoTodos(fecha: any, tipo: any): void {
+    console.log('hola');
+    this.api.faturasPorTipo(fecha, tipo)
+      .subscribe(res => {
+        if (res != null) {
+          this.facturasServicio.data = res;
+          console.log('serivico', this.facturasServicio.data);
+        }
+        else {
+          this.facturasServicio.data = [];
+        }
+      })
   }
 
   close(): void {

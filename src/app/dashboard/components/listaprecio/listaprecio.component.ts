@@ -8,6 +8,7 @@ import { ConectionFirebaseService } from '../../../core/services/conection-fireb
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-listaprecio',
@@ -17,10 +18,12 @@ import Swal from 'sweetalert2';
 export class ListaprecioComponent implements OnInit {
 
   f = new FormGroup({});
+  g = new FormGroup({});
   // tipo: any[] = [];
   loading = false;
   registro = false;
   id = '';
+  cod = '';
   btnName = '';
   codCliente: any[] = [];
   activo = false;
@@ -31,6 +34,8 @@ export class ListaprecioComponent implements OnInit {
   labelPosition = 'after';
   comercializadora: any[] = [];
   datoscom: any;
+  user = this.local.get('user');
+  params: any;
   tipo = [
     { codigo: 'MPO', nombre: 'MARGEN SOBRE EL PERCIO EN TERMINAL' },
     { codigo: 'MCO', nombre: 'MARGEN SOBRE EL MARGEN DE COMERCIALIZACIÓN' }
@@ -43,11 +48,14 @@ export class ListaprecioComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {
       this.id = params.id;
+      this.params = params;
+      //this.cod = params.cod;
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -84,34 +92,38 @@ export class ListaprecioComponent implements OnInit {
 
   getDataItem(): void {
     if (this.id !== 'new') {
-      this.cf.getItemData('listaprecio', this.id).subscribe(data => {
-        // this.getComOrigen(data.payload.data().comercializadoraId);
-        console.log(data.payload.data());
-        this.f.patchValue({
-          nombre: data.payload.data().nombre,
-          codigo: data.payload.data().codigo,
-          estatus: data.payload.data().estatus,
-          comercializadoraId: data.payload.data().comercializadoraId,
-          comercializadoraNombre: data.payload.data().comercializadoraNombre,
-          tipo: data.payload.data().tipo,
-        });
-        this.setChange(data.payload.data().estatus);
-        // this.loading = false;
-      });
+      console.log(this.id);
+      console.log(this.params);
+
+      const parametros = {
+        codigocomercializadora: this.params.codigocomercializadora,
+        codigo: this.params.codigo
+      } 
+
+      this.ia.getItemInfinity('listaprecio', parametros) .subscribe(
+        d => {
+          console.log(d.retorno);
+          this.f.setValue({
+            nombre: d.retorno[0].nombre, 
+            codigo: d.retorno[0].listaprecioPK.codigo,
+            activo: d.retorno[0].activo,
+            codigocomercializadora: d.retorno[0].listaprecioPK.codigocomercializadora,
+            tipo: d.retorno[0].tipo,
+          });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 
   getComercializadora(): void {
-    this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
-      this.comercializadora = [];
-      data.forEach((element: any) => {
-        this.comercializadora.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.comercializadora);
-    });
+    this.ia.getTableInfinity('comercializadora').subscribe(
+      d => {
+        console.log(d.retorno);
+        this.comercializadora = d.retorno;
+      },
+      err => console.log('HTTP Error', err),
+    );
   }
 
   get nombreNotValid(): any {
@@ -123,7 +135,7 @@ export class ListaprecioComponent implements OnInit {
   }
 
   get estatusNotValid(): any {
-    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
+    return this.f.get('activo')?.invalid && this.f.get('activo')?.touched;
   }
 
   get fechaNotValid(): any {
@@ -131,7 +143,7 @@ export class ListaprecioComponent implements OnInit {
   }
 
   get comercializadoraIdNotValid(): any {
-    return this.f.get('comercializadoraId')?.invalid && this.f.get('comercializadoraId')?.touched;
+    return this.f.get('codigocomercializadora')?.invalid && this.f.get('codigocomercializadora')?.touched;
   }
 
   // get porcentajeNotValid(): any {
@@ -146,6 +158,7 @@ export class ListaprecioComponent implements OnInit {
     return this.f.get('tipo')?.invalid && this.f.get('tipo')?.touched;
   }
 
+
   makeForm(): void {
     this.f = this.fb.group({
       nombre: ['', [
@@ -156,13 +169,13 @@ export class ListaprecioComponent implements OnInit {
         Validators.required,
         Validators.minLength(4)
       ]],
-      estatus: [false, [Validators.required]],
-      comercializadoraId: ['', [Validators.required]],
-      comercializadoraNombre: [''],
+      activo: [false, [Validators.required]],
+      codigocomercializadora: ['', [Validators.required]],
       tipo: ['', [Validators.required]],
     });
-
   }
+
+
 
   // getComOrigen(id: string): void {
   //   console.log(id);
@@ -183,13 +196,21 @@ export class ListaprecioComponent implements OnInit {
   }
 
   save(): void {
-
+    debugger;
     if (this.f.valid) {
       const value = this.f.value;
-      if (this.datoscom) {
-        value.comercializadoraNombre = this.datoscom.nombre;
-      }
+      value.usuarioactual = this.user.email;
       this.registro = true;
+      const listaprecio = {
+        listaprecioPK: {
+          codigocomercializadora: value.codigocomercializadora,
+          codigo: value.codigo
+        },
+        nombre: value.nombre,
+        activo: value.activo,
+        tipo: value.tipo,
+        usuarioactual: value.usuarioactual
+      }
 
       Swal.fire({
         icon: 'question',
@@ -202,75 +223,95 @@ export class ListaprecioComponent implements OnInit {
         if (resp.value) {
           console.log('Guardar');
           if (this.id !== 'new') {
-            value.fechaActualizacion = new Date();
-            console.log(value);
-            this.cf.editItem('listaprecio', this.id, value).then(() => {
-              console.log('Item editado con exito');
-              this.toastr.success('Item editado con exito', 'Item Editado', {
-                positionClass: 'toast-bottom-right'
-              });
-              this.registro = false;
-              this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
-            }).catch(error => {
-              this.loading = false;
-              console.log(error);
-            });
+            this.editItems(listaprecio, this.id, 'listaprecio', 'postgres');
           } else {
-            value.fechaCreacion = new Date();
-            this.cf.agregarItem(value, 'listaprecio').then(() => {
-              console.log('Item registrado con exito');
-              this.toastr.success('Item registrado con exito', 'Item Registrado', {
-                positionClass: 'toast-bottom-right'
-              });
-              this.registro = false;
-              this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
-            }).catch(error => {
-              this.loading = false;
-              console.log(error);
-            });
+            this.addItems('listaprecio', listaprecio, 'postgres');
           }
         } else {
           console.log('Configurar');
-          value.fechaCreacion = new Date();
           console.log(value);
           if (this.id !== 'new') {
-            this.cf.editItem('listaprecio', this.id, value).then(() => {
-              console.log('Item editado con exito');
-              this.toastr.success('Item editado con exito', 'Item Editado', {
-                positionClass: 'toast-bottom-right'
-              });
-              this.registro = false;
-            }).catch(error => {
-              this.loading = false;
-              console.log(error);
-            });
+            this.editItems(listaprecio, this.id, 'listaprecio', 'postgres');
           } else {
-            this.cf.agregarItem(value, 'listaprecio').then(r => {
-              console.log('Item registrado con exito');
-              this.toastr.success('Item registrado con exito', 'Item Registrado', {
-                positionClass: 'toast-bottom-right'
-              });
-              this.registro = false;
-            }).catch(error => {
-              this.loading = false;
-              console.log(error);
-            });
+            this.addItems('listaprecio', listaprecio, 'postgres');
           }
           this.router.navigate(['/dashboard/listaprecioterminalproducto'], {
             queryParams: {
               listaprecioId: this.id,
               listaprecioCodigo: value.codigo,
               listaprecioNombre: value.nombre,
-              comercializadoraId: value.comercializadoraId,
+              codigocomercializadora: value.codigocomercializadora,
               comercializadoraNombre: value.comercializadoraNombre,
               tipo: value.tipo,
-              estatus: value.estatus
+              activo: value.activo
             }
           });
         }
       });
 
       console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf.agregarItem(items, table).then(() => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 2).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
+    }
+  }
+
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf.editItem(table, codigo, items).then(() => {
+        console.log('Item editado con exito');
+        this.toastr.success('Item editado con exito', 'Item Editado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'LISTA PRECIO' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 

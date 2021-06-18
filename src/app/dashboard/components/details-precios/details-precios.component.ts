@@ -166,7 +166,7 @@ export class DetailsPreciosComponent implements AfterViewInit {
     //   });
     //   Swal.showLoading();
 
-    //   if (this.nameCol === 'notadepedido') {
+    //   if (this.nameCol === 'notapedido') {
     //     this.es.getNotaPedido(this.nameCol).then((data: any) => {
     //       const user = this.local.get('user');
     //       console.log(data);
@@ -177,7 +177,7 @@ export class DetailsPreciosComponent implements AfterViewInit {
     //         numeropedido: arr.numero
     //       };
     //       console.log(ar1);
-    //       this.cf.agregarItemNP(ar1, 'notadepedido').
+    //       this.cf.agregarItemNP(ar1, 'notapedido').
     //         then(r => {
     //           console.log(colId);
     //           console.log(r.id);

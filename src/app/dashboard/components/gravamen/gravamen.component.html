@@ -25,34 +25,47 @@
             </div>
             <div *ngIf="nombreNotValid" class="text-danger notification">Campo invalido.</div>
 
-            <div class="select-check">
-                <div class="campo">
-                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
-                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
-                        Estado: </mat-checkbox>
-                </div>
-                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
-                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
-            </div>
-            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
-
             <div class="seccion-uno">
-                <div class="form__div">
+                <div class="select-check">
                     <div class="campo">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Comercializadora:</mat-label>
-                            <mat-select formControlName="comercializadoraId" required>
-                                <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let com of comercializadora" [value]="com.codigo">
-                                    {{com.codigo}} - {{com.nombre}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                        <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                            [(indeterminate)]="indeterminate" (change)="setChange($event.checked)"
+                            labelPosition="before">
+                            Estado: </mat-checkbox>
                     </div>
-                    <div *ngIf="comercializadoraIdNotValid" class="text-danger notification-select">
-                        Campo no seleccionado.
-                    </div>
+                    <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                    <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
                 </div>
+                <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+                <div class="campo-check">
+                    <mat-checkbox class="mat-check" formControlName="imprime" [color]="color"
+                        [(indeterminate)]="indeterminate" labelPosition="before">
+                        Imprime: </mat-checkbox>
+                </div>
+                <div *ngIf="imprimeNotValid" class="text-danger notification-select">
+                    Campo no seleccionado.
+                </div>
+            </div>
+
+            <div class="form__div">
+                <div class="campo">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Comercializadora:</mat-label>
+                        <mat-select formControlName="comercializadoraId" required>
+                            <mat-option>Opciones</mat-option>
+                            <mat-option *ngFor="let com of comercializadora" [value]="com.codigo">
+                                {{com.codigo}} - {{com.nombre}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div *ngIf="comercializadoraIdNotValid" class="text-danger notification-select">
+                    Campo no seleccionado.
+                </div>
+            </div>
+
+            <!-- <div class="seccion-uno">
+                
 
                 <div class="form__div">
                     <div class="campo">
@@ -70,7 +83,8 @@
                         Campo no seleccionado.
                     </div>
                 </div>
-            </div>
+
+            </div> -->
 
             <div class="form-div-input">
                 <div class="campo">
@@ -90,14 +104,14 @@
             </div>
             <div *ngIf="valorDefectoNotValid" class="text-danger notification">Campo invalido.</div>
 
-            <div class="form-div-input">
+            <!-- <div class="form-div-input">
                 <div class="campo">
                     <input type="number" class="form__input form-control" placeholder=" " formControlName="secuencial"
                         [class.is-invalid]="secuencialNotValid">
                     <label for="" class="form__label">Secuencial:</label>
                 </div>
             </div>
-            <div *ngIf="secuencialNotValid" class="text-danger notification">Campo invalido.</div>
+            <div *ngIf="secuencialNotValid" class="text-danger notification">Campo invalido.</div> -->
 
             <div class="btn-container">
                 <button mat-raised-button type="button" (click)="close()">Regresar</button>

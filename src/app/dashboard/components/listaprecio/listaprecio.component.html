@@ -6,12 +6,11 @@
             </div>
         </div>
         <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
-
             <div class="form__div">
                 <div class="campo">
                     <mat-form-field appearance="outline">
                         <mat-label>Comercializadora:</mat-label>
-                        <mat-select formControlName="comercializadoraId" required>
+                        <mat-select formControlName="codigocomercializadora" required>
                             <mat-option>Opciones</mat-option>
                             <mat-option *ngFor="let com of comercializadora" [value]="com.codigo" (click)="getCom(com)">
                                 {{com.codigo}} - {{com.nombre}}
@@ -44,7 +43,7 @@
 
             <div class="select-check">
                 <div class="campo">
-                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                    <mat-checkbox class="mat-check" formControlName="activo" [color]="color"
                         [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
                         Estado: </mat-checkbox>
                 </div>

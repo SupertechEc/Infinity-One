@@ -7,6 +7,7 @@
     </div>
 
     <ng-template #carga>
+
         <div class="contenedor">
             <div [id]="label+item.secuencial" class="tarjetas" *ngFor="let item of items; index as i"
                 (click)="goPage(item)">

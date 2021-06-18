@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-comercializadora',
@@ -36,8 +37,12 @@ export class ComercializadoraComponent implements OnInit {
   formapagos: any[] = [];
   areamercadeo: any[] = [];
   direccioninen: any[] = [];
+  banco: any[] = [];
   cfp = false;
   fecha: Date = new Date();
+  fechaIn: Date = new Date();
+  user = this.local.get('user');
+  params: any;
   ces = [
     { estado: 'SI' },
     { estado: 'NO' }
@@ -53,6 +58,11 @@ export class ComercializadoraComponent implements OnInit {
     { codigo: 'C', nombre: 'Calendario' }
   ];
 
+  contabilidad = [
+    { estado: 'SI' },
+    { estado: 'NO' }
+  ];
+
   constructor(
     private fb: FormBuilder,
     private cf: ConectionFirebaseService,
@@ -60,11 +70,15 @@ export class ComercializadoraComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
+
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {
       this.id = params.id;
+      this.params = params;
+
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -82,19 +96,13 @@ export class ComercializadoraComponent implements OnInit {
     this.getFormaPago();
     this.getAreaMercadeo();
     this.getDireccionInen();
+    this.getBanco();
     // this.getItems();
   }
 
   getAbas(): void {
-    this.cf.getItems('abastecedora', 'nombre').subscribe(data => {
-      this.abas = [];
-      data.forEach((element: any) => {
-        this.abas.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.abas);
+    this.ia.getTableInfinity('abastecedora').subscribe(data => {
+      this.abas = data.retorno;
     });
   }
 
@@ -112,15 +120,14 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   getFormaPago(): void {
-    this.cf.getItems('formapago', 'nombre').subscribe(data => {
-      this.formapagos = [];
-      data.forEach((element: any) => {
-        this.formapagos.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.formapagos);
+    this.ia.getTableInfinity('formapago').subscribe(data => {
+      this.formapagos = data.retorno;
+    });
+  }
+
+  getBanco(): void {
+    this.ia.getTableInfinity('banco').subscribe(data => {
+      this.banco = data.retorno;
     });
   }
 
@@ -158,56 +165,69 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   camposFormaPago(fp: any): void {
-    if (fp.nombre === 'DEBITO') {
+    if (fp.nombre === 'Débito Bancario') {
       this.cfp = true;
     } else {
       this.cfp = false;
     }
   }
 
-
   getDataItem(): void {
     if (this.id !== 'new') {
-      // this.loading = true;
-      this.cf.getItemData('comercializadora', this.id).subscribe(data => {
-        console.log(data.payload.data());
-        this.fecha = new Date(data.payload.data().fechaVencimiento.seconds);
-        console.log(this.fecha);
-        // this.imgUrl = data.payload.data().imagenUrl;
-        this.f.reset({
-          codigo: data.payload.data().codigo,
-          codigoARCH: data.payload.data().codigoARCH,
-          codigoSTC: data.payload.data().codigoSTC,
-          claveSTC: data.payload.data().claveSTC,
-          ruc: data.payload.data().ruc,
-          nombre: data.payload.data().nombre,
-          estatus: data.payload.data().estatus,
-          contEspecial: data.payload.data().contEspecial,
-          // correo1: data.payload.data().correo1,
-          // telefono1: data.payload.data().telefono1,
-          direccion: data.payload.data().direccion,
-          identificacionRL: data.payload.data().identificacionRL,
-          nombreRL: data.payload.data().nombreRL,
-          nombreCorto: data.payload.data().nombreCorto,
-          formaPago: data.payload.data().formaPago,
-          areaMercadeo: data.payload.data().areaMercadeo,
-          direccionInen: data.payload.data().direccionInen,
-          abastecedoraId: data.payload.data().abastecedoraId,
-          // segmentoOperacion: data.payload.data().segmentoOperacion,
-          tipoDiasPlazo: data.payload.data().tipoDiasPlazo,
-          diasPlazoCredito: data.payload.data().diasPlazoCredito,
-          cuentaDebitar: data.payload.data().cuentaDebitar,
-          codigoBancoDebitar: data.payload.data().codigoBancoDebitar,
-          tasaInteresCreditoDias: data.payload.data().tasaInteresCreditoDias,
-          fechaVencimiento: this.fecha,
-          // datosContactos: data.payload.data().datosContactos
-        });
-        this.setChange(data.payload.data().estatus);
-        const dc = data.payload.data().datosContactos;
-        console.log(dc);
-        dc.forEach((valor: any) => this.datosContactos.push(this.dataDatoContacto(valor)));
-        // this.loading = false;
-      });
+      console.log(this.id);
+      console.log(this.params);
+
+      const parametros = {
+        codigo: this.params.codigo
+      }
+
+      this.ia.getItemInfinity('comercializadora', parametros).subscribe(
+        d => {
+          this.fecha = new Date(d.retorno[0].fechavencimientocontr);
+          this.fechaIn = new Date(d.retorno[0].fehainiciocontrato);
+          console.log(d.retorno);
+          this.f.setValue({
+            codigoabastecedora: d.retorno[0].codigoabastecedora.codigo,
+            codigo: d.retorno[0].codigo,
+            codigoarch: d.retorno[0].codigoarch,
+            codigostc: d.retorno[0].codigostc,
+            clavestc: d.retorno[0].clavestc,
+            ruc: d.retorno[0].ruc,
+            nombre: d.retorno[0].nombre,
+            activo: d.retorno[0].activo,
+            escontribuyenteespacial: d.retorno[0].escontribuyenteespacial,
+            // correo1: data.payload.data().correo1,
+            // telefono1: data.payload.data().telefono1,
+            direccion: d.retorno[0].direccion,
+            identificacionrepresentantelega: d.retorno[0].identificacionrepresentantelega,
+            nombrerepresentantelegal: d.retorno[0].nombrerepresentantelegal,
+            nombrecorto: d.retorno[0].nombrecorto,
+            establecimientofac: d.retorno[0].establecimientofac,
+            establecimientondb: d.retorno[0].establecimientondb,
+            establecimientoncr: d.retorno[0].establecimientoncr,
+            puntoventandb: d.retorno[0].puntoventandb,
+            puntoventancr: d.retorno[0].puntoventancr,
+            puntoventafac: d.retorno[0].puntoventafac,
+            fechavencimientocontr: this.fecha,
+            fehainiciocontrato: this.fechaIn,
+            prefijonpe: d.retorno[0].prefijonpe,
+            clavewsepp: d.retorno[0].clavewsepp,
+            obligadocontabilidad: d.retorno[0].obligadocontabilidad,
+            esagenteretencion: d.retorno[0].esagenteretencion,
+            leyendaagenteretencion: d.retorno[0].leyendaagenteretencion,
+            ambientesri: d.retorno[0].ambientesri,
+            tipoemision: d.retorno[0].tipoemision,
+            tipoplazocredito: d.retorno[0].tipoplazocredito,
+            diasplazocredito: d.retorno[0].diasplazocredito,
+            cuentadebito: d.retorno[0].cuentadebito,
+            tipocuentadebito: d.retorno[0].tipocuentadebito,
+            codigobancodebito: d.retorno[0].codigobancodebito.codigo,
+            tasainteres: d.retorno[0].tasainteres,
+            // formaPago: d.retorno[0].formaPago,
+          });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 
@@ -217,15 +237,15 @@ export class ComercializadoraComponent implements OnInit {
 
   private crearDatoContacto(): any {
     return this.fb.group({
-      correo: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      correo1: ['', [Validators.required]],
+      telefono1: ['', [Validators.required]],
     });
   }
 
   private dataDatoContacto(valor: any): any {
     return this.fb.group({
-      correo: [valor.correo],
-      telefono: [valor.telefono],
+      correo1: [valor.correo],
+      telefono1: [valor.telefono],
     });
   }
 
@@ -242,15 +262,15 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   get codigoARCHNotValid(): any {
-    return this.f.get('codigoARCH')?.invalid && this.f.get('codigoARCH')?.touched;
+    return this.f.get('codigoarch')?.invalid && this.f.get('codigoarch')?.touched;
   }
 
   get codigoSTCNotValid(): any {
-    return this.f.get('codigoSTC')?.invalid && this.f.get('codigoSTC')?.touched;
+    return this.f.get('codigostc')?.invalid && this.f.get('codigostc')?.touched;
   }
 
   get claveSTCNotValid(): any {
-    return this.f.get('claveSTC')?.invalid && this.f.get('claveSTC')?.touched;
+    return this.f.get('clavestc')?.invalid && this.f.get('clavestc')?.touched;
   }
 
   get rucNotValid(): any {
@@ -262,11 +282,11 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   get estatusNotValid(): any {
-    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
+    return this.f.get('activo')?.invalid && this.f.get('activo')?.touched;
   }
 
   get contEspecialNotValid(): any {
-    return this.f.get('contEspecial')?.invalid && this.f.get('contEspecial')?.touched;
+    return this.f.get('escontribuyenteespacial')?.invalid && this.f.get('escontribuyenteespacial')?.touched;
   }
 
   get correo1NotValid(): any {
@@ -282,15 +302,15 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   get identificacionRLNotValid(): any {
-    return this.f.get('identificacionRL')?.invalid && this.f.get('identificacionRL')?.touched;
+    return this.f.get('identificacionrepresentantelega')?.invalid && this.f.get('identificacionrepresentantelega')?.touched;
   }
 
   get nombreRLNotValid(): any {
-    return this.f.get('nombreRL')?.invalid && this.f.get('nombreRL')?.touched;
+    return this.f.get('nombrerepresentantelegal')?.invalid && this.f.get('nombrerepresentantelegal')?.touched;
   }
 
   get nombreCortoNotValid(): any {
-    return this.f.get('nombreCorto')?.invalid && this.f.get('nombreCorto')?.touched;
+    return this.f.get('nombrecorto')?.invalid && this.f.get('nombrecorto')?.touched;
   }
 
   get formaPagoNotValid(): any {
@@ -301,16 +321,44 @@ export class ComercializadoraComponent implements OnInit {
     return this.f.get('areaMercadeo')?.invalid && this.f.get('areaMercadeo')?.touched;
   }
 
+  get establecimientoFacNotValid(): any {
+    return this.f.get('establecimientofac')?.invalid && this.f.get('establecimientofac')?.touched;
+  }
+
+  get establecimientoDbNotValid(): any {
+    return this.f.get('establecimientondb')?.invalid && this.f.get('establecimientondb')?.touched;
+  }
+
+  get establecimientoCrNotValid(): any {
+    return this.f.get('establecimientoncr')?.invalid && this.f.get('establecimientoncr')?.touched;
+  }
+
+  get puntoVentaFacNotValid(): any {
+    return this.f.get('puntoventafac')?.invalid && this.f.get('puntoventafac')?.touched;
+  }
+
+  get puntoVentaDbNotValid(): any {
+    return this.f.get('puntoventandb')?.invalid && this.f.get('puntoventandb')?.touched;
+  }
+
+  get puntoVentaCrNotValid(): any {
+    return this.f.get('puntoventancr')?.invalid && this.f.get('puntoventancr')?.touched;
+  }
+
   get direccionInenNotValid(): any {
     return this.f.get('direccionInen')?.invalid && this.f.get('direccionInen')?.touched;
   }
 
   get fechaVencimientoNotValid(): any {
-    return this.f.get('fechaVencimiento')?.invalid && this.f.get('fechaVencimiento')?.touched;
+    return this.f.get('fechavencimientocontr')?.invalid && this.f.get('fechavencimientocontr')?.touched;
+  }
+
+  get fechaInicioNotValid(): any {
+    return this.f.get('fehainiciocontrato')?.invalid && this.f.get('fehainiciocontrato')?.touched;
   }
 
   get abastecedoraIdNotValid(): any {
-    return this.f.get('abastecedoraId')?.invalid && this.f.get('abastecedoraId')?.touched;
+    return this.f.get('codigoabastecedora')?.invalid && this.f.get('codigoabastecedora')?.touched;
   }
 
   get segmentoOperacionNotValid(): any {
@@ -318,23 +366,43 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   get tipoDiasPlazoNotValid(): any {
-    return this.f.get('tipoDiasPlazo')?.invalid && this.f.get('tipoDiasPlazo')?.touched;
+    return this.f.get('tipoplazocredito')?.invalid && this.f.get('tipoplazocredito')?.touched;
   }
 
   get diasPlazoCreditoNotValid(): any {
-    return this.f.get('diasPlazoCredito')?.invalid && this.f.get('diasPlazoCredito')?.touched;
+    return this.f.get('diasplazocredito')?.invalid && this.f.get('diasplazocredito')?.touched;
   }
 
   get cuentaDebitarNotValid(): any {
-    return this.f.get('cuentaDebitar')?.invalid && this.f.get('cuentaDebitar')?.touched;
+    return this.f.get('cuentadebito')?.invalid && this.f.get('cuentadebito')?.touched;
+  }
+
+  get tipoCuentaDebitoNotValid(): any {
+    return this.f.get('tipocuentadebito')?.invalid && this.f.get('tipocuentadebito')?.touched;
   }
 
   get codigoBancoDebitarNotValid(): any {
-    return this.f.get('codigoBancoDebitar')?.invalid && this.f.get('codigoBancoDebitar')?.touched;
+    return this.f.get('codigobancodebito')?.invalid && this.f.get('codigobancodebito')?.touched;
   }
 
   get tasaInteresCreditoDiasNotValid(): any {
-    return this.f.get('tasaInteresCreditoDias')?.invalid && this.f.get('tasaInteresCreditoDias')?.touched;
+    return this.f.get('tasainteres')?.invalid && this.f.get('tasainteres')?.touched;
+  }
+
+  get prefijoNotValid(): any {
+    return this.f.get('prefijonpe')?.invalid && this.f.get('prefijonpe')?.touched;
+  }
+
+  get claveNotValid(): any {
+    return this.f.get('clavewsepp')?.invalid && this.f.get('clavewsepp')?.touched;
+  }
+
+  get obligadoContabilidadNotValid(): any {
+    return this.f.get('obligadocontabilidad')?.invalid && this.f.get('obligadocontabilidad')?.touched;
+  }
+
+  get agenteRetencionNotValid(): any {
+    return this.f.get('esagenteretencion')?.invalid && this.f.get('esagenteretencion')?.touched;
   }
 
   makeForm(): void {
@@ -343,18 +411,16 @@ export class ComercializadoraComponent implements OnInit {
         Validators.required,
         Validators.minLength(4)
       ]],
-      codigoARCH: ['', [
+      codigoarch: ['', [
         Validators.required,
         Validators.minLength(2)
       ]],
-      codigoSTC: ['', [
+      codigostc: ['', [
         Validators.required,
-        Validators.minLength(6)
+        Validators.minLength(1),
+        Validators.maxLength(10)
       ]],
-      claveSTC: ['', [
-        Validators.required,
-        Validators.minLength(4)
-      ]],
+      clavestc: [''],
       ruc: ['', [
         Validators.required,
         Validators.minLength(13)
@@ -363,26 +429,48 @@ export class ComercializadoraComponent implements OnInit {
         Validators.required,
         Validators.minLength(3)
       ]],
-      estatus: [''],
-      contEspecial: ['', [Validators.required]],
+      activo: ['', [
+        Validators.required,
+      ]],
+      escontribuyenteespacial: [''],
       // correo1: ['', [Validators.required]],
       // telefono1: ['', [Validators.required]],
-      direccion: ['', [Validators.required]],
-      identificacionRL: ['', [Validators.required]],
-      nombreRL: ['', [Validators.required]],
-      nombreCorto: ['', [Validators.required]],
-      formaPago: ['', [Validators.required]],
-      areaMercadeo: ['', [Validators.required]],
-      direccionInen: ['', [Validators.required]],
-      fechaVencimiento: ['', [Validators.required]],
-      abastecedoraId: ['', [Validators.required]],
-      // segmentoOperacion: ['', [Validators.required]],
-      tipoDiasPlazo: [''],
-      diasPlazoCredito: [''],
-      cuentaDebitar: [''],
-      codigoBancoDebitar: [''],
-      tasaInteresCreditoDias: [''],
-      datosContactos: this.fb.array([]),
+      direccion: [''],
+      identificacionrepresentantelega: [''],
+      nombrerepresentantelegal: [''],
+      nombrecorto: [''],
+      // formaPago: [''],
+      establecimientofac: [''],
+      establecimientondb: [''],
+      establecimientoncr: [''],
+      puntoventandb: [''],
+      puntoventafac: [''],
+      puntoventancr: [''],
+      fechavencimientocontr: [''],
+      fehainiciocontrato: [''],
+      codigoabastecedora: ['', [Validators.required]],
+      tipoplazocredito: [''],
+      diasplazocredito: [''],
+      cuentadebito: [''],
+      tipocuentadebito: [''],
+      codigobancodebito: [''],
+      tasainteres: [''],
+      obligadocontabilidad: [''],
+      esagenteretencion: [''],
+      leyendaagenteretencion: [''],
+      ambientesri: [''],
+      tipoemision: [''],
+      // datosContactos: this.fb.array([]),
+      prefijonpe: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(2)
+      ]],
+      clavewsepp: ['', [
+        Validators.required,
+        Validators.minLength(1),
+        Validators.maxLength(8)
+      ]],
     });
 
   }
@@ -393,59 +481,81 @@ export class ComercializadoraComponent implements OnInit {
   }
 
   save(): void {
-
+    debugger;
     if (this.f.valid) {
       const value = this.f.value;
-      console.log(this.imageUrl);
-
-      if (this.imageUrl === undefined) {
-
-        if (this.id !== null) {
-          value.imagenUrl = this.imgUrl;
-        } else {
-          value.imagenUrl = '';
-        }
-
-      } else {
-        value.imagenUrl = this.imageUrl;
-      }
-
       console.log(value);
-
       this.registro = true;
-
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('comercializadora', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        // this.editItems('comercializadora', this.id, value, 'firebase');
+        this.editItems(value, this.id, 'comercializadora', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'comercializadora').then(() => {
+        // this.addItems('comercializadora', value, 'firebase');
+        this.addItems('comercializadora', value, 'postgres');
+      }
+      console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf.agregarItem(items, table).then(() => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 2).subscribe(
+        d => {
+          console.log(d);
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
           this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
-      }
+        },
+        err => console.log('HTTP Error', err),
+      );
+    }
+  }
 
-      console.log(value);
-      // return Object.values(this.f.controls).forEach(control => {
-      //   control.markAsTouched();
-      // });
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf.editItem(table, codigo, items).then(() => {
+        console.log('Item editado con exito');
+        this.toastr.success('Item editado con exito', 'Item Editado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 

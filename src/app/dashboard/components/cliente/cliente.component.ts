@@ -7,14 +7,14 @@ import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-cliente',
   templateUrl: './cliente.component.html',
-  styleUrls: ['./cliente.component.css']
+  styleUrls: ['./cliente.component.css'],
 })
 export class ClienteComponent implements OnInit {
-
   f = new FormGroup({});
   tipo: any[] = [];
   loading = false;
@@ -40,29 +40,29 @@ export class ClienteComponent implements OnInit {
   grupocliente: any[] = [];
   grupoflete: any[] = [];
   terminal: any[] = [];
+  banco: any[] = [];
   listaprecios: any[] = [];
   codigosupervisorzonal: any[] = [];
-
+  fechaIni: Date = new Date();
+  fechaInsc: Date = new Date();
+  fechaArch: Date = new Date();
+  fechaVenCon: Date = new Date();
+  user = this.local.get('user');
+  params: any;
   cfp = false;
 
-  controlargarantiabanacaria = [
-    { estado: 'SI' },
-    { estado: 'NO' }
-  ];
+  controlargarantiabanacaria = [{ estado: 'SI' }, { estado: 'NO' }];
 
-  ces = [
-    { estado: 'SI' },
-    { estado: 'NO' }
-  ];
+  ces = [{ estado: 'SI' }, { estado: 'NO' }];
 
   eces = [
     { codigo: 'S', nombre: 'SI' },
-    { codigo: 'N', nombre: 'NO' }
+    { codigo: 'N', nombre: 'NO' },
   ];
 
   tdpcs = [
     { codigo: 'L', nombre: 'Laborable' },
-    { codigo: 'C', nombre: 'Calendario' }
+    { codigo: 'C', nombre: 'Calendario' },
   ];
 
   constructor(
@@ -72,11 +72,13 @@ export class ClienteComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
   ) {
     this.makeForm();
-    this.aRoute.queryParams.subscribe(params => {
+    this.aRoute.queryParams.subscribe((params) => {
       this.id = params.id;
+      this.params = params;
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -84,7 +86,6 @@ export class ClienteComponent implements OnInit {
         this.btnName = 'Agregar';
       }
     });
-
   }
 
   ngOnInit(): void {
@@ -92,73 +93,52 @@ export class ClienteComponent implements OnInit {
     this.getDataItem();
     this.getComercializadora();
     this.getTipoCliente();
-    this.getAreaMercadeo();
+    //this.getAreaMercadeo();
     this.getFormaPago();
     this.getDireccionInen();
     this.getTerminal();
     this.getListaPrecios();
+    this.getBanco();
     // this.getItems();
   }
 
+  getBanco(): void {
+    this.ia.getTableInfinity('banco').subscribe((data) => {
+      this.banco = data.retorno;
+    });
+  }
+
   getFormaPago(): void {
-    this.cf.getItems('formapago', 'nombre').subscribe(data => {
-      this.formapagos = [];
-      data.forEach((element: any) => {
-        this.formapagos.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.formapagos);
+    this.ia.getTableInfinity('formapago').subscribe((data) => {
+      this.formapagos = data.retorno;
     });
   }
 
   getListaPrecios(): void {
-    this.cf.getItems('listaprecio', 'nombre').subscribe(data => {
-      this.listaprecios = [];
-      data.forEach((element: any) => {
-        this.listaprecios.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.listaprecios);
+    this.ia.getTableInfinity('listaprecio').subscribe((data) => {
+      this.listaprecios = data.retorno;
     });
   }
 
   getTerminal(): void {
-    this.cf.getItems('terminal', 'nombre').subscribe(data => {
-      this.terminal = [];
-      data.forEach((element: any) => {
-        this.terminal.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.terminal);
+    this.ia.getTableInfinity('terminal').subscribe((data) => {
+      this.terminal = data.retorno;
     });
   }
 
   getComercializadora(): void {
-    this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
-      this.comercializadora = [];
-      data.forEach((element: any) => {
-        this.comercializadora.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.comercializadora);
+    this.ia.getTableInfinity('comercializadora').subscribe((data) => {
+      this.comercializadora = data.retorno;
     });
   }
 
   getAreaMercadeo(): void {
-    this.cf.getItems('áreamercadeo', 'nombre').subscribe(data => {
+    this.cf.getItems('áreamercadeo', 'nombre').subscribe((data) => {
       this.areamercadeo = [];
       data.forEach((element: any) => {
         this.areamercadeo.push({
           id: element.payload.doc.id,
-          ...element.payload.doc.data()
+          ...element.payload.doc.data(),
         });
       });
       console.log(this.areamercadeo);
@@ -166,31 +146,28 @@ export class ClienteComponent implements OnInit {
   }
 
   getTipoCliente(): void {
-    this.cf.getItems('tipocliente', 'nombre').subscribe(data => {
-      this.tipocliente = [];
-      data.forEach((element: any) => {
-        this.tipocliente.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.tipocliente);
+    this.ia.getTableInfinity('tipocliente').subscribe((data) => {
+      this.tipocliente = data.retorno;
     });
   }
 
   getDireccionInen(): void {
-    this.cf.getItems('direccióninen', 'nombre').subscribe(data => {
-      this.direccioninen = [];
-      data.forEach((element: any) => {
-        this.direccioninen.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.direccioninen);
+    this.ia.getTableInfinity('direccioninen').subscribe((data) => {
+      this.direccioninen = data.retorno;
     });
   }
 
+  getGrupoFlete(): void {
+    this.ia.getTableInfinity('grupoflete').subscribe((data) => {
+      this.grupoflete = data.retorno;
+    });
+  }
+
+  getSupervisorZonal(): void {
+    this.ia.getTableInfinity('supervisorzonal').subscribe((data) => {
+      this.codigosupervisorzonal = data.retorno;
+    });
+  }
 
   setChange(cambio: boolean): any {
     if (cambio == null) {
@@ -212,7 +189,7 @@ export class ClienteComponent implements OnInit {
   }
 
   camposFormaPago(fp: any): void {
-    if (fp.nombre === 'DEBITO') {
+    if (fp.nombre === 'Débito Bancario') {
       this.cfp = true;
     } else {
       this.cfp = false;
@@ -221,54 +198,114 @@ export class ClienteComponent implements OnInit {
 
   getDataItem(): void {
     if (this.id !== 'new') {
-      // this.loading = true;
-      this.cf.getItemData('cliente', this.id).subscribe(data => {
+      console.log(this.id);
+      console.log(this.params);
+
+      const parametros = {
+        codigo: this.params.codigo,
+      };
+
+      this.ia.getItemInfinity('cliente', parametros).subscribe(
+        (d) => {
+          console.log('comercializadora', d.retorno[0].codigocomercializadora);
+          this.fechaIni = new Date(d.retorno[0].fehainiciooperacion),
+          this.fechaInsc = new Date(d.retorno[0].fehainscripcion),
+          this.fechaArch = new Date(d.retorno[0].feharegistroarch),
+          this.fechaVenCon = new Date(d.retorno[0].fehavencimientocontrato)
+          this.f.setValue({
+          codigocomercializadora: d.retorno[0].codigocomercializadora,
+          codigo: d.retorno[0].codigo,
+          codigoarch: d.retorno[0].codigoarch,
+          codigostc: d.retorno[0].codigostc,
+          clavestc: d.retorno[0].clavestc,
+          ruc: d.retorno[0].ruc,
+          nombre: d.retorno[0].nombre,
+          estado: d.retorno[0].estado,
+          escontribuyenteespacial: d.retorno[0].escontribuyenteespacial,
+          // correo1: data.payload.data().correo1,
+          // telefono1: data.payload.data().telefono1,
+          direccion: d.retorno[0].direccion,
+          identificacionrepresentantelega: d.retorno[0].identificacionrepresentantelega,
+          nombrerepresentantelegal: d.retorno[0].nombrerepresentantelegal,
+          // nombreCorto: data.payload.data().nombreCorto,
+          codigotipocliente: d.retorno[0].codigotipocliente,
+          //areaMercadeo: d.retorno[0].areaMercadeo,
+          codigodireccioninen: d.retorno[0].codigodireccioninen.codigo,
+          fehavencimientocontrato: this.fechaVenCon,
+          // segmentoOperacion: data.payload.data().segmentoOperacion,
+          tipoplazocredito: d.retorno[0].tipoplazocredito,
+          diasplazocredito: d.retorno[0].diasplazocredito,
+          cuentadebito: d.retorno[0].cuentadebito,
+          tipocuentadebito: d.retorno[0].tipocuentadebito,
+          codigobancodebito: d.retorno[0].codigobancodebito.codigo,
+          tasainteres: d.retorno[0].tasainteres,
+          nombrearrendatario: d.retorno[0].nombrearrendatario,
+          codigoformapago: d.retorno[0].codigoformapago.codigo,
+          controlagarantia: d.retorno[0].controlagarantia,
+          codigolistaprecio: d.retorno[0].codigolistaprecio,
+          codigolistaflete: d.retorno[0].codigolistaflete,
+          fehainiciooperacion: this.fechaIni,
+          fehainscripcion: this.fechaInsc,
+          feharegistroarch: this.fechaArch,
+          //fechaRegistroAbastecedora: data.payload.data().fechaRegistroAbastecedora,
+          aplicasubsidio2: d.retorno[0].aplicasubsidio2,
+          centrocosto: d.retorno[0].centrocosto,
+          codigosupervisorzonal: d.retorno[0].codigosupervisorzonal,
+          codigoterminaldefecto: d.retorno[0].codigoterminaldefecto.codigo,
+          //datosContactos: data.payload.data().datosContactos
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
+
+      /*this.cf.getItemData('cliente', this.id).subscribe(data => {
         console.log(data.payload.data());
         // this.imgUrl = data.payload.data().imagenUrl;
         this.f.patchValue({
           codigo: data.payload.data().codigo,
-          codigoARCH: data.payload.data().codigoARCH,
-          codigoSTC: data.payload.data().codigoSTC,
-          claveSTC: data.payload.data().claveSTC,
+          codigoarch: data.payload.data().codigoarch,
+          codigostc: data.payload.data().codigostc,
+          clavestc: data.payload.data().clavestc,
           ruc: data.payload.data().ruc,
           nombre: data.payload.data().nombre,
-          estatus: data.payload.data().estatus,
-          contEspecial: data.payload.data().contEspecial,
+          estado: data.payload.data().estado,
+          escontribuyenteespacial: data.payload.data().escontribuyenteespacial,
           // correo1: data.payload.data().correo1,
           // telefono1: data.payload.data().telefono1,
           direccion: data.payload.data().direccion,
-          identificacionRL: data.payload.data().identificacionRL,
-          nombreRL: data.payload.data().nombreRL,
+          identificacionrepresentantelega: data.payload.data().identificacionrepresentantelega,
+          nombrerepresentantelegal: data.payload.data().nombrerepresentantelegal,
           // nombreCorto: data.payload.data().nombreCorto,
-          tipoCliente: data.payload.data().tipoCliente,
+          codigotipocliente: data.payload.data().codigotipocliente,
           areaMercadeo: data.payload.data().areaMercadeo,
-          direccionInen: data.payload.data().direccionInen,
-          fechaVencimientoContrato: data.payload.data().fechaVencimientoContrato,
-          comercializadoraId: data.payload.data().comercializadoraId,
+          codigodireccioninen: data.payload.data().codigodireccioninen,
+          fehavencimientocontrato: data.payload.data().fehavencimientocontrato,
+          codigocomercializadora: data.payload.data().codigocomercializadora,
           // segmentoOperacion: data.payload.data().segmentoOperacion,
-          tipoDiasPlazo: data.payload.data().tipoDiasPlazo,
-          diasPlazoCredito: data.payload.data().diasPlazoCredito,
-          cuentaDebitar: data.payload.data().cuentaDebitar,
-          codigoBancoDebitar: data.payload.data().codigoBancoDebitar,
-          tasaInteresCreditoDias: data.payload.data().tasaInteresCreditoDias,
-          nombreArrendatario: data.payload.data().nombreArrendatario,
-          formaPago: data.payload.data().formaPago,
-          controlarGrarantiaBancaria: data.payload.data().controlarGrarantiaBancaria,
-          listaPrecios: data.payload.data().listaPrecios,
-          // codigoGrupoFlete: data.payload.data().codigoGrupoFlete,
-          fechaInicioOperacion: data.payload.data().fechaInicioOperacion,
-          fechaInscripcionCliente: data.payload.data().fechaInscripcionCliente,
-          fechaRegistroARCH: data.payload.data().fechaRegistroARCH,
-          fechaRegistroAbastecedora: data.payload.data().fechaRegistroAbastecedora,
-          aplicaSubsidio: data.payload.data().aplicaSubsidio,
-          centroCosto: data.payload.data().centroCosto,
-          // codigoSupervisorZonal: data.payload.data().codigoSupervisorZonal,
-          terminalPorDefecto: data.payload.data().terminalPorDefecto,
-          datosContactos: data.payload.data().datosContactos
+          tipoplazocredito: data.payload.data().tipoplazocredito,
+          diasplazocredito: data.payload.data().diasplazocredito,
+          cuentadebito: data.payload.data().cuentadebito,
+          tipocuentadebito: data.payload.data().tipocuentadebito,
+          codigobancodebito: data.payload.data().codigobancodebito,
+          tasainteres: data.payload.data().tasainteres,
+          nombrearrendatario: data.payload.data().nombrearrendatario,
+          codigoformapago: data.payload.data().codigoformapago,
+          controlagarantia: data.payload.data().controlagarantia,
+          codigolistaprecio: data.payload.data().codigolistaprecio,
+          codigolistaflete: data.payload.data().codigolistaflete,
+          fehainiciooperacion: data.payload.data().fehainiciooperacion,
+          fehainscripcion: data.payload.data().fehainscripcion,
+          feharegistroarch: data.payload.data().feharegistroarch,
+          //fechaRegistroAbastecedora: data.payload.data().fechaRegistroAbastecedora,
+          aplicasubsidio2: data.payload.data().aplicasubsidio2,
+          centrocosto: data.payload.data().centrocosto,
+          codigosupervisorzonal: data.payload.data().codigosupervisorzonal,
+          codigoterminaldefecto: data.payload.data().codigoterminaldefecto,
+          //datosContactos: data.payload.data().datosContactos
         });
-        this.setChange(data.payload.data().estatus);
+        this.setChange(data.payload.data().estado);
         // this.loading = false;
-      });
+      });*/
     }
   }
 
@@ -278,8 +315,8 @@ export class ClienteComponent implements OnInit {
 
   private crearDatoContacto(): any {
     return this.fb.group({
-      correo: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      correo1: ['', [Validators.required]],
+      telefono1: ['', [Validators.required]],
     });
   }
 
@@ -296,15 +333,17 @@ export class ClienteComponent implements OnInit {
   }
 
   get codigoARCHNotValid(): any {
-    return this.f.get('codigoARCH')?.invalid && this.f.get('codigoARCH')?.touched;
+    return (
+      this.f.get('codigoarch')?.invalid && this.f.get('codigoarch')?.touched
+    );
   }
 
   get codigoSTCNotValid(): any {
-    return this.f.get('codigoSTC')?.invalid && this.f.get('codigoSTC')?.touched;
+    return this.f.get('codigostc')?.invalid && this.f.get('codigostc')?.touched;
   }
 
   get claveSTCNotValid(): any {
-    return this.f.get('claveSTC')?.invalid && this.f.get('claveSTC')?.touched;
+    return this.f.get('clavestc')?.invalid && this.f.get('clavestc')?.touched;
   }
 
   get rucNotValid(): any {
@@ -316,11 +355,14 @@ export class ClienteComponent implements OnInit {
   }
 
   get estatusNotValid(): any {
-    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
+    return this.f.get('estado')?.invalid && this.f.get('estado')?.touched;
   }
 
   get contEspecialNotValid(): any {
-    return this.f.get('contEspecial')?.invalid && this.f.get('contEspecial')?.touched;
+    return (
+      this.f.get('escontribuyenteespacial')?.invalid &&
+      this.f.get('escontribuyenteespacial')?.touched
+    );
   }
 
   get correo1NotValid(): any {
@@ -336,11 +378,17 @@ export class ClienteComponent implements OnInit {
   }
 
   get identificacionRLNotValid(): any {
-    return this.f.get('identificacionRL')?.invalid && this.f.get('identificacionRL')?.touched;
+    return (
+      this.f.get('identificacionrepresentantelega')?.invalid &&
+      this.f.get('identificacionrepresentantelega')?.touched
+    );
   }
 
   get nombreRLNotValid(): any {
-    return this.f.get('nombreRL')?.invalid && this.f.get('nombreRL')?.touched;
+    return (
+      this.f.get('nombrerepresentantelegal')?.invalid &&
+      this.f.get('nombrerepresentantelegal')?.touched
+    );
   }
 
   // get nombreCortoNotValid(): any {
@@ -348,23 +396,37 @@ export class ClienteComponent implements OnInit {
   // }
 
   get tipoClienteNotValid(): any {
-    return this.f.get('tipoCliente')?.invalid && this.f.get('tipoCliente')?.touched;
+    return (
+      this.f.get('codigotipocliente')?.invalid &&
+      this.f.get('codigotipocliente')?.touched
+    );
   }
 
   get areaMercadeoNotValid(): any {
-    return this.f.get('areaMercadeo')?.invalid && this.f.get('areaMercadeo')?.touched;
+    return (
+      this.f.get('areaMercadeo')?.invalid && this.f.get('areaMercadeo')?.touched
+    );
   }
 
   get direccionInenNotValid(): any {
-    return this.f.get('direccionInen')?.invalid && this.f.get('direccionInen')?.touched;
+    return (
+      this.f.get('codigodireccioninen')?.invalid &&
+      this.f.get('codigodireccioninen')?.touched
+    );
   }
 
   get fechaVencimientoContratoNotValid(): any {
-    return this.f.get('fechaVencimientoContrato')?.invalid && this.f.get('fechaVencimientoContrato')?.touched;
+    return (
+      this.f.get('fehavencimientocontrato')?.invalid &&
+      this.f.get('fehavencimientocontrato')?.touched
+    );
   }
 
   get comercializadoraIdNotValid(): any {
-    return this.f.get('comercializadoraId')?.invalid && this.f.get('comercializadoraId')?.touched;
+    return (
+      this.f.get('codigocomercializadora')?.invalid &&
+      this.f.get('codigocomercializadora')?.touched
+    );
   }
 
   // get segmentoOperacionNotValid(): any {
@@ -372,226 +434,277 @@ export class ClienteComponent implements OnInit {
   // }
 
   get tipoDiasPlazoNotValid(): any {
-    return this.f.get('tipoDiasPlazo')?.invalid && this.f.get('tipoDiasPlazo')?.touched;
+    return (
+      this.f.get('tipoplazocredito')?.invalid &&
+      this.f.get('tipoplazocredito')?.touched
+    );
   }
 
   get diasPlazoCreditoNotValid(): any {
-    return this.f.get('diasPlazoCredito')?.invalid && this.f.get('diasPlazoCredito')?.touched;
+    return (
+      this.f.get('diasplazocredito')?.invalid &&
+      this.f.get('diasplazocredito')?.touched
+    );
   }
 
   get cuentaDebitarNotValid(): any {
-    return this.f.get('cuentaDebitar')?.invalid && this.f.get('cuentaDebitar')?.touched;
+    return (
+      this.f.get('cuentadebito')?.invalid && this.f.get('cuentadebito')?.touched
+    );
+  }
+
+  get tipoCuentaNotValid(): any {
+    return (
+      this.f.get('tipocuentadebito')?.invalid &&
+      this.f.get('tipocuentadebito')?.touched
+    );
   }
 
   get codigoBancoDebitarNotValid(): any {
-    return this.f.get('codigoBancoDebitar')?.invalid && this.f.get('codigoBancoDebitar')?.touched;
+    return (
+      this.f.get('codigobancodebito')?.invalid &&
+      this.f.get('codigobancodebito')?.touched
+    );
   }
 
   get tasaInteresCreditoDiasNotValid(): any {
-    return this.f.get('tasaInteresCreditoDias')?.invalid && this.f.get('tasaInteresCreditoDias')?.touched;
+    return (
+      this.f.get('tasainteres')?.invalid && this.f.get('tasainteres')?.touched
+    );
   }
 
   get nombreArrendatarioNotValid(): any {
-    return this.f.get('nombreArrendatario')?.invalid && this.f.get('nombreArrendatario')?.touched;
+    return (
+      this.f.get('nombrearrendatario')?.invalid &&
+      this.f.get('nombrearrendatario')?.touched
+    );
   }
 
   get formaPagoNotValid(): any {
-    return this.f.get('formaPago')?.invalid && this.f.get('formaPago')?.touched;
+    return (
+      this.f.get('codigoformapago')?.invalid &&
+      this.f.get('codigoformapago')?.touched
+    );
   }
 
   get controlarGrarantiaBancariaNotValid(): any {
-    return this.f.get('controlarGrarantiaBancaria')?.invalid && this.f.get('controlarGrarantiaBancaria')?.touched;
+    return (
+      this.f.get('controlagarantia')?.invalid &&
+      this.f.get('controlagarantia')?.touched
+    );
   }
 
   get listaPreciosNotValid(): any {
-    return this.f.get('listaPrecios')?.invalid && this.f.get('listaPrecios')?.touched;
+    return (
+      this.f.get('codigolistaprecio')?.invalid &&
+      this.f.get('codigolistaprecio')?.touched
+    );
   }
 
-  // get codigoGrupoFleteNotValid(): any {
-  //   return this.f.get('codigoGrupoFlete')?.invalid && this.f.get('codigoGrupoFlete')?.touched;
-  // }
+  get codigoGrupoFleteNotValid(): any {
+    return (
+      this.f.get('codigolistaflete')?.invalid &&
+      this.f.get('codigolistaflete')?.touched
+    );
+  }
 
   get fechaInicioOperacionNotValid(): any {
-    return this.f.get('fechaInicioOperacion')?.invalid && this.f.get('fechaInicioOperacion')?.touched;
+    return (
+      this.f.get('fehainiciooperacion')?.invalid &&
+      this.f.get('fehainiciooperacion')?.touched
+    );
   }
 
   get fechaInscripcionClienteNotValid(): any {
-    return this.f.get('fechaInscripcionCliente')?.invalid && this.f.get('fechaInscripcionCliente')?.touched;
+    return (
+      this.f.get('fehainscripcion')?.invalid &&
+      this.f.get('fehainscripcion')?.touched
+    );
   }
 
   get fechaRegistroARCHNotValid(): any {
-    return this.f.get('fechaRegistroARCH')?.invalid && this.f.get('fechaRegistroARCH')?.touched;
+    return (
+      this.f.get('feharegistroarch')?.invalid &&
+      this.f.get('feharegistroarch')?.touched
+    );
   }
 
   get fechaRegistroAbastecedoraNotValid(): any {
-    return this.f.get('fechaRegistroAbastecedora')?.invalid && this.f.get('fechaRegistroAbastecedora')?.touched;
+    return (
+      this.f.get('fechaRegistroAbastecedora')?.invalid &&
+      this.f.get('fechaRegistroAbastecedora')?.touched
+    );
   }
 
   get aplicaSubsidioNotValid(): any {
-    return this.f.get('aplicaSubsidio')?.invalid && this.f.get('aplicaSubsidio')?.touched;
+    return (
+      this.f.get('aplicasubsidio2')?.invalid &&
+      this.f.get('aplicasubsidio2')?.touched
+    );
   }
 
   get centroCostoNotValid(): any {
-    return this.f.get('centroCosto')?.invalid && this.f.get('centroCosto')?.touched;
+    return (
+      this.f.get('centrocosto')?.invalid && this.f.get('centrocosto')?.touched
+    );
   }
 
-  // get codigoSupervisorZonalNotValid(): any {
-  //   return this.f.get('codigoSupervisorZonal')?.invalid && this.f.get('codigoSupervisorZonal')?.touched;
-  // }
+  get codigoSupervisorZonalNotValid(): any {
+    return (
+      this.f.get('codigosupervisorzonal')?.invalid &&
+      this.f.get('codigosupervisorzonal')?.touched
+    );
+  }
 
   get terminalPorDefectoNotValid(): any {
-    return this.f.get('terminalPorDefecto')?.invalid && this.f.get('terminalPorDefecto')?.touched;
+    return (
+      this.f.get('codigoterminaldefecto')?.invalid &&
+      this.f.get('codigoterminaldefecto')?.touched
+    );
   }
 
   makeForm(): void {
     this.f = this.fb.group({
-      codigo: ['', [
-        Validators.required,
-        Validators.minLength(4)
-      ]],
-      codigoARCH: ['', [
-        Validators.required,
-        Validators.minLength(2)
-      ]],
-      codigoSTC: ['', [
-        Validators.required,
-        Validators.minLength(6)
-      ]],
-      claveSTC: ['', [
-        Validators.required,
-        Validators.minLength(4)
-      ]],
-      ruc: ['', [
-        Validators.required,
-        Validators.minLength(13)
-      ]],
-      nombre: ['', [
-        Validators.required,
-        Validators.minLength(3)
-      ]],
-      estatus: ['', [Validators.required]],
-      contEspecial: ['', [Validators.required]],
+      codigo: ['', [Validators.required, Validators.minLength(4)]],
+      codigoarch: ['', [Validators.required, Validators.minLength(2)]],
+      codigostc: ['', [Validators.required, Validators.minLength(6)]],
+      clavestc: [''],
+      ruc: ['', [Validators.required, Validators.minLength(13)]],
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      estado: ['', [Validators.required]],
+      escontribuyenteespacial: [''],
       // correo1: ['', [Validators.required]],
       // telefono1: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      identificacionRL: ['', [Validators.required]],
-      nombreRL: ['', [Validators.required]],
+      identificacionrepresentantelega: [''],
+      nombrerepresentantelegal: [''],
       // nombreCorto: ['', [Validators.required]],
-      tipoCliente: ['', [Validators.required]],
-      areaMercadeo: ['', [Validators.required]],
-      direccionInen: ['', [Validators.required]],
-      fechaVencimientoContrato: ['', [Validators.required]],
-      comercializadoraId: ['', [Validators.required]],
+      codigotipocliente: [''],
+      // areaMercadeo: ['', [Validators.required]],
+      codigodireccioninen: ['', [Validators.required]],
+      fehavencimientocontrato: [''],
+      codigocomercializadora: ['', [Validators.required]],
       // segmentoOperacion: ['', [Validators.required]],
-      tipoDiasPlazo: [''],
-      diasPlazoCredito: [''],
-      cuentaDebitar: [''],
-      codigoBancoDebitar: [''],
-      tasaInteresCreditoDias: [''],
-      nombreArrendatario: ['', [Validators.required]],
-      formaPago: ['', [Validators.required]],
-      controlarGrarantiaBancaria: ['', [Validators.required]],
-      listaPrecios: ['', [Validators.required]],
-      // codigoGrupoFlete: ['', [Validators.required]],
-      fechaInicioOperacion: ['', [Validators.required]],
-      fechaInscripcionCliente: ['', [Validators.required]],
-      fechaRegistroARCH: ['', [Validators.required]],
-      fechaRegistroAbastecedora: ['', [Validators.required]],
-      aplicaSubsidio: ['', [Validators.required]],
-      centroCosto: ['', [Validators.required]],
-      // codigoSupervisorZonal: ['', [Validators.required]],
-      terminalPorDefecto: ['', [Validators.required]],
-      datosContactos: this.fb.array([]),
+      tipoplazocredito: [''],
+      diasplazocredito: [0],
+      cuentadebito: [''],
+      tipocuentadebito: [''],
+      codigobancodebito: [''],
+      tasainteres: [''],
+      nombrearrendatario: [''],
+      codigoformapago: [''],
+      controlagarantia: [''],
+      codigolistaprecio: ['', [Validators.required]],
+      codigolistaflete: [''],
+      fehainiciooperacion: [''],
+      fehainscripcion: [''],
+      feharegistroarch: [''],
+      // fechaRegistroAbastecedora  : [''],
+      aplicasubsidio2: [''],
+      centrocosto: [''],
+      codigosupervisorzonal: [''],
+      codigoterminaldefecto: [''],
+      // datosContactos: this.fb.array([]),
     });
-
   }
 
   close(): void {
-    console.log('Salir de COMERCIALIZADORA');
-    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'COMERCIALIZADORA' } });
+    console.log('Salir de CLIENTE');
+    this.router.navigate(['/dashboard/detalle-opciones'], {
+      queryParams: { nombre: 'CLIENTE' },
+    });
   }
 
   save(): void {
-
+    debugger;
     if (this.f.valid) {
       const value = this.f.value;
-      // console.log(this.imageUrl);
-
-      // if (this.imageUrl === undefined) {
-
-      //   if (this.id !== null) {
-      //     value.imagenUrl = this.imgUrl;
-      //   } else {
-      //     value.imagenUrl = '';
-      //   }
-
-      // } else {
-      //   value.imagenUrl = this.imageUrl;
-      // }
-
       console.log(value);
-
       this.registro = true;
-
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('cliente', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'CLIENTE' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        // this.editItems('cliente', this.id, value, 'firebase');
+        this.editItems(value, this.id, 'cliente', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'cliente').then(() => {
-          console.log('Item registrado con exito');
-          this.toastr.success('Item registrado con exito', 'Item Registrado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'CLIENTE' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        // this.addItems('cliente', value, 'firebase');
+        this.addItems('cliente', value, 'postgres');
       }
-
       console.log(value);
-      // return Object.values(this.f.controls).forEach(control => {
-      //   control.markAsTouched();
-      // });
     }
   }
 
-  // uploadFile(event: any): void {
-  //   this.loading = true;
-  //   const file = event.target.files[0];
+  addItems(table: string, items: any, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf
+        .agregarItem(items, table)
+        .then(() => {
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'CLIENTE' },
+          });
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log(error);
+        });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 2).subscribe(
+        (d) => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'CLIENTE' },
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
+    }
+  }
 
-  //   const numram = Math.random() * this.f.get('secuencial')?.value;
-  //   const fileName = 'TERMINAL-' + this.f.get('nombre')?.value + '' + numram;
-  //   console.log(fileName);
-
-  //   const fileRef = this.afs.ref(fileName);
-  //   const task = this.afs.upload(fileName, file);
-
-  //   task.snapshotChanges()
-  //     .pipe(
-  //       finalize(() => {
-  //         this.image$ = fileRef.getDownloadURL();
-  //         this.image$.subscribe(url => {
-  //           this.imageUrl = url;
-  //           console.log(url);
-  //           this.loading = false;
-  //           this.msgImage = 'La imagen ' + fileName + ' está cargada';
-  //         });
-  //       })
-  //     )
-  //     .subscribe();
-  // }
-
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf
+        .editItem(table, codigo, items)
+        .then(() => {
+          console.log('Item editado con exito');
+          this.toastr.success('Item editado con exito', 'Item Editado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'CLIENTE' },
+          });
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log(error);
+        });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        (d) => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'CLIENTE' },
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
+    }
+  }
 }

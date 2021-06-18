@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-medida',
@@ -32,6 +33,8 @@ export class MedidaComponent implements OnInit {
   color = '';
   stylecolor = '';
   labelPosition = 'after';
+  user = this.local.get('user');
+  params: any;
 
   constructor(
     private fb: FormBuilder,
@@ -40,11 +43,13 @@ export class MedidaComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {
       this.id = params.id;
+      this.params = params;
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -81,21 +86,27 @@ export class MedidaComponent implements OnInit {
 
   getDataItem(): void {
     if (this.id !== 'new') {
-      // this.loading = true;
-      this.cf.getItemData('medida', this.id).subscribe(data => {
-        console.log(data.payload.data());
-        // this.imgUrl = data.payload.data().imagenUrl;
-        this.f.setValue({
-          nombre: data.payload.data().nombre,
-          codigo: data.payload.data().codigo,
-          // secuencial: data.payload.data().secuencial,
-          estatus: data.payload.data().estatus,
-          abreviacion: data.payload.data().abreviacion,
-          // accion: data.payload.data().accion
-        });
-        this.setChange(data.payload.data().estatus);
-        // this.loading = false;
-      });
+      console.log(this.id);
+
+      console.log(this.id);
+      console.log(this.params);
+
+      const parametros = {
+        codigo: this.params.codigo
+      }
+
+      this.ia.getItemInfinity('medida', parametros).subscribe(
+        d => {
+          console.log(d.retorno);
+          this.f.setValue({
+            codigo: d.retorno[0].codigo,
+            nombre: d.retorno[0].nombre,
+            activo: d.retorno[0].activo,
+            abreviacion: d.retorno[0].abreviacion,
+          });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 
@@ -112,7 +123,7 @@ export class MedidaComponent implements OnInit {
   // }
 
   get estatusNotValid(): any {
-    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
+    return this.f.get('activo')?.invalid && this.f.get('activo')?.touched;
   }
 
   get abreviacionNotValid(): any {
@@ -141,7 +152,7 @@ export class MedidaComponent implements OnInit {
       //   Validators.required,
       //   Validators.min(0)
       // ]],
-      estatus: ['', [Validators.required]],
+      activo: ['', [Validators.required]],
       abreviacion: ['', [
         Validators.required,
         Validators.minLength(3)
@@ -168,56 +179,77 @@ export class MedidaComponent implements OnInit {
 
     if (this.f.valid) {
       const value = this.f.value;
-      // console.log(this.imageUrl);
-
-      // if (this.imageUrl === undefined) {
-
-      //   if (this.id !== null) {
-      //     value.imagenUrl = this.imgUrl;
-      //   } else {
-      //     value.imagenUrl = '';
-      //   }
-
-      // } else {
-      //   value.imagenUrl = this.imageUrl;
-      // }
-
       console.log(value);
-
       this.registro = true;
-
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('medida', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'MEDIDA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        this.editItems(value, this.id, 'medida', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'medida').then(() => {
+        this.addItems('medida', value, 'postgres');
+      }
+      console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    debugger;
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf.agregarItem(items, table).then(() => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'MEDIDA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 1).subscribe(
+        d => {
+          console.log(d);
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
           this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'MEDIDA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
-      }
+        },
+        err => console.log('HTTP Error', err),
+      );
+    }
+  }
 
-      console.log(value);
-      // return Object.values(this.f.controls).forEach(control => {
-      //   control.markAsTouched();
-      // });
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf.editItem(table, codigo, items).then(() => {
+        console.log('Item editado con exito');
+        this.toastr.success('Item editado con exito', 'Item Editado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'MEDIDA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'MEDIDA' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 

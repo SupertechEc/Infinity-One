@@ -1,8 +1,10 @@
 {
     "/ConsumidorWS_SOAP/*": {
         "target": "https://www.supertech.ec:8443",
-        "secure": true,
-        "logLevel": "debug",
-        "changeOrigin": true
+        "secure": false
+    },
+    "/infinity_one/*": {
+        "target": "https://www.supertech.ec:8443",
+        "secure": false
     }
 }

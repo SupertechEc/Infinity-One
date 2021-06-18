@@ -43,8 +43,8 @@ import { NumeracionComponent } from './components/numeracion/numeracion.componen
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
 import { DataTablesModule } from 'angular-datatables';
 import { DialogFacturasComponent } from './components/dialog-facturas/dialog-facturas.component';
+import { TestComponent } from './components/test/test.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
-import { PruebasComponent } from './components/pruebas/pruebas.component';
 import { ClienteRubrosComponent } from './components/cliente-rubros/cliente-rubros.component';
 import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-cliente.component';
 
@@ -88,8 +88,8 @@ import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-clien
     NumeracionComponent,
     AdministracionnotapedidoComponent,
     DialogFacturasComponent,
+    TestComponent,
     RubrosComponent,
-    PruebasComponent,
     ClienteRubrosComponent,
     CuotasClienteComponent,
   ],

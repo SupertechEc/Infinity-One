@@ -148,13 +148,17 @@ main {
     background-color: #1A73E8;
 }
 
+.campo-check {
+    margin: 10px 0 0 0;
+}
+
 .select-check {
     width: 100%;
     height: 48px;
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: .5rem;
+    margin: 0 0 0 1.6rem;
 }
 
 .select-check .campo {
@@ -170,7 +174,7 @@ main {
     height: 48px;
     display: flex;
     align-items: center;
-    margin: -8px 0 0 10px;
+    margin: -8px 0 0 30px;
     font-size: 18px;
     font-weight: 500;
 } 

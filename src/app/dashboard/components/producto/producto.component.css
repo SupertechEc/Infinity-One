@@ -62,6 +62,7 @@ main {
     margin-bottom: 1.5rem;
     background-color: white;
     border-radius: .5rem;
+    outline: none;
 }
 
 .form__input{

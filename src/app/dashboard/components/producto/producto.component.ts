@@ -7,14 +7,14 @@ import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-producto',
   templateUrl: './producto.component.html',
-  styleUrls: ['./producto.component.css']
+  styleUrls: ['./producto.component.css'],
 })
 export class ProductoComponent implements OnInit {
-
   f = new FormGroup({});
   tipo: any[] = [];
   loading = false;
@@ -32,6 +32,10 @@ export class ProductoComponent implements OnInit {
   color = '';
   stylecolor = '';
   labelPosition = 'after';
+  user = this.local.get('user');
+  areamercadeo: any[] = [];
+  obj: any;
+  params: any;
 
   constructor(
     private fb: FormBuilder,
@@ -40,11 +44,13 @@ export class ProductoComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
   ) {
     this.makeForm();
-    this.aRoute.queryParams.subscribe(params => {
+    this.aRoute.queryParams.subscribe((params) => {
       this.id = params.id;
+      this.params = params;
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -52,11 +58,11 @@ export class ProductoComponent implements OnInit {
         this.btnName = 'Agregar';
       }
     });
-
   }
 
   ngOnInit(): void {
     // this.upload();
+    this.getCom();
     this.getDataItem();
   }
 
@@ -81,22 +87,25 @@ export class ProductoComponent implements OnInit {
 
   getDataItem(): void {
     if (this.id !== 'new') {
-      // this.loading = true;
-      this.cf.getItemData('producto', this.id).subscribe(data => {
-        console.log(data.payload.data());
-        // this.imgUrl = data.payload.data().imagenUrl;
-        this.f.setValue({
-          nombre: data.payload.data().nombre,
-          codigo: data.payload.data().codigo,
-          // secuencial: data.payload.data().secuencial,
-          estatus: data.payload.data().estatus,
-          codigoSTC: data.payload.data().codigoSTC,
-          codigoARCH: data.payload.data().codigoARCH,
-          // accion: data.payload.data().accion
-        });
-        this.setChange(data.payload.data().estatus);
-        // this.loading = false;
-      });
+      console.log(this.id);
+      console.log(this.params);
+
+      const parametros = {
+        codigo: this.params.codigo,
+      };
+      this.ia.getItemInfinity('producto', parametros).subscribe(
+        (d) => {
+          console.log(d.retorno);
+          this.f.setValue({
+            codigo: d.retorno[0].codigo,
+            nombre: d.retorno[0].nombre,
+            codigostc: d.retorno[0].codigostc,
+            codigoarch: d.retorno[0].codigoarch,
+            codigoareamercadeo: d.retorno[0].codigoareamercadeo.codigo,
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
     }
   }
 
@@ -108,6 +117,13 @@ export class ProductoComponent implements OnInit {
     return this.f.get('codigo')?.invalid && this.f.get('codigo')?.touched;
   }
 
+  get codigoAreaNotValid(): any {
+    return (
+      this.f.get('codigoareamercadeo')?.invalid &&
+      this.f.get('codigoareamercadeo')?.touched
+    );
+  }
+
   // get secuencialNotValid(): any {
   //   return this.f.get('secuencial')?.invalid && this.f.get('secuencial')?.touched;
   // }
@@ -117,36 +133,26 @@ export class ProductoComponent implements OnInit {
   }
 
   get codigoSTCNotValid(): any {
-    return this.f.get('codigoSTC')?.invalid && this.f.get('codigoSTC')?.touched;
+    return this.f.get('codigostc')?.invalid && this.f.get('codigostc')?.touched;
   }
 
   get codigoARCHNotValid(): any {
-    return this.f.get('codigoARCH')?.invalid && this.f.get('codigoARCH')?.touched;
+    return (
+      this.f.get('codigoarch')?.invalid && this.f.get('codigoarch')?.touched
+    );
   }
 
   makeForm(): void {
     this.f = this.fb.group({
-      nombre: ['', [
-        Validators.required,
-        Validators.minLength(3)
-      ]],
-      codigo: ['', [
-        Validators.required,
-        Validators.minLength(4)
-      ]],
+      nombre: ['', [Validators.required, Validators.minLength(3)]],
+      codigo: ['', [Validators.required, Validators.minLength(4)]],
       // secuencial: ['', [
       //   Validators.required,
       //   Validators.min(0)
       // ]],
-      estatus: ['', [Validators.required]],
-      codigoSTC: ['', [
-        Validators.required,
-        Validators.minLength(2)
-      ]],
-      codigoARCH: ['', [
-        Validators.required,
-        Validators.minLength(4)
-      ]],
+      codigostc: ['', [Validators.required, Validators.minLength(2)]],
+      codigoarch: ['', [Validators.required, Validators.minLength(3)]],
+      codigoareamercadeo: ['', [Validators.required, Validators.minLength(2)]],
       // accion: [false, [Validators.required]],
       // height: ['', [
       //   Validators.required,
@@ -157,68 +163,112 @@ export class ProductoComponent implements OnInit {
       //   Validators.min(0)
       // ]],
     });
-
   }
 
   close(): void {
     console.log('Salir de Producto');
-    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'PRODUCTO' } });
+    this.router.navigate(['/dashboard/detalle-opciones'], {
+      queryParams: { nombre: 'PRODUCTO' },
+    });
+  }
+
+  getCom(): void {
+    this.ia.getTableInfinity('areamercadeo').subscribe((data) => {
+      console.log(data.retorno);
+      this.areamercadeo = data.retorno;
+      console.log(this.areamercadeo);
+    });
   }
 
   save(): void {
-
+    debugger;
     if (this.f.valid) {
       const value = this.f.value;
-      // console.log(this.imageUrl);
-
-      // if (this.imageUrl === undefined) {
-
-      //   if (this.id !== null) {
-      //     value.imagenUrl = this.imgUrl;
-      //   } else {
-      //     value.imagenUrl = '';
-      //   }
-
-      // } else {
-      //   value.imagenUrl = this.imageUrl;
-      // }
-
       console.log(value);
-
       this.registro = true;
-
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('producto', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'PRODUCTO' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        this.editItems(value, this.id, 'producto', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'producto').then(() => {
+        this.addItems('producto', value, 'postgres');
+      }
+      console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    debugger;
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf
+        .agregarItem(items, table)
+        .then(() => {
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
-            positionClass: 'toast-bottom-right'
+            positionClass: 'toast-bottom-right',
           });
           this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'PRODUCTO' } });
-        }).catch(error => {
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'PRODUCTO' },
+          });
+        })
+        .catch((error) => {
           this.loading = false;
           console.log(error);
         });
-      }
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 2).subscribe(
+        (d) => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'PRODUCTO' },
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
+    }
+  }
 
-      console.log(value);
-      // return Object.values(this.f.controls).forEach(control => {
-      //   control.markAsTouched();
-      // });
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf
+        .editItem(table, codigo, items)
+        .then(() => {
+          console.log('Item editado con exito');
+          this.toastr.success('Item editado con exito', 'Item Editado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'PRODUCTO' },
+          });
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log(error);
+        });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        (d) => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right',
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], {
+            queryParams: { nombre: 'PRODUCTO' },
+          });
+        },
+        (err) => console.log('HTTP Error', err)
+      );
     }
   }
 
@@ -247,5 +297,4 @@ export class ProductoComponent implements OnInit {
   //     )
   //     .subscribe();
   // }
-
 }

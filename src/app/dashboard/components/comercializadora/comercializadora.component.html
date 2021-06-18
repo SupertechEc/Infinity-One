@@ -33,7 +33,7 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="codigoARCH" [class.is-invalid]="codigoARCHNotValid">
+                                            formControlName="codigoarch" [class.is-invalid]="codigoARCHNotValid">
                                         <label for="" class="form__label">Código ARCH:</label>
                                     </div>
                                     <div *ngIf="codigoARCHNotValid" class="text-danger notification-outbound">Campo
@@ -47,7 +47,7 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="codigoSTC" [class.is-invalid]="codigoSTCNotValid">
+                                            formControlName="codigostc" [class.is-invalid]="codigoSTCNotValid">
                                         <label for="" class="form__label">Código STC:</label>
                                     </div>
                                     <div *ngIf="codigoSTCNotValid" class="text-danger notification-outbound">Campo
@@ -57,11 +57,8 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="claveSTC" [class.is-invalid]="claveSTCNotValid">
+                                            formControlName="clavestc" >
                                         <label for="" class="form__label">Clave STC:</label>
-                                    </div>
-                                    <div *ngIf="claveSTCNotValid" class="text-danger notification-outbound">Campo
-                                        invalido.
                                     </div>
                                 </div>
                             </div>
@@ -92,16 +89,13 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="nombreCorto" [class.is-invalid]="nombreCortoNotValid">
+                                            formControlName="nombrecorto"> 
                                         <label for="" class="form__label">Nombre Corto:</label>
-                                    </div>
-                                    <div *ngIf="nombreCortoNotValid" class="text-danger notification-outbound">Campo
-                                        invalido.
                                     </div>
                                 </div>
                                 <div class="select-check form-group">
                                     <div class="campo">
-                                        <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                                        <mat-checkbox class="mat-check" formControlName="activo" [color]="color"
                                             [(indeterminate)]="indeterminate" (change)="setChange($event.checked)"
                                             labelPosition="before">
                                             Estado: </mat-checkbox>
@@ -114,73 +108,104 @@
                             </div>
                         </div>
 
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                     <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="establecimientofac" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Establecimiento Fac:</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="puntoventafac" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Punto Venta Fac:</label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                     <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="establecimientondb" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Establecimiento Db:</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="puntoventandb" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Punto Venta Db:</label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                     <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="establecimientoncr" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Establecimiento Cr:</label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="puntoventancr" 
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Punto Venta Db:</label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>                        
+
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="direccion" [class.is-invalid]="direccionNotValid"
+                                    formControlName="direccion" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Dirección:</label>
                             </div>
                         </div>
-                        <div *ngIf="direccionNotValid" class="text-danger notification-inbound">Campo invalido.</div>
 
-                        <div class="img-dimension separacion">
-                            <div class="img-content">
-                                <div class="campo-seleccion">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Área de Mercadeo:</mat-label>
-                                        <mat-select formControlName="areaMercadeo" required>
-                                            <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let am of areamercadeo" [value]="am.codigo">
-                                                {{am.codigo}} - {{am.nombre}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <div *ngIf="areaMercadeoNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
-                                </div>
-
-                                <div class="campo-seleccion">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Dirección Inen:</mat-label>
-                                        <mat-select formControlName="direccionInen" required>
-                                            <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let di of direccioninen" [value]="di.codigo">
-                                                {{di.codigo}} - {{di.nombre}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <div *ngIf="direccionInenNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
 
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="identificacionRL" [class.is-invalid]="identificacionRLNotValid"
+                                    formControlName="identificacionrepresentantelega" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Identeficación Representante Legal:</label>
                             </div>
                         </div>
-                        <div *ngIf="identificacionRLNotValid" class="text-danger notification-inbound">Campo invalido.
-                        </div>
 
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="nombreRL" [class.is-invalid]="nombreRLNotValid"
+                                    formControlName="nombrerepresentantelegal" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Nombre Representante Legal:</label>
                             </div>
                         </div>
-                        <div *ngIf="nombreRLNotValid" class="text-danger notification-inbound">Campo invalido.</div>
 
-                        <div class="file-upload">
+
+                        <!--<div class="file-upload">
                             <div class="file-upload-btn">
                                 <button type="button" (click)="fileInput.click()" class="file-upload-button">
                                     <span>Cargar Logo</span>
@@ -200,14 +225,13 @@
                                 <div class="file-upload-label">{{msgImage}}</div>
                             </ng-template>
 
-                        </div>
+                        </div>-->
 
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col">
                                 <table class="table">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <!-- <th>ID</th> -->
                                             <th>Correo</th>
                                             <th>Telefono</th>
                                             <th>Borrar</th>
@@ -216,14 +240,13 @@
                                     <tbody formArrayName="datosContactos">
                                         <tr *ngFor="let control of datosContactos.controls; let i = index"
                                             [formGroupName]="i" class="group-datacontacto">
-                                            <!-- <td>{{i + 1}}</td> -->
                                             <td>
                                                 <input type="text" class="from-control datocontacto"
-                                                    formControlName="correo">
+                                                    formControlName="correo1">
                                             </td>
                                             <td>
                                                 <input type="text" class="from-control datocontacto"
-                                                    formControlName="telefono">
+                                                    formControlName="telefono1">
                                             </td>
                                             <td>
                                                 <button class="btn btn-danger" type="button"
@@ -236,7 +259,7 @@
                                 <button class="btn btn-primary" type="button" (click)="agregarDatosContactos()">+
                                     Agregar Campos</button>
                             </div>
-                        </div>
+                        </div>-->
 
                     </mat-expansion-panel>
                     <mat-expansion-panel>
@@ -254,7 +277,7 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Abastecedora:</mat-label>
-                                        <mat-select formControlName="abastecedoraId" required>
+                                        <mat-select formControlName="codigoabastecedora" required>
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let aba of abas" [value]="aba.codigo">
                                                 {{aba.codigo}} - {{aba.nombre}}
@@ -267,45 +290,143 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha de Inicio:</mat-label>
+                                    <input matInput [matDatepicker]="picker1" formControlName="fehainiciocontrato">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        
 
                         <div class="form__div form-group form-fecha">
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha de Vencimiento:</mat-label>
-                                    <input matInput [matDatepicker]="picker" formControlName="fechaVencimiento">
+                                    <input matInput [matDatepicker]="picker" formControlName="fechavencimientocontr">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div *ngIf="fechaVencimientoNotValid" class="text-danger notification-inbound">Campo invalido.
-                        </div>
+                        
 
                         <div class="form__div form-group separacion-full">
                             <div class="campo">
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Es Contribuyente Especial:</mat-label>
-                                        <mat-select formControlName="contEspecial" required>
+                                        <mat-select formControlName="escontribuyenteespacial" >
                                             <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let ece of eces" [value]="ece.codigo">
-                                                {{ece.codigo}} - {{ece.nombre}}
-                                            </mat-option>
+                                            <mat-option [value]= "true">SI</mat-option>
+                                            <mat-option [value]= "false">NO</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                     <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="prefijonpe" [class.is-invalid]="prefijoNotValid"
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Prefijo Npe:</label>
+                                    </div>
+                                    <div *ngIf="prefijoNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="clavewsepp" [class.is-invalid]="claveNotValid"
+                                            oninput="this.value = this.value.toUpperCase()">
+                                        <label for="" class="form__label">Clave Acceso Petro:</label>
+                                    </div>
+                                    <div *ngIf="claveNotValid" class="text-danger notification-check">Campo invalido.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Obligado Contabilidad:</mat-label>
+                                            <mat-select formControlName="obligadocontabilidad"  >
+                                                <mat-option >Opciones</mat-option>
+                                                <mat-option *ngFor="let cont of contabilidad" [value]="cont.estado">
+                                                    {{cont.estado}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        
+                                    </div>
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Agente Retención:</mat-label>
+                                            <mat-select formControlName="esagenteretencion"  >
+                                                <mat-option >Opciones</mat-option>
+                                                <mat-option [value]= "true">SI</mat-option>
+                                                <mat-option [value]= "false">NO</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                       
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form__div form-group separacion-full">
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="leyendaagenteretencion" oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Leyenda Agente:</label>
+                            </div>
+                        </div>
+
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Ambiente Sri:</mat-label>
+                                            <mat-select formControlName="ambientesri"  >
+                                                <mat-option >Opciones</mat-option>
+                                                <mat-option [value]= "'1'">Desarrollo</mat-option>
+                                                <mat-option [value]= "'2'">Producción</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Tipo Emisión:</mat-label>
+                                            <mat-select formControlName="tipoemision"  >
+                                                <mat-option >Opciones</mat-option>
+                                                <mat-option [value]= "'1'">Normal</mat-option>
+                                                <mat-option [value]= "'2'">Controlada</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="form__div form-group separacion-full">
                             <div class="campo">
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Forma de Pago:</mat-label>
-                                        <mat-select formControlName="formaPago" required>
+                                        <mat-select formControlName="formaPago">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let fp of formapagos" [value]="fp.codigo"
                                                 (click)="camposFormaPago(fp)">
@@ -313,41 +434,29 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="formaPagoNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
-                        <ng-container *ngIf="cfp">
+                        <ng-container *ngIf="true">
                             <div class="img-dimension separacion">
                                 <div class="img-content">
                                     <div class="campo-seleccion">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Tipo Días Plazo:</mat-label>
-                                            <mat-select formControlName="tipoDiasPlazo" required>
+                                            <mat-select formControlName="tipoplazocredito" >
                                                 <mat-option>Opciones</mat-option>
                                                 <mat-option *ngFor="let tdpc of tdpcs" [value]="tdpc.codigo">
                                                     {{tdpc.codigo}} - {{tdpc.nombre}}
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
-                                        <div *ngIf="tipoDiasPlazoNotValid" class="text-danger notification-check">Campo
-                                            no
-                                            seleccionado.
-                                        </div>
                                     </div>
                                     <div class="form__div form-group so">
                                         <div class="campo">
                                             <input type="text" class="form__input form-control" placeholder=" "
-                                                formControlName="diasPlazoCredito"
-                                                [class.is-invalid]="diasPlazoCreditoNotValid">
+                                                formControlName="diasplazocredito">
                                             <label for="" class="form__label">Días Plazo Credito:</label>
-                                        </div>
-                                        <div *ngIf="diasPlazoCreditoNotValid" class="text-danger notification-outbound">
-                                            Campo
-                                            invalido.
                                         </div>
                                     </div>
                                 </div>
@@ -356,39 +465,45 @@
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="cuentaDebitar" [class.is-invalid]="cuentaDebitarNotValid"
+                                        formControlName="cuentadebito" 
                                         oninput="this.value = this.value.toUpperCase()">
                                     <label for="" class="form__label">Cuenta a Debitar:</label>
                                 </div>
                             </div>
-                            <div *ngIf="cuentaDebitarNotValid" class="text-danger notification-inbound">Campo
-                                invalido.
-                            </div>
 
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="codigoBancoDebitar"
-                                        [class.is-invalid]="codigoBancoDebitarNotValid"
+                                        formControlName="tipocuentadebito" 
                                         oninput="this.value = this.value.toUpperCase()">
-                                    <label for="" class="form__label">Código Banco a Debitar:</label>
+                                    <label for="" class="form__label">Tipo Cuenta Débito:</label>
                                 </div>
                             </div>
-                            <div *ngIf="codigoBancoDebitarNotValid" class="text-danger notification-inbound">Campo
-                                invalido.
+
+                            
+                            <div class="form__div form-group">
+                                <div class="campo">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Código Banco</mat-label>
+                                        <mat-select formControlName="codigobancodebito" >
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let ban of banco" [value]="ban.codigo">
+                                                {{ban.codigo}} - {{ban.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
                             </div>
+
 
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="tasaInteresCreditoDias"
-                                        [class.is-invalid]="tasaInteresCreditoDiasNotValid"
+                                        formControlName="tasainteres"
                                         oninput="this.value = this.value.toUpperCase()">
                                     <label for="" class="form__label">Tasa Interes Crédito Días:</label>
                                 </div>
                             </div>
-                            <div *ngIf="tasaInteresCreditoDiasNotValid" class="text-danger notification-inbound">Campo
-                                invalido.</div>
                         </ng-container>
 
                     </mat-expansion-panel>

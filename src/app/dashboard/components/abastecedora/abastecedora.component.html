@@ -21,7 +21,7 @@
                     <div class="form__div form-group">
                         <div class="campo">
                             <input type="text" class="form__input form-control" placeholder=" "
-                                formControlName="codigoARCH" [class.is-invalid]="codigoARCHNotValid">
+                                formControlName="codigoarch" [class.is-invalid]="codigoARCHNotValid">
                             <label for="" class="form__label">Código ARCH:</label>
                         </div>
                         <div *ngIf="codigoARCHNotValid" class="text-danger notification-outbound">Campo invalido.</div>
@@ -35,7 +35,7 @@
                     <div class="form__div form-group">
                         <div class="campo">
                             <input type="text" class="form__input form-control" placeholder=" "
-                                formControlName="codigoSTC" [class.is-invalid]="codigoSTCNotValid">
+                                formControlName="codigostc" [class.is-invalid]="codigoSTCNotValid">
                             <label for="" class="form__label">Código STC:</label>
                         </div>
                         <div *ngIf="codigoSTCNotValid" class="text-danger notification-outbound">Campo invalido.</div>
@@ -43,7 +43,7 @@
                     <div class="form__div form-group">
                         <div class="campo">
                             <input type="text" class="form__input form-control" placeholder=" "
-                                formControlName="claveSTC" [class.is-invalid]="claveSTCNotValid">
+                                formControlName="clavestc" [class.is-invalid]="claveSTCNotValid">
                             <label for="" class="form__label">Clave STC:</label>
                         </div>
                         <div *ngIf="claveSTCNotValid" class="text-danger notification-outbound">Campo invalido.</div>
@@ -81,7 +81,7 @@
             <div class="form__div form-group">
                 <div class="campo">
                     <input type="text" class="form__input form-control" placeholder=" "
-                        formControlName="identificacionRL" [class.is-invalid]="identificacionRLNotValid"
+                        formControlName="identificacionrepresentantelega" [class.is-invalid]="identificacionRLNotValid"
                         oninput="this.value = this.value.toUpperCase()">
                     <label for="" class="form__label">Identeficación RL:</label>
                 </div>
@@ -90,7 +90,7 @@
 
             <div class="form__div form-group">
                 <div class="campo">
-                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombreRL"
+                    <input type="text" class="form__input form-control" placeholder=" " formControlName="nombrerepresentantelegal"
                         [class.is-invalid]="nombreRLNotValid" oninput="this.value = this.value.toUpperCase()">
                     <label for="" class="form__label">Nombre RL:</label>
                 </div>
@@ -101,8 +101,8 @@
             <div class="grupo-campos">
                 <div class="select-check form-group">
                     <div class="campo">
-                        <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
-                            [(indeterminate)]="indeterminate" (change)="setChange($event.checked)"
+                        <mat-checkbox class="mat-check" formControlName="activo" [color]="color"
+                            [(indeterminate)]="indeterminate" (change)="setChangeEstado($event.checked)"
                             labelPosition="before">
                             Estado: </mat-checkbox>
                     </div>
@@ -111,20 +111,29 @@
                     <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
                 </div>
 
+                <!--<div class="select-check form-group">
+                    <div class="campo">
+                        <mat-checkbox class="mat-check" formControlName="escontribuyenteespacial" [color]="color"
+                            [(indeterminate)]="indeterminate" (change)="setChangeContE($event.checked)"
+                            labelPosition="before">
+                            Contribuyente Especial: </mat-checkbox>
+                    </div>
+                    <div class="check-name" *ngIf="activoC" [style.color]="stylecolor"></div>
+                    <div class="check-name" *ngIf="inactivoC" [style.color]="stylecolor"></div>
+                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+                </div>-->
+
                 <div class="campo-seleccion">
                     <mat-form-field appearance="outline">
                         <mat-label>Contribuyente Especial:</mat-label>
-                        <mat-select formControlName="contEspecial" required>
-                            <mat-option>Opciones</mat-option>
-                            <mat-option *ngFor="let ce of ces" [value]="ce.estado">
-                                {{ce.estado}}
-                            </mat-option>
+                        <mat-select formControlName="escontribuyenteespacial" required >
+                            <mat-option >Opciones</mat-option>
+                            <mat-option [value]= "true">SI</mat-option>
+                            <mat-option [value]= "false">NO</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no seleccionado.
-                    </div>
+                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
                 </div>
-
             </div>
 
             <div class="img-dimension">

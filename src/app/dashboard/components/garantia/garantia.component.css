@@ -57,7 +57,7 @@ main {
     padding: 15px;
     border-radius: 20px;
     position: relative;
-    bottom: 65px;
+    bottom: 72px;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     background-color: white;
 }
@@ -133,7 +133,7 @@ main {
 }
 .btn-containerD {
     position: relative;
-    bottom: 40px;
+    bottom: 25px;
     padding-left: 20px;
 }
 

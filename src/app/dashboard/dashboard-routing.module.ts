@@ -34,10 +34,11 @@ import { PrecioComponent } from './components/precio/precio.component';
 import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
+import { TestComponent } from './components/test/test.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
-import { PruebasComponent } from './components/pruebas/pruebas.component';
 import { ClienteRubrosComponent } from './components/cliente-rubros/cliente-rubros.component';
 import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-cliente.component';
+
 const routes: Routes = [
   {
     path: '',
@@ -188,12 +189,12 @@ const routes: Routes = [
     component: AdministracionnotapedidoComponent,
   },
   {
-    path: 'rubros',
-    component: RubrosComponent,
+    path: 'test',
+    component: TestComponent,
   },
   {
-    path: 'pruebas',
-    component: PruebasComponent,
+    path: 'rubros',
+    component: RubrosComponent,
   },
   {
     path: 'clienteRubros',

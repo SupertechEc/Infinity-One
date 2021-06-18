@@ -35,17 +35,20 @@
             </div>
         </div>
         <div class="componentesD">
-            <div class="title">MONITOR DE FACTURAS ÚNICAS</div>
-            <form [formGroup] = "datosFecha" >
+            
+                <div class="title">MONITOR DE FACTURAS ÚNICAS</div>
                 <div class="btn-containerD">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Fecha de Emisión:</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="fechaEmision" #fechaEmision>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-datepicker #picker></mat-datepicker>
-                    </mat-form-field>
-                    <button style="margin-left: 10px" mat-raised-button (click)="getDataDate(fechaEmision)">ACTUALIZAR</button>
+                    <form [formGroup] = "datosFecha" >
+                        <mat-form-field appearance="outline">
+                            <mat-label>Fecha de Emisión:</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="fechaEmision" #fechaEmision>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <button style="margin-left: 10px" mat-raised-button (click)="getDataDate(fechaEmision)">ACTUALIZAR</button>
+                    </form>
                 </div>
+
                 <div class="detalle-valoresD">
                     <div class="campo-center fondo">{{ comercializadoraM }}</div>
                     <div class="etiquetaD">
@@ -60,20 +63,19 @@
                         <div class="fecha-consulta">Total</div>
                     </div>
                     <div id="row" #row class="etiquetaD">
-                        <div class="subetiqueta">NO PAGADAS:</div>
+                        <div class="subetiqueta">PAGADAS:</div>
                         <div class="numeroDoc">{{facturasemitidasnopagadas}}</div>
                         <div class="valorD">$ {{valornopagadas}}</div>
                         <div class="datosF">
-                            <mat-icon (click)="listarFacturas(1)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                            <mat-icon (click)="editItem(fechaEmision, 'SIN PAGO')" class="btn-edit" style="margin-left: 50px">create</mat-icon>
                         </div>
                     </div>
                     <div id="row2" #row2 class="etiquetaD fondo">
-                        <div class="subetiqueta">PAGADAS:</div>
+                        <div class="subetiqueta">NO PAGADAS:</div>
                         <div class="numeroDoc">{{facturasemitidaspagadas}}</div>
                         <div class="valorD">$ {{valorpagadas}}</div>
                         <div class="datosF">
-                            
-                            <mat-icon (click)="listarFacturas(2)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                            <mat-icon (click)="editItem(fechaEmision, row2)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
                         </div>
 
                     </div>
@@ -82,13 +84,11 @@
                         <div class="numeroDoc">{{facturasanuladas}}</div>
                         <div class="valorD">$ {{valoranuladas}}</div>
                         <div class="datosF">
-                            <mat-icon (click)="listarFacturas(3)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                            <mat-icon (click)="editItem(fechaEmision, row3)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
                         </div>
                     </div>
                 </div>
-                
-            </form> 
-                   
+            
         </div>
     </section>
 </main>

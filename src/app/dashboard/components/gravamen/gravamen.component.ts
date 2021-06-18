@@ -5,6 +5,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize, map, tap, catchError } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
+import { InfinityApiService } from '../../../core/services/infinity-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -30,6 +31,7 @@ export class GravamenComponent implements OnInit {
   stylecolor = '';
   labelPosition = 'after';
   comercializadora: any[] = [];
+  params: any;
   catImprime = [
     { codigo: 'S' },
     { codigo: 'N' }
@@ -42,12 +44,14 @@ export class GravamenComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService,
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {
       this.id = params.id;
-      console.log(this.id);
+      this.params = params;
+      console.log(params);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
       } else {
@@ -83,26 +87,33 @@ export class GravamenComponent implements OnInit {
 
   getDataItem(): void {
     if (this.id !== 'new') {
-      this.cf.getItemData('gravamen', this.id).subscribe(data => {
-        console.log(data.payload.data());
-        this.f.setValue({
-          nombre: data.payload.data().nombre,
-          codigo: data.payload.data().codigo,
-          estatus: data.payload.data().estatus,
-          comercializadoraId: data.payload.data().comercializadoraId,
-          imprime: data.payload.data().imprime,
-          formula: data.payload.data().formula,
-          valorDefecto: data.payload.data().valorDefecto,
-          secuencial: data.payload.data().secuencial,
-        });
-        this.setChange(data.payload.data().estatus);
-        // this.loading = false;
-      });
+      const parametros = {
+        codigocomercializadora: this.params.codigocomercializadora,
+        codigo: this.params.codigo
+      }
+
+      this.ia.getItemInfinity('gravamen', parametros).subscribe(
+        d => {
+          console.log(d.retorno);
+          this.f.setValue({
+            nombre: d.retorno[0].nombre,
+            codigo: d.retorno[0].gravamenPK.codigo,
+            comercializadoraId: d.retorno[0].gravamenPK.codigocomercializadora,
+            estatus: d.retorno[0].activo,
+            imprime: d.retorno[0].seimprime,
+            formula: d.retorno[0].formulavalor,
+            valorDefecto: d.retorno[0].valordefecto
+          });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
+
   }
 
   getCom(): void {
     this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
+      console.log('ale', data);
       this.comercializadora = [];
       data.forEach((element: any) => {
         this.comercializadora.push({
@@ -161,7 +172,7 @@ export class GravamenComponent implements OnInit {
       imprime: ['', [Validators.required]],
       formula: ['', [Validators.required]],
       valorDefecto: ['', [Validators.required]],
-      secuencial: ['', [Validators.required]],
+      // secuencial: ['', [Validators.required]],
     });
 
   }
@@ -181,36 +192,87 @@ export class GravamenComponent implements OnInit {
       console.log(value);
 
       this.registro = true;
+      const gravamen = {
+        gravamenPK: {
+          codigocomercializadora: value.comercializadoraId,
+          codigo: value.codigo
+        },
+        nombre: value.nombre,
+        activo: value.estatus,
+        seimprime: value.imprime,
+        formulavalor: value.formula,
+        valordefecto: value.valorDefecto,
+        usuarioactual: value.usuarioactual
+      }
 
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('gravamen', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+        this.editItems(gravamen, this.id, 'gravamen', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'gravamen').then(() => {
+        this.addItems('gravamen', gravamen, 'postgres');
+      }
+      console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf.agregarItem(items, table).then(() => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      this.ia.addDataTable(table, items, 2).subscribe(
+        d => {
+          console.log(d);
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
           this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
-      }
+        },
+        err => console.log('HTTP Error', err),
+      );
+    }
 
-      console.log(value);
+  }
+
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf.editItem(table, codigo, items).then(() => {
+        console.log('Item editado con exito');
+        this.toastr.success('Item editado con exito', 'Item Editado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'GRAVAMEN' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 

@@ -75,13 +75,11 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "despach:build:production",
-              "proxyConfig": "proxy.conf.json"
+              "browserTarget": "despach:build:production"
             }
           },
           "staging": {
-            "browserTarget": "despach:build:staging",
-            "proxyConfig": "proxy.conf.json"
+            "browserTarget": "despach:build:staging"
           }
         },
         "extract-i18n": {

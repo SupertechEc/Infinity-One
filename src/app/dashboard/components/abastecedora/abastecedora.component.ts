@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 import { ConectionFirebaseService } from '../../../core/services/conection-firebase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-abastecedora',
@@ -28,14 +30,19 @@ export class AbastecedoraComponent implements OnInit {
   codCliente: any[] = [];
   activo = false;
   inactivo = false;
+  activoC = false;
+  inactivoC = false;
   indeterminate = false;
   color = '';
   stylecolor = '';
   labelPosition = 'after';
   ces = [
-    { estado: 'SI' },
-    { estado: 'NO' }
+    { estado: 'Si' },
+    { estado: 'No' }
   ];
+  user = this.local.get('user');
+  items = [];
+  params: any;
 
   constructor(
     private fb: FormBuilder,
@@ -44,11 +51,13 @@ export class AbastecedoraComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private ia: InfinityApiService
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {
       this.id = params.id;
+      this.params = params;
       console.log(this.id);
       if (this.id !== 'new') {
         this.btnName = 'Editar';
@@ -65,50 +74,57 @@ export class AbastecedoraComponent implements OnInit {
     // this.getItems();
   }
 
-  setChange(cambio: boolean): any {
+  setChangeEstado(cambio: boolean): any {
     if (cambio == null) {
-      return;
+        return;
     }
     if (cambio) {
-      this.activo = true;
-      this.inactivo = false;
-      this.color = 'primary';
-      this.indeterminate = false;
-      this.stylecolor = '#66bb6a';
+        this.activo = true;
+        this.inactivo = false;
+        this.color = 'primary';
+        this.indeterminate = false;
+        this.stylecolor = '#66bb6a';
     } else {
-      this.activo = false;
-      this.inactivo = true;
-      this.color = 'warn';
-      this.indeterminate = true;
-      this.stylecolor = '#ef5350';
+        this.activo = false;
+        this.inactivo = true;
+        this.color = 'warn';
+        this.indeterminate = true;
+        this.stylecolor = '#ef5350';
     }
   }
 
-
   getDataItem(): void {
     if (this.id !== 'new') {
-      // this.loading = true;
-      this.cf.getItemData('abastecedora', this.id).subscribe(data => {
-        console.log(data.payload.data());
-        // this.imgUrl = data.payload.data().imagenUrl;
-        this.f.setValue({
-          codigo: data.payload.data().codigo,
-          codigoARCH: data.payload.data().codigoARCH,
-          codigoSTC: data.payload.data().codigoSTC,
-          claveSTC: data.payload.data().claveSTC,
-          ruc: data.payload.data().ruc,
-          nombre: data.payload.data().nombre,
-          estatus: data.payload.data().estatus,
-          contEspecial: data.payload.data().contEspecial,
-          correo1: data.payload.data().correo1,
-          telefono1: data.payload.data().telefono1,
-          direccion: data.payload.data().direccion,
-          identificacionRL: data.payload.data().identificacionRL,
-          nombreRL: data.payload.data().nombreRL
-        });
-        this.setChange(data.payload.data().estatus);
-        // this.loading = false;
-      });
+
+      console.log(this.id);
+
+      console.log(this.params);
+
+      const parametros = {
+        codigo: this.params.codigo
+      }
+
+      this.ia.getItemInfinity('abastecedora', parametros).subscribe(
+        d => {
+          console.log(d.retorno);
+          this.f.setValue({
+            codigo: d.retorno[0].codigo,
+            codigoarch: d.retorno[0].codigoarch,
+            codigostc: d.retorno[0].codigostc,
+            clavestc: d.retorno[0].clavestc,
+            ruc: d.retorno[0].ruc,
+            nombre: d.retorno[0].nombre,
+            activo: d.retorno[0].activo,
+            escontribuyenteespacial: d.retorno[0].escontribuyenteespacial,
+            correo1: d.retorno[0].correo1,
+            telefono1: d.retorno[0].telefono1,
+            direccion: d.retorno[0].direccion,
+            identificacionrepresentantelega: d.retorno[0].identificacionrepresentantelega,
+            nombrerepresentantelegal: d.retorno[0].nombrerepresentantelegal
+          });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 
@@ -117,15 +133,15 @@ export class AbastecedoraComponent implements OnInit {
   }
 
   get codigoARCHNotValid(): any {
-    return this.f.get('codigoARCH')?.invalid && this.f.get('codigoARCH')?.touched;
+    return this.f.get('codigoarch')?.invalid && this.f.get('codigoarch')?.touched;
   }
 
   get codigoSTCNotValid(): any {
-    return this.f.get('codigoSTC')?.invalid && this.f.get('codigoSTC')?.touched;
+    return this.f.get('codigostc')?.invalid && this.f.get('codigostc')?.touched;
   }
 
   get claveSTCNotValid(): any {
-    return this.f.get('claveSTC')?.invalid && this.f.get('claveSTC')?.touched;
+    return this.f.get('clavestc')?.invalid && this.f.get('clavestc')?.touched;
   }
 
   get rucNotValid(): any {
@@ -137,11 +153,11 @@ export class AbastecedoraComponent implements OnInit {
   }
 
   get estatusNotValid(): any {
-    return this.f.get('estatus')?.invalid && this.f.get('estatus')?.touched;
+    return this.f.get('activo')?.invalid && this.f.get('activo')?.touched;
   }
 
   get contEspecialNotValid(): any {
-    return this.f.get('contEspecial')?.invalid && this.f.get('contEspecial')?.touched;
+    return this.f.get('escontribuyenteespacial')?.invalid && this.f.get('escontribuyenteespacial')?.touched;
   }
 
   get correo1NotValid(): any {
@@ -157,11 +173,11 @@ export class AbastecedoraComponent implements OnInit {
   }
 
   get identificacionRLNotValid(): any {
-    return this.f.get('identificacionRL')?.invalid && this.f.get('identificacionRL')?.touched;
+    return this.f.get('identificacionrepresentantelega')?.invalid && this.f.get('identificacionrepresentantelega')?.touched;
   }
 
   get nombreRLNotValid(): any {
-    return this.f.get('nombreRL')?.invalid && this.f.get('nombreRL')?.touched;
+    return this.f.get('nombrerepresentantelegal')?.invalid && this.f.get('nombrerepresentantelegal')?.touched;
   }
 
   makeForm(): void {
@@ -170,15 +186,15 @@ export class AbastecedoraComponent implements OnInit {
         Validators.required,
         Validators.minLength(4)
       ]],
-      codigoARCH: ['', [
+      codigoarch: ['', [
         Validators.required,
         Validators.minLength(2)
       ]],
-      codigoSTC: ['', [
+      codigostc: ['', [
         Validators.required,
-        Validators.minLength(10)
+        Validators.minLength(8)
       ]],
-      claveSTC: ['', [
+      clavestc: ['', [
         Validators.required,
         Validators.minLength(4)
       ]],
@@ -190,13 +206,13 @@ export class AbastecedoraComponent implements OnInit {
         Validators.required,
         Validators.minLength(3)
       ]],
-      estatus: ['', [Validators.required]],
-      contEspecial: ['', [Validators.required]],
+      activo: ['', [Validators.required]],
+      escontribuyenteespacial: ['', [Validators.required]],
       correo1: ['', [Validators.required]],
       telefono1: ['', [Validators.required]],
       direccion: ['', [Validators.required]],
-      identificacionRL: ['', [Validators.required]],
-      nombreRL: ['', [Validators.required]]
+      identificacionrepresentantelega: ['', [Validators.required]],
+      nombrerepresentantelegal: ['', [Validators.required]]
     });
 
   }
@@ -210,56 +226,78 @@ export class AbastecedoraComponent implements OnInit {
 
     if (this.f.valid) {
       const value = this.f.value;
-      // console.log(this.imageUrl);
-
-      // if (this.imageUrl === undefined) {
-
-      //   if (this.id !== null) {
-      //     value.imagenUrl = this.imgUrl;
-      //   } else {
-      //     value.imagenUrl = '';
-      //   }
-
-      // } else {
-      //   value.imagenUrl = this.imageUrl;
-      // }
-
       console.log(value);
-
       this.registro = true;
-
       if (this.id !== 'new') {
-        value.fechaActualizacion = new Date();
-        this.cf.editItem('abastecedora', this.id, value).then(() => {
-          console.log('Item editado con exito');
-          this.toastr.success('Item editado con exito', 'Item Editado', {
-            positionClass: 'toast-bottom-right'
-          });
-          this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'ABASTECEDORA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
+         // this.editItems('abastecedora', this.id, value, 'firebase');
+         this.editItems(value, this.id, 'abastecedora', 'postgres');
       } else {
-        value.fechaCreacion = new Date();
-        this.cf.agregarItem(value, 'abastecedora').then(() => {
+        // this.addItems('abastecedora', value, 'firebase');
+        this.addItems('abastecedora', value, 'postgres');
+      }
+      console.log(value);
+    }
+  }
+
+  addItems(table: string, items: any, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaCreacion = new Date();
+      this.cf.agregarItem(items, table).then(() => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'ABASTECEDORA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.addDataTable(table, items, 1).subscribe(
+        d => {
+          console.log(d);
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
           this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'ABASTECEDORA' } });
-        }).catch(error => {
-          this.loading = false;
-          console.log(error);
-        });
-      }
+        },
+        err => console.log('HTTP Error', err),
+      );
+    }
+  }
 
-      console.log(value);
-      // return Object.values(this.f.controls).forEach(control => {
-      //   control.markAsTouched();
-      // });
+  editItems(items: any, codigo: string, table: string, tipo: string): void {
+    if (tipo === 'firebase') {
+      items.fechaActualizacion = new Date();
+      this.cf.editItem(table, codigo, items).then(() => {
+        console.log('Item editado con exito');
+        this.toastr.success('Item editado con exito', 'Item Editado', {
+          positionClass: 'toast-bottom-right'
+        });
+        this.registro = false;
+        this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'ABASTECEDORA' } });
+      }).catch(error => {
+        this.loading = false;
+        console.log(error);
+      });
+    } else {
+      items.usuarioactual = this.user.email;
+      this.ia.editDataTable(table, items).subscribe(
+        d => {
+          console.log(d);
+          console.log('Item registrado con exito');
+          this.toastr.success('Item registrado con exito', 'Item Registrado', {
+            positionClass: 'toast-bottom-right'
+          });
+          this.registro = false;
+          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'ABASTECEDORA' } });
+        },
+        err => console.log('HTTP Error', err),
+      );
     }
   }
 

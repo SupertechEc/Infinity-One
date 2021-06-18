@@ -11,7 +11,7 @@ import { LocalstorageService } from '../../../core/services/localstorage.service
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogListaprecioComponent } from '../dialog-listaprecio/dialog-listaprecio.component';
 import Swal from 'sweetalert2';
-import { stringify } from '@angular/compiler/src/util';
+import { InfinityApiService } from '../../../core/services/infinity-api.service';
 
 @Component({
   selector: 'app-details',
@@ -55,6 +55,7 @@ export class DetailsComponent implements AfterViewInit {
     private aRoute: ActivatedRoute,
     private es: ElementosService,
     private dialog: MatDialog,
+    private ias: InfinityApiService,
   ) {
 
     // this.id = this.aRoute.snapshot.paramMap.get('id');
@@ -66,6 +67,7 @@ export class DetailsComponent implements AfterViewInit {
       this.nameCol = this.nameCol.replace(' ', '');
       this.nameCol = this.nameCol.replace(' ', '');
       this.nameCol = this.nameCol.toLocaleLowerCase();
+
       console.log(this.nameCol);
       if (this.nameCol === 'notadepedido') {
         this.getComercializadora();
@@ -73,18 +75,15 @@ export class DetailsComponent implements AfterViewInit {
       if (this.nameCol === 'clienteproducto') {
         this.getItems('cliente', 'nombre');
         this.flag = false;
-        this.cli = false;
         this.displayedColumns = ['codigo', 'name', 'editar'];
       } else if (this.nameCol === 'comercializadoraproducto') {
         this.getItems('comercializadora', 'nombre');
         this.flag = false;
-        this.cli = false;
         this.displayedColumns = ['codigo', 'name', 'editar'];
       } else if (this.nameCol === 'notadepedido') {
         this.ndp = true;
-        this.getItems('notadepedido', 'fechaVenta');
+        this.getItems('notapedido', 'fechaventa');
         this.flag = true;
-        this.cli = false;
         this.displayedColumns = ['codigo', 'fecha', 'editar'];
       } else if (this.nameCol === 'rubros'){
         this.flag = true;
@@ -115,7 +114,7 @@ export class DetailsComponent implements AfterViewInit {
   }
 
   getComercializadora(): void {
-    this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
+    /*this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
       this.comer = [];
       data.forEach((element: any) => {
         this.comer.push({
@@ -124,6 +123,10 @@ export class DetailsComponent implements AfterViewInit {
         });
       });
       console.log(this.comer);
+    });*/
+    this.ias.getTableInfinity('comercializadora').subscribe((data) => {
+      this.comer = [];
+      this.comer = data.retorno;
     });
   }
 
@@ -135,7 +138,7 @@ export class DetailsComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(this.itemsFilter);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    // this.getItems('notadepedido', 'fechaVenta');
+    // this.getItems('notapedido', 'fechaVenta');
   }
 
   openLista(item: any): void {
@@ -161,71 +164,6 @@ export class DetailsComponent implements AfterViewInit {
     }
   }
 
-  getItems(col: any, columna: string): void {
-    this.cf.getItems(col, columna).subscribe(data => {
-      this.items = [];
-      data.forEach((element: any) => {
-        this.items.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.items);
-      this.dataSource = new MatTableDataSource(this.items);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
-  }
-
-  newItem(): void {
-
-    Swal.fire({
-      icon: 'info',
-      showConfirmButton: false,
-      text: 'Espere por favor...',
-    });
-    Swal.showLoading();
-
-    if (this.nameCol === 'notadepedido') {
-      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new' } });
-      Swal.close();
-      // this.es.getNotaPedido(this.nameCol).then((data: any) => {
-      //   const user = this.local.get('user');
-      //   console.log(data);
-      //   const arr = data;
-      //   console.log(arr);
-      //   const colId = arr.id;
-      //   const ar1 = {
-      //     numeropedido: arr.numero
-      //   };
-      //   console.log(ar1);
-      //   this.cf.agregarItemNP(ar1, 'notadepedido').
-      //     then(r => {
-      //       console.log(colId);
-      //       console.log(r.id);
-      //       arr.notapedidoId = '' + r.id;
-      //       arr.flag = 'B';
-      //       arr.uid = user.localId;
-      //       arr.fechaUpdate = new Date();
-      //       delete arr.id;
-      //       console.log(arr);
-      //       this.cf.editItem('tablanumero', colId, arr).then(() => {
-      //         console.log('Item editado con exito');
-      //         Swal.close();
-      //         this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new', tn: colId, np: r.id } });
-      //       }).catch(error => {
-      //         console.log(error);
-      //       });
-      //     })
-      //     .catch(err => console.log(err));
-      // });
-    } else {
-      console.log(this.nameCol);
-      Swal.close();
-      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new' } });
-    }
-  }
-
   verCliente(): void{
     this.nameCol = 'clienteRubros';
     Swal.fire({
@@ -240,7 +178,67 @@ export class DetailsComponent implements AfterViewInit {
 
   }
 
-  delItem(item: any, id: string): void {
+  getItems(col: any, columna: string): void {
+    debugger;
+    const table = this.es.quitarAcentos(col);
+    console.log(table);
+    this.ias.getTableInfinity(table).subscribe(
+      d => {
+        console.log(table + 'PK');
+        this.items = [];
+        if (d.retorno[0].codigo) {
+          d.retorno.forEach((item: any, index: number) => {
+            this.items.push({
+              codigo: item.codigo,
+              nombre: item.nombre,
+              tipo: 1
+            });
+          });
+          console.log(this.items);
+          this.showitems(this.items);
+        } else {
+          d.retorno.forEach((item: any, index: number) => {
+            this.items.push({
+              nombre: item.nombre,
+              fechaventa: item.fechaventa,
+              ...item[table + 'PK'],
+              tipo: 2
+            });
+          });
+          console.log(this.items);
+          this.showitems(this.items);
+        }
+      },
+      err => console.log('HTTP Error', err),
+    );
+  }
+
+  showitems(items: any): void {
+    this.dataSource = new MatTableDataSource(items);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  newItem(): void {
+
+    Swal.fire({
+      icon: 'info',
+      showConfirmButton: false,
+      text: 'Espere por favor...',
+    });
+    Swal.showLoading();
+
+    if (this.nameCol === 'notapedido') {
+      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new' } });
+      Swal.close();
+    } else {
+      console.log(this.nameCol);
+      Swal.close();
+      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: 'new' } });
+    }
+  }
+
+  delItem(item: any): void {
 
     console.log(item);
     Swal.fire({
@@ -251,14 +249,22 @@ export class DetailsComponent implements AfterViewInit {
       confirmButtonText: `Borrar`,
     }).then(resp => {
       if (resp.value) {
-        this.cf.deleteItem(this.nameCol, id).then(() => {
-          console.log('Registro eliminado con exito');
-          this.toastr.info('Registro eliminado con exito', 'Registro Eliminado', {
-            positionClass: 'toast-bottom-right'
-          });
-        }).catch(error => {
-          console.log(error);
-        });
+        const table = this.es.quitarAcentos(this.nameCol);
+        console.log(table);
+
+        this.ias.deleteDataTable(table, item).subscribe(
+          d => {
+            console.log(d);
+            console.log('Registro eliminado con exito');
+            this.toastr.info('Registro eliminado con exito', 'Registro Eliminado', {
+              positionClass: 'toast-bottom-right'
+            });
+            // location.reload();
+            this.getItems(this.nameCol, 'nombre');
+          },
+          err => console.log('HTTP Error', err),
+        );
+
       }
     });
 
@@ -266,6 +272,7 @@ export class DetailsComponent implements AfterViewInit {
 
   editItem(item: any): void {
     debugger;
+    console.log(item);
     if (this.nameCol === 'clienteproducto') {
       this.cliente.clienteId = item.id;
       this.cliente.clienteCodigo = item.codigo;
@@ -321,7 +328,11 @@ export class DetailsComponent implements AfterViewInit {
         }
       });
     } else {
-      this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.id } });
+      if (item.tipo === 2 || item.tipo === 1) {
+        this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { ...item } });
+      } else {
+        this.router.navigate(['/dashboard/' + this.nameCol], { queryParams: { id: item.codigo } });
+      }
     }
   }
 }

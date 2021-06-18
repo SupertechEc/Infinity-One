@@ -33,7 +33,7 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="codigoARCH" [class.is-invalid]="codigoARCHNotValid">
+                                            formControlName="codigoarch" [class.is-invalid]="codigoARCHNotValid">
                                         <label for="" class="form__label">Código ARCH:</label>
                                     </div>
                                     <div *ngIf="codigoARCHNotValid" class="text-danger notification-outbound">Campo
@@ -47,7 +47,7 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="codigoSTC" [class.is-invalid]="codigoSTCNotValid">
+                                            formControlName="codigostc" [class.is-invalid]="codigoSTCNotValid">
                                         <label for="" class="form__label">Código STC:</label>
                                     </div>
                                     <div *ngIf="codigoSTCNotValid" class="text-danger notification-outbound">Campo
@@ -57,11 +57,8 @@
                                 <div class="form__div form-group">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="claveSTC" [class.is-invalid]="claveSTCNotValid">
+                                            formControlName="clavestc">
                                         <label for="" class="form__label">Clave STC:</label>
-                                    </div>
-                                    <div *ngIf="claveSTCNotValid" class="text-danger notification-outbound">Campo
-                                        invalido.
                                     </div>
                                 </div>
                             </div>
@@ -90,12 +87,10 @@
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="nombreArrendatario" [class.is-invalid]="nombreArrendatarioNotValid"
+                                    formControlName="nombrearrendatario" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Nombre Arrendatario:</label>
                             </div>
-                        </div>
-                        <div *ngIf="nombreArrendatarioNotValid" class="text-danger notification-inbound">Campo invalido.
                         </div>
 
                         <div class="img-dimension">
@@ -111,8 +106,9 @@
                                     </div>
                                 </div> -->
                                 <div class="select-check form-group">
+                                    
                                     <div class="campo">
-                                        <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                                        <mat-checkbox class="mat-check" formControlName="estado" [color]="color"
                                             [(indeterminate)]="indeterminate" (change)="setChange($event.checked)"
                                             labelPosition="before">
                                             Estado: </mat-checkbox>
@@ -121,6 +117,18 @@
                                     <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
                                     <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no
                                         seleccionado.</div>
+                                    <!--<div class="campo-seleccion-full">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Estado:</mat-label>
+                                            <mat-select formControlName="estado" required>
+                                                <mat-option>Opciones</mat-option>
+                                                <mat-option [value]= "'S'">SI</mat-option>
+                                                <mat-option [value]= "'N'">NO</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.</div>-->
                                 </div>
                             </div>
                         </div>
@@ -135,61 +143,41 @@
                         </div>
                         <div *ngIf="direccionNotValid" class="text-danger notification-inbound">Campo invalido.</div>
 
-                        <div class="img-dimension separacion">
-                            <div class="img-content">
-                                <div class="campo-seleccion">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Área de Mercadeo:</mat-label>
-                                        <mat-select formControlName="areaMercadeo" required>
-                                            <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let am of areamercadeo" [value]="am.codigo">
-                                                {{am.codigo}} - {{am.nombre}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <div *ngIf="areaMercadeoNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Dirección Inen:</mat-label>
+                                    <mat-select formControlName="codigodireccioninen" required>
+                                        <mat-option>Opciones</mat-option>
+                                        <mat-option *ngFor="let di of direccioninen" [value]="di.codigo">
+                                            {{di.codigo}} - {{di.nombre}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <div *ngIf="direccionInenNotValid" class="text-danger notification-check">Campo no
+                                    seleccionado.
                                 </div>
-
-                                <div class="campo-seleccion">
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Dirección Inen:</mat-label>
-                                        <mat-select formControlName="direccionInen" required>
-                                            <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let di of direccioninen" [value]="di.codigo">
-                                                {{di.codigo}} - {{di.nombre}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                    <div *ngIf="direccionInenNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
-                                </div>
-
                             </div>
                         </div>
 
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="identificacionRL" [class.is-invalid]="identificacionRLNotValid"
+                                    formControlName="identificacionrepresentantelega" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Identeficación Representante Legal:</label>
                             </div>
                         </div>
-                        <div *ngIf="identificacionRLNotValid" class="text-danger notification-inbound">Campo invalido.
-                        </div>
 
                         <div class="form__div form-group">
                             <div class="campo">
                                 <input type="text" class="form__input form-control" placeholder=" "
-                                    formControlName="nombreRL" [class.is-invalid]="nombreRLNotValid"
+                                    formControlName="nombrerepresentantelegal" 
                                     oninput="this.value = this.value.toUpperCase()">
                                 <label for="" class="form__label">Nombre Representante Legal:</label>
                             </div>
                         </div>
-                        <div *ngIf="nombreRLNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
 
                         <!-- <div class="file-upload">
                             <div class="file-upload-btn">
@@ -213,12 +201,12 @@
 
                         </div> -->
 
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col">
                                 <table class="table">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <!-- <th>ID</th> -->
+                                            <th>ID</th>
                                             <th>Correo</th>
                                             <th>Telefono</th>
                                             <th>Borrar</th>
@@ -227,14 +215,14 @@
                                     <tbody formArrayName="datosContactos">
                                         <tr *ngFor="let control of datosContactos.controls; let i = index"
                                             [formGroupName]="i" class="group-datacontacto">
-                                            <!-- <td>{{i + 1}}</td> -->
+                                            <td>{{i + 1}}</td>
                                             <td>
                                                 <input type="text" class="from-control datocontacto"
-                                                    formControlName="correo">
+                                                    formControlName="correo1">
                                             </td>
                                             <td>
                                                 <input type="text" class="from-control datocontacto"
-                                                    formControlName="telefono">
+                                                    formControlName="telefono1">
                                             </td>
                                             <td>
                                                 <button class="btn btn-danger" type="button"
@@ -247,7 +235,7 @@
                                 <button class="btn btn-primary" type="button" (click)="agregarDatosContactos()">+
                                     Agregar Campos</button>
                             </div>
-                        </div>
+                        </div>-->
 
                     </mat-expansion-panel>
                     <mat-expansion-panel>
@@ -264,44 +252,39 @@
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha Inicio Operación:</mat-label>
-                                    <input matInput [matDatepicker]="picker" formControlName="fechaInicioOperacion">
+                                    <input matInput [matDatepicker]="picker" formControlName="fehainiciooperacion">
                                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                     <mat-datepicker #picker></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div *ngIf="fechaInicioOperacionNotValid" class="text-danger notification-inbound">Campo
-                            invalido.
-                        </div>
+
 
                         <div class="form__div form-group form-fecha">
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha Inscripción Cliente:</mat-label>
-                                    <input matInput [matDatepicker]="picker1" formControlName="fechaInscripcionCliente">
+                                    <input matInput [matDatepicker]="picker1" formControlName="fehainscripcion">
                                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                     <mat-datepicker #picker1></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div *ngIf="fechaInscripcionClienteNotValid" class="text-danger notification-inbound">Campo
-                            invalido.
-                        </div>
+
 
                         <div class="form__div form-group form-fecha">
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha Registro ARCH:</mat-label>
-                                    <input matInput [matDatepicker]="picker2" formControlName="fechaRegistroARCH">
+                                    <input matInput [matDatepicker]="picker2" formControlName="feharegistroarch">
                                     <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                     <mat-datepicker #picker2></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div *ngIf="fechaRegistroARCHNotValid" class="text-danger notification-inbound">Campo invalido.
-                        </div>
 
-                        <div class="form__div form-group form-fecha">
+
+                        <!--<div class="form__div form-group form-fecha">
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha Registro Abastecedora:</mat-label>
@@ -314,21 +297,18 @@
                         </div>
                         <div *ngIf="fechaRegistroAbastecedoraNotValid" class="text-danger notification-inbound">Campo
                             invalido.
-                        </div>
+                        </div>-->
 
                         <div class="form__div form-group form-fecha">
                             <div class="campo">
                                 <mat-form-field appearance="outline">
                                     <mat-label>Fecha Vencimiento Contrato:</mat-label>
                                     <input matInput [matDatepicker]="picker4"
-                                        formControlName="fechaVencimientoContrato">
+                                        formControlName="fehavencimientocontrato">
                                     <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                                     <mat-datepicker #picker4></mat-datepicker>
                                 </mat-form-field>
                             </div>
-                        </div>
-                        <div *ngIf="fechaVencimientoContratoNotValid" class="text-danger notification-inbound">Campo
-                            invalido.
                         </div>
 
                         <div class="form__div form-group separacion-full">
@@ -336,16 +316,12 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Es Contribuyente Especial:</mat-label>
-                                        <mat-select formControlName="contEspecial" required>
+                                        <mat-select formControlName="escontribuyenteespacial" >
                                             <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let ece of eces" [value]="ece.codigo">
-                                                {{ece.codigo}} - {{ece.nombre}}
-                                            </mat-option>
+                                            <mat-option [value]= "true">SI</mat-option>
+                                            <mat-option [value]= "false">NO</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -355,7 +331,7 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Comercializadora:</mat-label>
-                                        <mat-select formControlName="comercializadoraId" required>
+                                        <mat-select formControlName="codigocomercializadora" required>
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let comer of comercializadora" [value]="comer.codigo">
                                                 {{comer.codigo}} - {{comer.nombre}}
@@ -375,7 +351,7 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Forma de Pago:</mat-label>
-                                        <mat-select formControlName="formaPago" required>
+                                        <mat-select formControlName="codigoformapago">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let fp of formapagos" [value]="fp.codigo"
                                                 (click)="camposFormaPago(fp)">
@@ -383,9 +359,6 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="formaPagoNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -396,26 +369,20 @@
                                     <div class="campo-seleccion">
                                         <mat-form-field appearance="outline">
                                             <mat-label>Tipo Días Plazo:</mat-label>
-                                            <mat-select formControlName="tipoDiasPlazo">
+                                            <mat-select formControlName="tipoplazocredito">
                                                 <mat-option>Opciones</mat-option>
                                                 <mat-option *ngFor="let tdpc of tdpcs" [value]="tdpc.codigo">
                                                     {{tdpc.codigo}} - {{tdpc.nombre}}
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
-                                        <div *ngIf="tipoDiasPlazoNotValid" class="text-danger notification-check">
-                                            Campo no seleccionado.
-                                        </div>
                                     </div>
                                     <div class="form__div form-group so">
                                         <div class="campo">
-                                            <input type="text" class="form__input form-control" placeholder=" "
-                                                formControlName="diasPlazoCredito"
+                                            <input type="number" class="form__input form-control" placeholder=" "
+                                                formControlName="diasplazocredito"
                                                 [class.is-invalid]="diasPlazoCreditoNotValid">
                                             <label for="" class="form__label">Días Plazo Credito:</label>
-                                        </div>
-                                        <div *ngIf="diasPlazoCreditoNotValid" class="text-danger notification-outbound">
-                                            Campo invalido.
                                         </div>
                                     </div>
                                 </div>
@@ -424,38 +391,48 @@
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="cuentaDebitar" [class.is-invalid]="cuentaDebitarNotValid"
+                                        formControlName="cuentadebito" 
                                         oninput="this.value = this.value.toUpperCase()">
                                     <label for="" class="form__label">Cuenta a Debitar:</label>
                                 </div>
                             </div>
-                            <div *ngIf="cuentaDebitarNotValid" class="text-danger notification-inbound">Campo invalido.
-                            </div>
 
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="codigoBancoDebitar"
-                                        [class.is-invalid]="codigoBancoDebitarNotValid"
+                                        formControlName="tipocuentadebito" 
                                         oninput="this.value = this.value.toUpperCase()">
-                                    <label for="" class="form__label">Código Banco a Debitar:</label>
+                                    <label for="" class="form__label">Tipo Cuenta:</label>
                                 </div>
                             </div>
-                            <div *ngIf="codigoBancoDebitarNotValid" class="text-danger notification-inbound">
-                                Campo invalido.
+
+
+                            <div class="form__div form-group">
+                                <div class="campo">
+                                    <div class="campo-seleccion-full">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Código Banco a Debitar:</mat-label>
+                                            <mat-select formControlName="codigobancodebito">
+                                                <mat-option>Opciones</mat-option>
+                                                <mat-option *ngFor="let ba of banco" [value]="ba.codigo">
+                                                    {{ba.codigo}} - {{ba.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
                             </div>
+
 
                             <div class="form__div form-group">
                                 <div class="campo">
                                     <input type="text" class="form__input form-control" placeholder=" "
-                                        formControlName="tasaInteresCreditoDias"
-                                        [class.is-invalid]="tasaInteresCreditoDiasNotValid"
+                                        formControlName="tasainteres"
+                                        
                                         oninput="this.value = this.value.toUpperCase()">
                                     <label for="" class="form__label">Tasa Interes Crédito Días:</label>
                                 </div>
                             </div>
-                            <div *ngIf="tasaInteresCreditoDiasNotValid" class="text-danger notification-inbound">Campo
-                                invalido.</div>
                         </ng-container>
 
                         <div class="form__div form-group separacion-full">
@@ -463,18 +440,12 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Controlar Grantía Bancaria:</mat-label>
-                                        <mat-select formControlName="controlarGrarantiaBancaria" required>
+                                        <mat-select formControlName="controlagarantia">
                                             <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let cgb of controlargarantiabanacaria"
-                                                [value]="cgb.estado">
-                                                {{cgb.estado}}
-                                            </mat-option>
+                                            <mat-option [value]= "true">SI</mat-option>
+                                            <mat-option [value]= "false">NO</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="controlarGrarantiaBancariaNotValid"
-                                        class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -484,16 +455,13 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Tipo Cliente:</mat-label>
-                                        <mat-select formControlName="tipoCliente" required>
+                                        <mat-select formControlName="codigotipocliente">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let tp of tipocliente" [value]="tp.codigo">
                                                 {{tp.codigo}} - {{tp.nombre}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="tipoClienteNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -503,10 +471,10 @@
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Lista de Precios:</mat-label>
-                                        <mat-select formControlName="listaPrecios" required>
+                                        <mat-select formControlName="codigolistaprecio" required>
                                             <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let lp of listaprecios" [value]="lp.codigo">
-                                                {{lp.codigo}} - {{lp.nombre}}
+                                            <mat-option *ngFor="let lp of listaprecios" [value]="lp.listaprecioPK.codigo">
+                                                {{lp.listaprecioPK.codigo}} - {{lp.nombre}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
@@ -517,93 +485,75 @@
                             </div>
                         </div>
 
-                        <!-- <div class="form__div form-group separacion-full">
+                        <div class="form__div form-group separacion-full">
                             <div class="campo">
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Código Grupo Flete:</mat-label>
-                                        <mat-select formControlName="codigoGrupoFlete" required>
+                                        <mat-select formControlName="codigolistaflete">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let gf of grupoflete" [value]="gf.codigo">
                                                 {{gf.nombre}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="codigoGrupoFleteNotValid" class="text-danger notification-check">Campo
-                                        no
-                                        seleccionado.
-                                    </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="img-dimension separacion">
                             <div class="img-content">
                                 <div class="campo-seleccion">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Aplica Subsidio:</mat-label>
-                                        <mat-select formControlName="aplicaSubsidio" required>
+                                        <mat-select formControlName="aplicasubsidio2" >
                                             <mat-option>Opciones</mat-option>
-                                            <mat-option *ngFor="let ece of eces" [value]="ece.codigo">
-                                                {{ece.codigo}} - {{ece.nombre}}
-                                            </mat-option>
+                                            <mat-option [value]= "true">SI</mat-option>
+                                            <mat-option [value]= "false">NO</mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="aplicaSubsidioNotValid" class="text-danger notification-check">Campo no
-                                        seleccionado.
-                                    </div>
                                 </div>
                                 <div class="form__div form-group so">
                                     <div class="campo">
                                         <input type="text" class="form__input form-control" placeholder=" "
-                                            formControlName="centroCosto" [class.is-invalid]="centroCostoNotValid">
+                                            formControlName="centrocosto">
                                         <label for="" class="form__label">Centro de Costo:</label>
-                                    </div>
-                                    <div *ngIf="centroCostoNotValid" class="text-danger notification-outbound">Campo
-                                        invalido.
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- <div class="form__div form-group separacion-full">
+                        <div class="form__div form-group separacion-full">
                             <div class="campo">
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Código Supervisor Zonal:</mat-label>
-                                        <mat-select formControlName="codigoSupervisorZonal" required>
+                                        <mat-select formControlName="codigosupervisorzonal">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let csz of codigosupervisorzonal" [value]="csz.codigo">
                                                 {{csz.nombre}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="codigoSupervisorZonalNotValid" class="text-danger notification-check">
-                                        Campo no seleccionado.
-                                    </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div> 
 
                         <div class="form__div form-group separacion-full">
                             <div class="campo">
                                 <div class="campo-seleccion-full">
                                     <mat-form-field appearance="outline">
                                         <mat-label>Terminal por Defecto:</mat-label>
-                                        <mat-select formControlName="terminalPorDefecto" required>
+                                        <mat-select formControlName="codigoterminaldefecto">
                                             <mat-option>Opciones</mat-option>
                                             <mat-option *ngFor="let ter of terminal" [value]="ter.codigo">
                                                 {{ter.codigo}} - {{ter.nombre}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                    <div *ngIf="terminalPorDefectoNotValid" class="text-danger notification-check">
-                                        Campo no seleccionado.
-                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </mat-expansion-panel>
                 </mat-accordion>
             </div>

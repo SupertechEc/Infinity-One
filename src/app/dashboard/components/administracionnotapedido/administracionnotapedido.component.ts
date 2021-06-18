@@ -10,6 +10,9 @@ import { ConectionFirebaseService } from '../../../core/services/conection-fireb
 import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { LocalstorageService } from '../../../core/services/localstorage.service';
+import { ServiceDataService } from '../../../core/services/service-data.service';
+import { map } from 'rxjs/operators';
+import { now } from 'jquery';
 
 @Component({
   selector: 'app-administracionnotapedido',
@@ -34,6 +37,11 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   num: any;
   grid = false;
   pp = false;
+  fv: Date | undefined;
+  precio: any;
+  subPrecio: any;
+  price: any[] = [];
+  facturaDetalle: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource();
@@ -57,16 +65,25 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private local: LocalstorageService,
+    private sd: ServiceDataService,
   ) {
     this.getNotaPedido();
     this.getAbastecedora();
     this.getComercializadora();
     this.getTerminal();
     this.getNumero();
+    // this.addDate();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+  }
+
+  addDate(fe: string, n: number): Date {
+    console.log(fe);
+    const f = new Date(fe);
+    f.setDate(f.getDate() + n);
+    return f;
   }
 
   getAbastecedora(): void {
@@ -110,7 +127,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
 
   getNotaPedido(): void {
     this.notaPedido = [];
-    this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -203,7 +220,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     this.notaPedido = [];
     this.abas = item.codigo;
     console.log(this.abas);
-    this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -230,7 +247,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     this.notaPedido = [];
     console.log(this.abas);
     console.log(this.come);
-    this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -264,7 +281,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     console.log(this.term);
     this.k = 0;
     this.notaPedido = [];
-    this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -309,7 +326,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
       console.log(fecha);
       this.k = 0;
       this.notaPedido = [];
-      this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+      this.cf.getItems('notapedido', 'codigo').subscribe(data => {
         if (this.k === 0) {
           this.k++;
           this.grid = true;
@@ -350,7 +367,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     this.k = 0;
     this.notaPedido = [];
     const fecha = this.datePipe.transform(valores.fecha, 'yyyy/MM/dd');
-    this.cf.getItems('notadepedido', 'codigo').subscribe(data => {
+    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -437,6 +454,14 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     this.user = this.local.get('user');
     console.log(this.user.email);
     let au = 0;
+    // this.sd.getDataPrecio('precio', 'codigo').subscribe((r: any) => {
+    //   // console.log(r);
+    //   this.precio = r;
+    //   console.log(this.precio);
+    // });
+
+    console.log(this.precio);
+
     this.f.value.datosNotaPedido.forEach((e: any) => {
       this.getNumero();
       console.log(this.num);
@@ -447,48 +472,63 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
 
       if (e.factura === '0') {
         if (e.autorizar) {
+          au++;
           this.np = this.notaPedido.filter(d => d.id === e.notaPedidoId);
           console.log(this.notaPedido);
+
           const factura = {
             codigoAbastecedora: e.abastecedoraId,
             codigoComercializadora: e.comercializadoraId,
-            nombreComercializadora: this.np[0].nombreComercializadora,
-            rucComercializadora: this.np[0].rucComercializadora,
-            direccionMatrizComercializadora: this.np[0].direccionComercializadora,
             numeroNotaPedido: e.numero,
             numero: this.num.codigo,
             fechaVenta: e.fechaVenta,
-            fechaVencimiento: '',
-            fechaAcreditacion: '',
+            fechaVencimiento: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
+            fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
             fechaDespacho: e.fechaDespacho,
             activa: true,
-            valorTotal: '',
+            valorTotal: 0,
             ivaTotal: '',
             observacion: e.comentario,
             pagada: false,
             oeenpetro: '',
             codigoCliente: e.clienteId,
-            nombreCliente: this.np[0].nombreCliente,
-            rucCliente: this.np[0].rucCliente,
-            clienteFormaPago: this.np[0].formaPagoCliente,
-            plazoCliente: this.np[0].tipoDiasPlazoCliente,
-            claveAcceso: this.np[0].claveSTCCliente,
             codigoTerminal: e.terminalId,
             codigoBanco: e.bancoId,
             adelantar: e.adelantar,
             usuarioActual: this.user.email,
+            nombreComercializadora: this.np[0].nombreComercializadora,
+            rucComercializadora: this.np[0].rucComercializadora,
+            direccionMatrizComercializadora: this.np[0].direccionComercializadora,
+            nombreCliente: this.np[0].nombreCliente,
+            rucCliente: this.np[0].rucCliente,
+            valorSinImpuestos: '',
             correoCliente: this.np[0].emailCliente,
             direccionCliente: this.np[0].direccionCliente,
             telefonoCliente: this.np[0].telefonoCliente,
-            valorSinImpuestos: '',
             numeroAutorizacion: '',
             fechaAutorizacion: '',
+            clienteFormaPago: this.np[0].formaPagoCliente,
+            plazoCliente: this.np[0].tipoDiasPlazoCliente,
+            claveAcceso: this.np[0].claveSTCCliente,
             campoAdicionalCampo1: '',
             campoAdicionalCampo2: '',
             campoAdicionalCampo3: '',
             campoAdicionalCampo4: '',
             campoAdicionalCampo5: '',
             campoAdicionalCampo6: '',
+            estado: 'Nueva',
+            errorDocumento: '',
+            hospedado: 0,
+            ambienteSRI: 1,
+            tipoEmision: 1,
+            codigoDocumento: '01',
+            esAgenteRetencion: false, // TOMAR DESDE COMERCIALIZADORA
+            esContribuyenteEspecial: false, // TOMAR DESDE COMERCIALIZADORA
+            obligadoContabilidad: '',
+            tipoComprador: '04',
+            moneda: 'DOLAR',
+            fechaCreacion: new Date(),
+            fechaActualizacion: new Date(),
           };
 
           const facturaDetalle = {
@@ -505,6 +545,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             precioProducto: 0,
             subTotal: 0,
             usuarioActual: this.user.email,
+            usuario: 'dgm'
           };
 
           const notaPedido = {
@@ -515,50 +556,65 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             estatus: true
           };
 
-          console.log(factura);
-          console.log(facturaDetalle);
-          notaPedido.numeroFactura = factura.numero;
-          if (e.fechaDespacho === e.fechaVenta && e.adelantar) {
-            au++;
-            console.log('Opción 1');
-            this.cf.agregarItem(factura, 'factura').then(c => {
-              this.cf.editItem('notadepedido', e.notaPedidoId, notaPedido);
-              this.cf.editItem('numero', this.num.id, numChange);
-              this.cf.agregarSubItem('factura', c.id, 'detalleFactura', facturaDetalle).then(sc => {
-                console.log('Item registrado con exito');
-                this.toastr.success('Item registrado con exito Op1', 'Item Registrado', {
-                  positionClass: 'toast-bottom-right'
-                });
-              });
+          // const filterDetalle = {
+          //   codigoComercializadora: e.comercializadoraId,
+          //   codigoTerminal: e.terminalId,
+          //   codigoProducto: e.productoCodigo,
+          //   codigoMedida: e.medidaId,
+          //   codigoListaPrecio: 'A0000000001',
+          //   fechaVenta: e.fechaVenta,
+          // };
+
+          // console.log(filterDetalle);
+          console.log(new Date(e.fechaVenta));
+
+          this.precio = this.sd.getData('precio', 'codigo');
+          this.precio.subscribe((d: any) => {
+            this.price = d;
+            d = d.filter((v: any) => v.listaPrecioCodigo === 'A0000000001');
+            d = d.filter((v: any) => v.comercializadoraCodigo === e.comercializadoraId);
+            // d = d.filter((v: any) => v.medidaCodigo = items.codigoMedida);
+            d = d.filter((v: any) => v.medidaAbreviacion === 'GLS');
+            d = d.filter((v: any) => v.activo === true);
+            // d = d.filter((v: any) => v.productoCodigo === e.productoCodigo);
+            d = d.filter((v: any) => this.datePipe.transform(v.fechaInicio.toDate(), 'yyyy/MM/dd') === e.fechaVenta);
+            d.sort((a: any, b: any) => {
+              return a.secuencial - b.secuencial;
             });
-          } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
-            au++;
-            console.log('Opción 2');
-            this.cf.agregarItem(factura, 'factura').then(c => {
-              this.cf.editItem('notadepedido', e.notaPedidoId, notaPedido);
-              this.cf.editItem('numero', this.num.id, numChange);
-              this.cf.agregarSubItem('factura', c.id, 'detalleFactura', facturaDetalle).then(sc => {
-                console.log('Item registrado con exito');
-                this.toastr.success('Item registrado con exito Op2', 'Item Registrado', {
-                  positionClass: 'toast-bottom-right'
-                });
-              });
-            });
-          } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
-            au++;
-            console.log('Opción 3');
-            this.cf.agregarItem(factura, 'factura').then(c => {
-              this.cf.editItem('notadepedido', e.notaPedidoId, notaPedido);
-              this.cf.editItem('numero', this.num.id, numChange);
-              this.cf.agregarSubItem('factura', c.id, 'detalleFactura', facturaDetalle).then(sc => {
-                console.log('Item registrado con exito');
-                this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
-                  positionClass: 'toast-bottom-right'
-                });
-              });
-            });
-          }
+            console.log(d[0]);
+            facturaDetalle.codigoPrecio = d[0].codigo;
+            facturaDetalle.precioProducto = d[0].precioProducto;
+            factura.fechaActualizacion = new Date();
+
+            notaPedido.numeroFactura = factura.numero;
+
+            if (e.fechaDespacho === e.fechaVenta && e.adelantar) {
+              au++;
+              console.log('Opción 1');
+              factura.fechaCreacion = new Date();
+              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              // return;
+            } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
+              au++;
+              console.log('Opción 2');
+              factura.fechaCreacion = new Date();
+              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              // return;
+            } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
+              au++;
+              console.log('Opción 3');
+              factura.fechaCreacion = new Date();
+              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+              // return;
+            }
+
+            console.log(factura);
+            console.log(facturaDetalle);
+
+          });
+
         } else {
+          console.log(au);
           if (au === 0) {
             Swal.fire({
               icon: 'error',
@@ -569,6 +625,74 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
       }
     });
     // this.filterSave();
+  }
+
+  actionFactura(factura: any, e: any, notaPedido: any, num: any, numChange: any, facturaDetalle: any, d: any): void {
+    factura.fechaCreacion = new Date();
+    this.cf.agregarItem(factura, 'facturas').then(c => {
+      this.cf.editItem('notapedido', e.notaPedidoId, notaPedido);
+      this.cf.editItem('numero', num.id, numChange);
+      this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facturaDetalle).then(sc => {
+        console.log('Item registrado con exito');
+        this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
+          positionClass: 'toast-bottom-right'
+        });
+      });
+      this.subPrecio = this.sd.getDataSub('precio', d[0].id, 'detalleprecio');
+      this.subPrecio.subscribe((r: any) => {
+        r = r.filter((v: any) => v.codigoGravamen !== '0001');
+        r = r.filter((v: any) => v.codigoGravamen !== '0009');
+        console.log(r);
+        r.forEach((elm: any, key: number) => {
+
+          const facDet = {
+            codigoAbastecedora: facturaDetalle.codigoAbastecedora,
+            codigoComercializadora: facturaDetalle.codigoComercializadora,
+            rucComercializadora: factura.rucComercializadora,
+            numeroNotaPedido: facturaDetalle.numeroNotaPedido,
+            numero: facturaDetalle.numero,
+            codigoProducto: '',
+            codigoMedida: '',
+            volumenNaturalRequerido: 0,
+            volumenNaturalAutorizado: 0,
+            codigoPrecio: 0,
+            precioProducto: 0,
+            subTotal: (facturaDetalle.volumenNaturalAutorizado * elm.valor),
+            usuarioActual: this.user.email,
+            codigoImpuesto: elm.codigoGravamen,
+            nombreImpuesto: elm.nombreGravamen,
+            seImprime: '',
+            valorDefecto: 0,
+            fechaCreacion: new Date(),
+            usuario: 'dgm'
+          };
+          // console.log(facDet);
+          // console.log(key);
+          let h = 0;
+
+          this.sd.getDataParm('gravamen', 'codigo', elm.codigoGravamen).subscribe((g: any) => {
+            console.log(g);
+            facDet.seImprime = g[0].imprime;
+            facDet.valorDefecto = g[0].valorDefecto;
+            console.log(key);
+            console.log(facDet);
+            h++;
+            console.log(h);
+            if (key < r.length) {
+              this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facDet).then(sc => {
+                // console.log('Item registrado con exito');
+                // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
+                //   positionClass: 'toast-bottom-right'
+                // });
+              });
+            }
+          });
+
+        });
+        return;
+      });
+
+    });
   }
 
   anularBtn(): void {

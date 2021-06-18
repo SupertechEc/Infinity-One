@@ -14,6 +14,9 @@ import { DatePipe } from '@angular/common';
 })
 export class GarantiaComponent implements OnInit {
 
+  displayedColumns: string[] = ['codigo', 'name', 'editar', 'borrar'];
+  dataSource!: MatTableDataSource<any>;
+
   item: any;
   comercializadora = '';
   comercializadoraM = '';
@@ -35,8 +38,6 @@ export class GarantiaComponent implements OnInit {
   clienteId = '';
   public datosFecha: FormGroup = new FormGroup({});
   public fechaEmision: any;
-  tipoFacturas: any;
-  facts: any;
 
   @Output()
   itemEdited = new EventEmitter();
@@ -92,9 +93,7 @@ export class GarantiaComponent implements OnInit {
     }
     fecha = yyyy + mm + dd;
     this.fechaEmi = fecha;
-    console.log(fecha)
     this.api.ConsultaDireccionTodos(this.fechaEmi).subscribe(data => {
-      this.tipoFacturas = data;
       console.log(data);
       let sumaNoPago = 0;
       let sumaPago = 0;
@@ -103,80 +102,69 @@ export class GarantiaComponent implements OnInit {
       let valorNoPagado = 0.0;
       let valorPagado = 0.0;
       let valorAnulado = 0.0;
-      if (data.length !== 0){
-        data.forEach((element: any) => {
-            if (element.estadoPago === 'SIN PAGO') {
-              sumaNoPago += 1;
-              this.facturasemitidasnopagadas = sumaNoPago as unknown as string;
-              this.facturasemitidaspagadas = sumaPago as unknown as string;
-            } else if (element.estadoPago === 'CANCELADA') {
-              sumaPago += 1;
-              this.facturasemitidasnopagadas = sumaNoPago as unknown as string;
-              this.facturasemitidaspagadas = sumaPago as unknown as string;
-            }
-    
-            if (element.estadoFac === 'ACTIVA') {
-              sumaActiva += 1;
-              if (sumaActiva >= 1) {
-                this.facturasanuladas = sumaNoActiva as unknown as string;
-              } else {
-                this.facturasanuladas = sumaActiva as unknown as string;
-              }
-            } else if (element.estadoFac === 'ANULADA') {
-              sumaNoActiva += 1;
-              this.facturasanuladas = sumaNoActiva as unknown as string;
-            }
-    
-            if (element.valorEmitidasSinPago >= 0) {
-              valorNoPagado += element.valorEmitidasSinPago;
-              let numeroP = valorNoPagado, comasP;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasP = numeroP.toLocaleString('en-US', noTruncarDecimales);
-              this.valornopagadas = comasP;
-    
-            } else {
-              var numeroP = valorNoPagado, comasP;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasP = numeroP.toLocaleString('en-US', noTruncarDecimales);
-              this.valornopagadas = comasP;
-            }
-    
-            if (element.valorEmitidasConPago >= 0) {
-              valorPagado += element.valorEmitidasConPago;
-              var numeroCP = valorPagado, comasCP;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasCP = numeroCP.toLocaleString('en-US', noTruncarDecimales);
-              this.valorpagadas = comasCP;
-    
-            } else {
-              var numeroCP = valorPagado, comasCP;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasCP = numeroCP.toLocaleString('en-US', noTruncarDecimales);
-              this.valorpagadas = comasCP;
-            }
-    
-            if (element.ValorAnuladas >= 0) {
-              valorAnulado += element.ValorAnuladas;
-              var numeroA = valorAnulado, comasA;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasA = numeroA.toLocaleString('en-US', noTruncarDecimales);
-              this.valoranuladas = comasA;
-            } else {
-              var numeroA = valorAnulado, comasA;
-              const noTruncarDecimales = { maximumFractionDigits: 2 };
-              comasA = numeroA.toLocaleString('en-US', noTruncarDecimales);
-              this.valoranuladas = comasA;
-            }
-        });
-      }else {
-        this.facturasemitidasnopagadas = '';
-        this.facturasemitidaspagadas = '',
-        this.facturasanuladas = '',
-        this.valoranuladas = '',
-        this.valornopagadas = '',
-        this.valorpagadas = ''
-      }
-      
+      data.forEach((element: any) => {
+        if (element.estadoPago === 'SIN PAGO') {
+          sumaNoPago += 1;
+          this.facturasemitidasnopagadas = sumaNoPago as unknown as string;
+          this.facturasemitidaspagadas = 0 as unknown as string;
+        } else if (element.estadoPago === 'CANCELADA') {
+          sumaPago += 1;
+          this.facturasemitidaspagadas = sumaPago as unknown as string;
+        }
+
+        if (element.estadoFac === 'ACTIVA') {
+          sumaActiva += 1;
+          if (sumaActiva >= 1) {
+            this.facturasanuladas = 0 as unknown as string;
+          } else {
+            this.facturasanuladas = sumaActiva as unknown as string;
+          }
+        } else if (element.estadoFac === 'ANULADA') {
+          sumaNoActiva += 1;
+          this.facturasanuladas = sumaNoActiva as unknown as string;
+        }
+
+        if (element.valorEmitidasSinPago >= 0) {
+          valorNoPagado += element.valorEmitidasSinPago;
+          let numeroP = valorNoPagado, comasP;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasP = numeroP.toLocaleString('en-US', noTruncarDecimales);
+          this.valornopagadas = comasP;
+
+        } else {
+          var numeroP = valorNoPagado, comasP;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasP = numeroP.toLocaleString('en-US', noTruncarDecimales);
+          this.valornopagadas = comasP;
+        }
+
+        if (element.valorEmitidasConPago >= 0) {
+          valorPagado += element.valorEmitidasConPago;
+          var numeroCP = valorPagado, comasCP;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasCP = numeroCP.toLocaleString('en-US', noTruncarDecimales);
+          this.valorpagadas = comasCP;
+
+        } else {
+          var numeroCP = valorPagado, comasCP;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasCP = numeroCP.toLocaleString('en-US', noTruncarDecimales);
+          this.valorpagadas = comasCP;
+        }
+
+        if (element.ValorAnuladas >= 0) {
+          valorAnulado += element.ValorAnuladas;
+          var numeroA = valorAnulado, comasA;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasA = numeroA.toLocaleString('en-US', noTruncarDecimales);
+          this.valoranuladas = comasA;
+        } else {
+          var numeroA = valorAnulado, comasA;
+          const noTruncarDecimales = { maximumFractionDigits: 2 };
+          comasA = numeroA.toLocaleString('en-US', noTruncarDecimales);
+          this.valoranuladas = comasA;
+        }
+      });
     });
   }
 
@@ -184,25 +172,17 @@ export class GarantiaComponent implements OnInit {
     this.datosFecha = this.formBuilder.group({ fechaEmision: [null, Validators.required] });
   }
 
-  listarFacturas(n: number): void {
-    let sinPago = {};
-    let cancelada = {};
-    let anulada = {};
+  convertirNumero(): void {
 
+  }
+
+  editItem(fechaEmision: HTMLInputElement, item: any): void {
+    console.log('abdc' + item);
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-
-    if(n===1){
-      sinPago = this.tipoFacturas.filter((d: any) => d.estadoFac ==='ACTIVA' && d.estadoPago ===  'SIN PAGO');
-      dialogConfig.data = sinPago;
-    }else if(n===2){
-      cancelada = this.tipoFacturas.filter((d: any) => d.estadoPago ===  'CANCELADA');
-      dialogConfig.data = cancelada;
-    }else{
-      anulada = this.tipoFacturas.filter((d: any) => d.estadoFac ===  'ANULADA');
-      dialogConfig.data = anulada;
-    }
+    dialogConfig.data = item;
     this.dialog.open(DialogFacturasComponent, dialogConfig)
+      .afterClosed()
+      .subscribe(val => {
+      });
   }
 }

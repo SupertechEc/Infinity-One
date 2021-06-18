@@ -14,7 +14,7 @@ export class ElementosService {
 
   getNotaPedido(nameCol: string): any {
 
-    if (nameCol === 'notadepedido') {
+    if (nameCol === 'notapedido') {
 
       return new Promise(resolve => {
         let numram = Math.random();
@@ -39,5 +39,9 @@ export class ElementosService {
         }, numram);
       });
     }
+  }
+
+  quitarAcentos(word: string): string {
+    return word.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
 }

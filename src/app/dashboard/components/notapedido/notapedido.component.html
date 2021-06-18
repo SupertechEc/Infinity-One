@@ -12,7 +12,7 @@
                     <div class="campo">
                         <mat-form-field appearance="outline">
                             <mat-label>Abastecedora:</mat-label>
-                            <mat-select formControlName="abastecedoraId" required>
+                            <mat-select formControlName="codigoabastecedora" required>
                                 <mat-option>Opciones</mat-option>
                                 <mat-option *ngFor="let abas of abastecedoras" [value]="abas.codigo"
                                     (click)="getComercializadora(abas)">
@@ -29,7 +29,7 @@
                     <div class="campo">
                         <mat-form-field appearance="outline">
                             <mat-label>Comercializadora:</mat-label>
-                            <mat-select formControlName="comercializadoraId" required>
+                            <mat-select formControlName="codigocomercializadora" required>
                                 <mat-option>Opciones</mat-option>
                                 <mat-option *ngFor="let comer of comercializadoras" [value]="comer.codigo"
                                     (click)="getCliente(comer)">
@@ -46,7 +46,7 @@
                     <div class="campo">
                         <mat-form-field appearance="outline">
                             <mat-label>Cliente:</mat-label>
-                            <mat-select formControlName="clienteId" required>
+                            <mat-select formControlName="codigocliente" required>
                                 <mat-option>Opciones</mat-option>
                                 <mat-option *ngFor="let cli of clientes" [value]="cli.codigo"
                                     (click)="getProductos(cli)">
@@ -64,7 +64,7 @@
             <div class="seccion-dos">
                 <div class="form__div campo-sec-dos">
                     <div class="text">
-                        Número de la Nota de Pedido Generada: <span [style.color]="stylecolor">{{nnp}}</span>
+                        Número de la Nota de Pedido Generada: <span [style.color]="stylecolor">{{numeroNP}}</span>
                     </div>
                 </div>
                 <div class="form__div campo-sec-dos">
@@ -77,11 +77,11 @@
                 <div class="parte-uno">
                     <div class="form__div">
 
-                        <div class="fecha-venta"><span>Fecha de Venta: </span>{{fechaInicial | date:'yyyy/MM/dd'}}</div>
+                        <div class="fecha-venta"><span>Fecha de Venta: </span>{{fechaventa | date:'yyyy/MM/dd'}}</div>
                         <!-- <div class="campo">
                             <mat-form-field appearance="outline">
                                 <mat-label>Fecha de Venta:</mat-label>
-                                <input matInput [matDatepicker]="picker" formControlName="fechaVenta">
+                                <input matInput [matDatepicker]="picker" formControlName="fechaventa">
                                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                 <mat-datepicker #picker></mat-datepicker>
                             </mat-form-field>
@@ -96,7 +96,7 @@
                         <div class="campo">
                             <mat-form-field appearance="outline">
                                 <mat-label>Fecha de Despacho:</mat-label>
-                                <input matInput [matDatepicker]="picker1" formControlName="fechaDespacho">
+                                <input matInput [matDatepicker]="picker1" formControlName="fechadespacho">
                                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
@@ -110,10 +110,10 @@
                         <div class="campo">
                             <mat-form-field appearance="outline">
                                 <mat-label>Banco:</mat-label>
-                                <mat-select formControlName="bancoId" required>
+                                <mat-select formControlName="codigobanco" required>
                                     <mat-option>Opciones</mat-option>
                                     <mat-option *ngFor="let banco of bancos" [value]="banco.codigo"
-                                        (click)="getBanco(banco)">
+                                    (click)="getBanco(banco)">
                                         {{banco.codigo}} - {{banco.nombre}}
                                     </mat-option>
                                 </mat-select>
@@ -134,7 +134,7 @@
                             </ng-container>
                             <!-- <mat-form-field appearance="outline">
                                 <mat-label>Terminal:</mat-label>
-                                <mat-select formControlName="terminalId" required>
+                                <mat-select formControlName="codigoterminal" required>
                                     <mat-option>Opciones</mat-option>
                                     <mat-option *ngFor="let terminal of terminales" [value]="terminal.codigo">
                                         {{terminal.codigo}} - {{terminal.nombre}}
@@ -153,7 +153,7 @@
                     <div class="form__div">
                         <div class="campo">
                             <input type="text" class="form__input form-control input" placeholder=" "
-                                formControlName="comentario" [class.is-invalid]="comentarioNotValid"
+                                formControlName="observacion" [class.is-invalid]="comentarioNotValid"
                                 oninput="this.value = this.value.toUpperCase()">
                             <label for="" class="form__label">Comentario:</label>
                         </div>
@@ -169,11 +169,11 @@
                     <div class="campo">
                         <mat-form-field appearance="outline">
                             <mat-label>Producto:</mat-label>
-                            <mat-select formControlName="productoId" required>
+                            <mat-select formControlName="codigoproducto" required>
                                 <mat-option>Opciones</mat-option>
-                                <mat-option *ngFor="let prod of productos" [value]="prod.productoCodigo"
+                                <mat-option *ngFor="let prod of productos" [value]="prod.codigo"
                                     (click)="getProducto(prod)">
-                                    {{prod.productoCodigo}} - {{prod.productoNombre}}
+                                    {{prod.codigo}} - {{prod.nombre}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -186,7 +186,7 @@
                     <div class="campo">
                         <mat-form-field appearance="outline">
                             <mat-label>Medida:</mat-label>
-                            <mat-select formControlName="medidaId" required>
+                            <mat-select formControlName="codigomedida" required>
                                 <mat-option>Opciones</mat-option>
                                 <mat-option *ngFor="let medi of medidas" [value]="medi.codigo"
                                     (click)="getMedida(medi)">
@@ -202,7 +202,7 @@
                 <div class="form__div">
                     <div class="campo">
                         <input type="number" class="form__input form-control input" placeholder=" "
-                            formControlName="volNatural" [class.is-invalid]="volNaturalNotValid">
+                            formControlName="volumennaturalrequerido" [class.is-invalid]="volNaturalNotValid">
                         <label for="" class="form__label">Vol. Natural:</label>
                     </div>
                     <div *ngIf="volNaturalNotValid" class="text-danger notification-td">Campo

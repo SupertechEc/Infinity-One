@@ -27,14 +27,14 @@
 
             <div class="select-check form-group">
                 <div class="campo">
-                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                    <mat-checkbox class="mat-check" formControlName="activo" [color]="color"
                         [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
                         Estado: </mat-checkbox>
                 </div>
                 <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
                 <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
             </div>
-            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
+            <div *ngIf="activoNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
 
             <!-- <div class="file-upload">
                 <div class="file-upload-btn">
@@ -88,4 +88,3 @@
 
     </div>
 </main>
-
