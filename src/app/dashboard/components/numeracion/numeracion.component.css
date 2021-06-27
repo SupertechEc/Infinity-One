@@ -1,0 +1,118 @@
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+    max-width: 1024px;
+    width: 50%;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+}
+
+.notification-select {
+    position: absolute;
+    margin-top: -20px;
+    margin-left: 25px;
+    z-index: -1;
+    font-size: 12px;
+    margin: -25px 0 15px 10px;
+}
+
+.notification-check {
+    position: absolute;
+    margin-top: -20px;
+    margin-left: 25px;
+    z-index: -1;
+    font-size: 12px;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color:#1A73E8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-underline {
+/*change color of underline*/
+    background-color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+    background-color: #1A73E8;
+}
+
+.select-check {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+
+.select-check .campo {
+    padding-left: 30px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.check-name {
+    width: 80%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    margin: -8px 0 0 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+}
+
+.mat-raised-button {
+    width: 150px;
+    background: linear-gradient(#dddddd, #80868B);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.btn-save {
+    color: white;
+    background: linear-gradient(#00C1D2, #004AC2);
+    margin: 0 0 0 20px;
+}
+
+button {
+    width: 100%;
+}

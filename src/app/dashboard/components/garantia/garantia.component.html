@@ -1,0 +1,94 @@
+<main>
+    <section id="pantalla-dividida">
+        <div class="componentes">
+            <div class="title">MONITOR DE GARANTÍA</div>
+            <div class="btn-container">
+                <button mat-raised-button (click)="getData()">ACTUALIZAR</button>
+            </div>
+            <div class="detalle-valores">
+                <div class="campo-center fondo">{{ comercializadora }}</div>
+                <div class="etiqueta">
+                    <div class="subetiqueta">ACTUALIZADO AL: </div>
+                    <div class="valor">{{actualizadoal}}</div>
+                </div>
+                <div class="etiqueta fondo">
+                    <div class="subetiqueta">VALOR TOTAL:</div>
+                    <div class="valor">$ {{valoratresdias}}</div>
+                </div>
+                <div class="etiqueta">
+                    <div class="subetiqueta">VALOR A TRES DÍAS:</div>
+                    <div class="valor">$ {{valortotal}}</div>
+                </div>
+                <div class="etiqueta fondo reduce">
+                    <div class="subetiqueta">VALOR MÁXIMO ALCANZABLE (98 %):</div>
+                    <div class="valor aumenta">{{noventayocho}}</div>
+                </div>
+                <div class="campo-center">USO ACTUAL: {{porcentajeusado}} %</div>
+                <div class="etiqueta fondo">
+                    <div class="subetiqueta">VALOR UTILIZADO:</div>
+                    <div class="valor">$ {{saldo}}</div>
+                </div>
+                <div class="etiqueta">
+                    <div class="subetiqueta">SALDO DISPONIBLE:</div>
+                    <div class="valor">$ {{saldodisponible}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="componentesD">
+            
+                <div class="title">MONITOR DE FACTURAS ÚNICAS</div>
+                <div class="btn-containerD">
+                    <form [formGroup] = "datosFecha" >
+                        <mat-form-field appearance="outline">
+                            <mat-label>Fecha de Emisión:</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="fechaEmision" #fechaEmision>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                        <button style="margin-left: 10px" mat-raised-button (click)="getDataDate(fechaEmision)">ACTUALIZAR</button>
+                    </form>
+                </div>
+
+                <div class="detalle-valoresD">
+                    <div class="campo-center fondo">{{ comercializadoraM }}</div>
+                    <div class="etiquetaD">
+                        <div class="subetiqueta">ACTUALIZADO AL: </div>
+                        <div class="consulta-doc"></div>
+                        <div class="fecha-consulta"></div>
+                        <div class="editar"><small>{{fechaActualizado}}</small></div>
+                    </div>
+                    <div class="etiquetaD fondo">
+                        <div class="subetiquetaF">F.U.</div>
+                        <div class="consulta-doc">Documentos</div>
+                        <div class="fecha-consulta">Total</div>
+                    </div>
+                    <div id="row" #row class="etiquetaD">
+                        <div class="subetiqueta">PAGADAS:</div>
+                        <div class="numeroDoc">{{facturasemitidasnopagadas}}</div>
+                        <div class="valorD">$ {{valornopagadas}}</div>
+                        <div class="datosF">
+                            <mat-icon (click)="editItem(fechaEmision, 'SIN PAGO')" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                        </div>
+                    </div>
+                    <div id="row2" #row2 class="etiquetaD fondo">
+                        <div class="subetiqueta">NO PAGADAS:</div>
+                        <div class="numeroDoc">{{facturasemitidaspagadas}}</div>
+                        <div class="valorD">$ {{valorpagadas}}</div>
+                        <div class="datosF">
+                            <mat-icon (click)="editItem(fechaEmision, row2)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                        </div>
+
+                    </div>
+                    <div id="row3" #row3 class="etiquetaD reduce">
+                        <div class="subetiqueta">ANULADAS:</div>
+                        <div class="numeroDoc">{{facturasanuladas}}</div>
+                        <div class="valorD">$ {{valoranuladas}}</div>
+                        <div class="datosF">
+                            <mat-icon (click)="editItem(fechaEmision, row3)" class="btn-edit" style="margin-left: 50px">create</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            
+        </div>
+    </section>
+</main>

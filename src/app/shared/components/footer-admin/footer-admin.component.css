@@ -1,0 +1,14 @@
+footer {
+    padding: 20px;
+    background-color: #e1e1e1;
+    /* background-color: #133C5D; */
+    color: #424242;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+}
+
+.text-footer {
+    width: 100%;
+}

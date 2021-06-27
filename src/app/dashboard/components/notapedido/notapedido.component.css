@@ -1,0 +1,501 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+main {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center center;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.contenedor {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center center;
+    max-width: 1200px;
+    /* width: 80%; */
+}
+
+form {
+    width: 100%;
+}
+
+.seccion-uno, .seccion-dos, .seccion-tres, .seccion-cuatro {
+    border-style: dotted;
+    border-width: 1px;
+    border-color: #660033;
+    background-color: white;
+    margin-bottom: 1.5rem;
+    padding: 20px 15px;
+    width: 100%;
+}
+
+.seccion-uno {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.seccion-uno .form__div {
+    width: 100%;
+    height: 70px;
+}
+
+.seccion-uno .notification{
+    padding-left: 12px;
+    font-size: 12px;
+}
+
+.seccion-dos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center center;
+    grid-gap: 10px;
+}
+
+.seccion-dos .form__div {
+    width: 100%;
+}
+
+.seccion-dos .campo-sec-dos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.seccion-dos .mat-raised-button {
+    width: 70%;
+}
+
+.seccion-dos span {
+    font-weight: bold;
+}
+
+.seccion-tres {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 15px 35px 15px;
+}
+
+.seccion-tres .parte-uno {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center center;
+    grid-gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.seccion-tres .parte-uno .form__div {
+    width: 100%;
+    height: 80px;
+}
+
+.seccion-tres .parte-dos {
+    width: 100%;
+    /* margin-bottom: 1rem; */
+}
+
+.seccion-tres .input {
+    height: 60px;
+}
+
+.seccion-tres .form__label {
+    margin-top: 5px;
+}
+
+.seccion-tres .notification{
+    padding-left: 12px;
+    font-size: 12px;
+}
+
+.seccion-tres .notification-td {
+    padding: 15px 0 0 15px;
+    font-size: 12px;
+}
+
+.seccion-cuatro
+{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33% 32% 32%;
+    place-items: center center;
+    grid-gap: 10px;
+    margin-bottom: 1rem;
+}
+
+.seccion-cuatro .form__div {
+    width: 100%;
+    height: 80px;
+}
+
+.seccion-cuatro .form__input {
+    height: 60px;
+}
+
+.seccion-cuatro .notification{
+    padding-left: 5px;
+    font-size: 12px;
+}
+
+.seccion-cuatro .notification-td {
+    padding: 68px 0 0 5px;
+    font-size: 12px;
+}
+
+.seccion-cuatro .input {
+    margin-top: 4px;
+}
+
+.seccion-cuatro .form__label {
+    margin-top: 8px;
+}
+
+.numero-nota-pedido {
+    font-size: 22px;
+    width: 70%;
+    text-align: center;
+}
+
+.numero-nota-pedido span {
+    font-weight: 800;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+}
+
+.form__div{
+    position: relative;
+    height: 48px;
+    /* margin-bottom: 1.5rem; */
+    background-color: white;
+    border-radius: .5rem;
+}
+
+.form__input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    font-size: 1rem;
+    border: 1px solid  #DADCE0;
+    border-radius: .5rem;
+    outline: none;
+    padding: 1rem;
+    background: none;
+    z-index: 1;
+}
+
+.form__label{
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 0 .75rem;
+    background-color: #fff;
+    color: #80868B;
+    font-size: 1rem;
+    transition: .3s;
+    border-radius: 5px;
+}
+
+.form__button{
+    display: block;
+    margin-left: auto;
+    padding: .75rem 2rem;
+    outline: none;
+    border: none;
+    background-color:  #1A73E8;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: .5rem;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.form__button:hover{
+    box-shadow: 0 10px 36px rgba(0,0,0,.15);
+}
+  
+/*Input focus move up label*/
+.form__input:focus + .form__label{
+    top: -.5rem;
+    left: .8rem;
+    color: #1A73E8;
+    font-size: .9rem;
+    font-weight: 500;
+    padding: 0 5px;
+    z-index: 10;
+}
+
+/*Input focus sticky top label*/
+.form__input:not(:placeholder-shown).form__input:not(:focus)+ .form__label{
+    top: -.5rem;
+    left: .8rem;
+    font-size: .75rem;
+    font-weight: 500;
+    z-index: 10;
+}
+
+/*Input focus*/
+.form__input:focus{
+    border: 1.5px solid  #1A73E8;
+}
+
+.fecha-venta, .terminal {
+    margin: 25px 0 0 10px;
+}
+
+.fecha-venta span {
+    font-weight: bold;
+    margin: 0 15px 0 0;
+}
+
+.terminal span {
+    font-weight: bold;
+    margin: 0 15px 0 0;
+}
+
+.mat-form-field {
+    width: 100%;
+}
+
+::ng-deep .mat-form-field-outline {
+    background-color: white;
+    border-radius: 5px;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color:#1A73E8;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-underline {
+/*change color of underline*/
+    background-color: #1A73E8;
+}
+
+::ng-deep.mat-form-field-ripple {
+/*change color of underline when focused*/
+    background-color: #1A73E8;
+}
+
+/* Cargar Imagenes */
+
+.file-upload{
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    width: 100%;
+    font-size: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.file-upload-btn {
+    width: 48%;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.file-upload-button {
+    -webkit-appearance: none;
+    background: #1A73E8;
+    border: 2px solid #133C5D;
+    border-radius: 4px;
+    outline: none;
+    padding: 0.5em 0.8em;
+    color: white;
+    font-size: 12px;
+    font-family: sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.file-upload-button:active {
+    background: #133C5D;
+}
+
+.file-upload-label {
+    width: 48%;
+    /* text-align: center; */
+    font-size: 14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    /* white-space: nowrap; */
+    word-wrap: break-word;
+    padding: 0 0 0 10px;
+}
+
+.loading {
+    width: 48%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading .title {
+    font-size: 14px;
+    margin: 0 20px 0 0;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0;
+}
+
+.btn-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.mat-raised-button {
+    width: 150px;
+    background: linear-gradient(#dddddd, #80868B);
+    border: 1px solid #bdbdbd;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.btn-save {
+    color: white;
+    background: linear-gradient(#00C1D2, #004AC2);
+    margin: 0 0 0 20px;
+}
+
+button {
+    width: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+    .contenedor {
+        width: 100%;
+    }
+
+    .seccion-uno, .seccion-cuatro {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .seccion-uno .form__div {
+        width: 100%;
+        height: 75px;
+    }
+
+}
+
+@media screen and (max-width: 868px) {
+    .contenedor {
+        width: 100%;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    .seccion-uno, .seccion-dos {
+        grid-template-columns: 1fr;
+    }
+
+    .seccion-dos {
+        grid-gap: 0;
+    }
+
+    .seccion-tres .parte-uno {
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+    }
+
+    .seccion-cuatro {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+
+    main {
+        padding: 20px 10px;
+    }
+
+    .form-fecha{
+        margin-bottom: 2rem;
+    }
+
+    .form__label {
+        font-size: 0.75rem;
+        padding: 0;
+    }
+
+    .form__input:focus + .form__label {
+        font-size: 0.75rem;
+        padding: 0 5px;
+    }
+
+    .check-name {
+        margin: -8px 0 0 15px;
+        font-size: 16px;
+    }
+
+    .notification-inbound {
+        margin: -20px 0 15px 15px;
+    }
+    
+    .notification-outbound {
+        margin: 48px 0 15px 15px;
+    }
+
+    .btn-container {
+        padding: 0 10px;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+}
+
+@media screen and (max-width: 330px) {
+    main {
+        padding: 10px 5px;
+    }
+
+    .seccion-dos .text {
+        text-align: center;
+    }
+
+    .form__label {
+        font-size: 1rem;
+        padding: 0;
+    }
+
+    .form__input:focus + .form__label {
+        font-size: 0.7rem;
+        padding: 0 5px;
+    }
+
+    .notification-outbound {
+        margin: 48px 0 15px 15px;
+    }
+
+    .btn-primary {
+        margin-bottom: 10px;
+    }
+
+    .mat-raised-button {
+        width: 130px;
+    }
+}

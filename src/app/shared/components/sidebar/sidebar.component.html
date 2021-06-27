@@ -1,0 +1,37 @@
+<mat-nav-list>
+    <div class="loading" *ngIf="loading else carga">
+        <div class="title">Cargando Datos...</div>
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden"></span>
+        </div>
+    </div>
+
+    <ng-template #carga>
+        <div class="avatar-container">
+            <div class="avatar-img">
+                <img [src]="imageUrl" alt="">
+            </div>
+            <div class="avatar-data">
+                <div class="avatar-name">{{user[0].firstname}} {{user[0].firstlastname}}</div>
+                <div class="profile">{{user[0].profile}}</div>
+            </div>
+
+        </div>
+
+        <mat-divider></mat-divider>
+        <h2 matSubheader>Componentes</h2>
+        <div class="links" *ngFor="let menu of menus; index as i" (click)="goPage(menu)">
+            <a mat-list-item>
+                <!-- <mat-icon>{{menu.icon}}</mat-icon>{{menu.name | titlecase}} -->
+                <i [class]="menu.icono"></i><span>{{menu.nombre | titlecase}}</span>
+            </a>
+        </div>
+
+        <!-- <br>
+        <mat-divider></mat-divider>
+        <h2 matSubheader>Configuración</h2>
+        <a mat-list-item routerLinkActive="list-item-active" routerLink="/dashboard/user">
+            <mat-icon>account_box</mat-icon>Usuarios
+        </a> -->
+    </ng-template>
+</mat-nav-list>

@@ -1,0 +1,124 @@
+<main>
+    <div class="componentes">
+        <div class="title">
+            {{title}}
+        </div>
+        <div class="mattab" *ngIf="comercializadora">
+            <mat-form-field appearance="outline">
+                <mat-label>Comercializadoras:</mat-label>
+                <mat-select>
+                    <mat-option *ngFor="let com of comercializadora" [value]="com.codigo"
+                        (click)="getFilter(com.codigo)">
+                        {{com.codigo}} -
+                        {{com.nombre}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="actions">
+            <button class="btn1" mat-raised-button (click)="newItem()" *ngIf="flag">Agregar</button>
+            <mat-form-field>
+                <mat-label>Buscar Registro:</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ej: MENÚS" #input>
+            </mat-form-field>
+            <button class="btn2" mat-raised-button (click)="newItem()" *ngIf="flag">Agregar</button>
+        </div>
+        <div class="mat-elevation-z8">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="codigo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+                    <td mat-cell *matCellDef="let row">
+                        <a class="btn" (click)="openLista(row)"
+                            *ngIf="this.nameCol === 'listaprecio' else nolista">{{row.codigo}}</a>
+                        <ng-template #nolista>{{row.codigo}}</ng-template>
+                    </td>
+                </ng-container>
+
+                <!-- Names Columns -->
+                <ng-container matColumnDef="fechainicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Inicio </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fechaInicio.toDate() | date: 'yyyy/MM/dd'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechafin">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Fin </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fechaFin}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="secuencial">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Secuencial </th>
+                    <td mat-cell *matCellDef="let row"> {{row.secuencial}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+                    <td mat-cell *matCellDef="let row"> {{row.activo}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="terminal">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Terminal </th>
+                    <td mat-cell *matCellDef="let row"> {{row.terminalCodigo}} - {{row.terminalNombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="producto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Producto </th>
+                    <td mat-cell *matCellDef="let row"> {{row.productoCodigo}} - {{row.productoNombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="margen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Margen Comer. </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="precio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+                    <td mat-cell *matCellDef="let row"> {{row.precioProducto}} </td>
+                </ng-container>
+
+                <!-- <ng-container matColumnDef="valor">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Valor </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+                </ng-container> -->
+
+                <ng-container matColumnDef="editar">
+                    <th mat-header-cell *matHeaderCellDef class="th-icon">Editar</th>
+                    <td mat-cell *matCellDef="let row; let i= index" class="td-icon">
+                        <mat-icon (click)="editItem(row)" class="btn-edit">create</mat-icon>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <ng-container matColumnDef="borrar" *ngIf="flag">
+                    <th mat-header-cell *matHeaderCellDef class="th-icon">Eliminar</th>
+                    <td mat-cell *matCellDef="let row; let i= index" class="td-icon">
+                        <mat-icon (click)="delItem(row, row.id)" class="btn-delete">delete_forever</mat-icon>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                </ng-container>
+
+                <!-- Progress Column -->
+                <!-- <ng-container matColumnDef="progress">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
+                    <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+                </ng-container> -->
+
+                <!-- Color Column -->
+                <!-- <ng-container matColumnDef="color">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
+                    <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </td>
+                </ng-container> -->
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                <!-- Row shown when there is no matching data. -->
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No se encontraron datos. "{{input.value}}"</td>
+                </tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+        </div>
+    </div>
+</main>

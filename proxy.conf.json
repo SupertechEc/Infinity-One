@@ -1,0 +1,10 @@
+{
+    "/ConsumidorWS_SOAP/*": {
+        "target": "https://www.supertech.ec:8443",
+        "secure": false
+    },
+    "/infinity_one/*": {
+        "target": "https://www.supertech.ec:8443",
+        "secure": false
+    }
+}

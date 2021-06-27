@@ -1,0 +1,26 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+
+        <button mat-icon-button (click)="toggleSideBar()">
+            <mat-icon>menu</mat-icon>
+        </button>
+
+        <div [routerLink]="['/dashboard']" class="title"> <span class="title-logo">SUPER</span> TECH</div>
+
+        <div class="nav-container">
+            <ul>
+                <li>
+                    <button mat-button [matMenuTriggerFor]="menu">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item (click)="exit()">
+                            <mat-icon>exit_to_app</mat-icon>Salir
+                        </button>
+                    </mat-menu>
+                </li>
+            </ul>
+        </div>
+
+    </mat-toolbar-row>
+</mat-toolbar>

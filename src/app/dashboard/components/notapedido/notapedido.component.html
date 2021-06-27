@@ -1,0 +1,233 @@
+<main>
+    <div class="contenedor">
+        <div class="title">NOTA DE PEDIDO
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+
+            <div class="seccion-uno">
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Abastecedora:</mat-label>
+                            <mat-select formControlName="abastecedoraId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let abas of abastecedoras" [value]="abas.codigo"
+                                    (click)="getComercializadora(abas)">
+                                    {{abas.codigo}} - {{abas.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="abastecedoraIdNotValid" class="text-danger notification">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Comercializadora:</mat-label>
+                            <mat-select formControlName="comercializadoraId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let comer of comercializadoras" [value]="comer.codigo"
+                                    (click)="getCliente(comer)">
+                                    {{comer.codigo}} - {{comer.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="comercializadoraIdNotValid" class="text-danger notification">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Cliente:</mat-label>
+                            <mat-select formControlName="clienteId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let cli of clientes" [value]="cli.codigo"
+                                    (click)="getProductos(cli)">
+                                    {{cli.codigo}} - {{cli.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="clienteIdNotValid" class="text-danger notification">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="seccion-dos">
+                <div class="form__div campo-sec-dos">
+                    <div class="text">
+                        Número de la Nota de Pedido Generada: <span [style.color]="stylecolor">{{nnp}}</span>
+                    </div>
+                </div>
+                <div class="form__div campo-sec-dos">
+                    <button mat-raised-button type="button" (click)="otraNotaPedido()">DESEA OTRA NOTA DE
+                        PEDIDO?</button>
+                </div>
+            </div>
+
+            <div class="seccion-tres">
+                <div class="parte-uno">
+                    <div class="form__div">
+
+                        <div class="fecha-venta"><span>Fecha de Venta: </span>{{fechaInicial | date:'yyyy/MM/dd'}}</div>
+                        <!-- <div class="campo">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Fecha de Venta:</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="fechaVenta">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="fechaVentaNotValid" class="text-danger notification">Campo
+                            invalido.
+                        </div> -->
+                    </div>
+
+
+                    <div class="form__div">
+                        <div class="campo">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Fecha de Despacho:</mat-label>
+                                <input matInput [matDatepicker]="picker1" formControlName="fechaDespacho">
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="fechaDespachoNotValid" class="text-danger notification">Campo
+                            invalido.
+                        </div>
+                    </div>
+
+                    <div class="form__div">
+                        <div class="campo">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Banco:</mat-label>
+                                <mat-select formControlName="bancoId" required>
+                                    <mat-option>Opciones</mat-option>
+                                    <mat-option *ngFor="let banco of bancos" [value]="banco.codigo"
+                                        (click)="getBanco(banco)">
+                                        {{banco.codigo}} - {{banco.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="bancoIdNotValid" class="text-danger notification">
+                            Campo no seleccionado.
+                        </div>
+                    </div>
+
+                    <div class="form__div">
+                        <div class="campo">
+                            <ng-container *ngIf="terminales[0]">
+
+                                <div class="terminal"><span>Terminal: </span>{{terminales[0].codigo}} -
+                                    {{terminales[0].nombre}}
+                                </div>
+                            </ng-container>
+                            <!-- <mat-form-field appearance="outline">
+                                <mat-label>Terminal:</mat-label>
+                                <mat-select formControlName="terminalId" required>
+                                    <mat-option>Opciones</mat-option>
+                                    <mat-option *ngFor="let terminal of terminales" [value]="terminal.codigo">
+                                        {{terminal.codigo}} - {{terminal.nombre}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field> -->
+                        </div>
+                        <div *ngIf="terminalIdNotValid" class="text-danger notification">
+                            Campo no seleccionado.
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="parte-dos">
+                    <div class="form__div">
+                        <div class="campo">
+                            <input type="text" class="form__input form-control input" placeholder=" "
+                                formControlName="comentario" [class.is-invalid]="comentarioNotValid"
+                                oninput="this.value = this.value.toUpperCase()">
+                            <label for="" class="form__label">Comentario:</label>
+                        </div>
+                    </div>
+                    <div *ngIf="comentarioNotValid" class="text-danger notification-td">Campo invalido.
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="seccion-cuatro">
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Producto:</mat-label>
+                            <mat-select formControlName="productoId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let prod of productos" [value]="prod.productoCodigo"
+                                    (click)="getProducto(prod)">
+                                    {{prod.productoCodigo}} - {{prod.productoNombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="productoIdNotValid" class="text-danger notification">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+                <div class="form__div">
+                    <div class="campo">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Medida:</mat-label>
+                            <mat-select formControlName="medidaId" required>
+                                <mat-option>Opciones</mat-option>
+                                <mat-option *ngFor="let medi of medidas" [value]="medi.codigo"
+                                    (click)="getMedida(medi)">
+                                    {{medi.codigo}} - {{medi.nombre}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="medidaIdNotValid" class="text-danger notification">
+                        Campo no seleccionado.
+                    </div>
+                </div>
+                <div class="form__div">
+                    <div class="campo">
+                        <input type="number" class="form__input form-control input" placeholder=" "
+                            formControlName="volNatural" [class.is-invalid]="volNaturalNotValid">
+                        <label for="" class="form__label">Vol. Natural:</label>
+                    </div>
+                    <div *ngIf="volNaturalNotValid" class="text-danger notification-td">Campo
+                        invalido.
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+        </form>
+
+        <!-- <hr>
+        <pre>
+        Estado del formulario: {{ f.valid }}
+        <br>
+        Status: {{ f.status }}
+        </pre>
+
+        <pre>
+
+        {{ f.value | json }}
+
+        </pre> -->
+    </div>
+</main>

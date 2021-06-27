@@ -1,0 +1,630 @@
+<main>
+    <div class="contenedor">
+        <div class="title">INGRESE CLIENTE
+            <div class="spinner-border text-primary" role="status" *ngIf="registro">
+                <span class="visually-hidden"></span>
+            </div>
+        </div>
+        <form autocomplete="off" [formGroup]="f" (ngSubmit)="save()">
+            <div class="accordion">
+                <mat-accordion class="example-headers-align" multi>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Información General
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon>assignment</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="codigo" [class.is-invalid]="codigoNotValid">
+                                        <label for="" class="form__label">Código:</label>
+                                    </div>
+                                    <div *ngIf="codigoNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.
+                                    </div>
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="codigoARCH" [class.is-invalid]="codigoARCHNotValid">
+                                        <label for="" class="form__label">Código ARCH:</label>
+                                    </div>
+                                    <div *ngIf="codigoARCHNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="codigoSTC" [class.is-invalid]="codigoSTCNotValid">
+                                        <label for="" class="form__label">Código STC:</label>
+                                    </div>
+                                    <div *ngIf="codigoSTCNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.
+                                    </div>
+                                </div>
+                                <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="claveSTC" [class.is-invalid]="claveSTCNotValid">
+                                        <label for="" class="form__label">Clave STC:</label>
+                                    </div>
+                                    <div *ngIf="claveSTCNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="ruc" [class.is-invalid]="rucNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">R.U.C.:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="rucNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="nombre" [class.is-invalid]="nombreNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Nombre:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="nombreNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="nombreArrendatario" [class.is-invalid]="nombreArrendatarioNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Nombre Arrendatario:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="nombreArrendatarioNotValid" class="text-danger notification-inbound">Campo invalido.
+                        </div>
+
+                        <div class="img-dimension">
+                            <div class="img-content">
+                                <!-- <div class="form__div form-group">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="nombreCorto" [class.is-invalid]="nombreCortoNotValid">
+                                        <label for="" class="form__label">Nombre Corto:</label>
+                                    </div>
+                                    <div *ngIf="nombreCortoNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.
+                                    </div>
+                                </div> -->
+                                <div class="select-check form-group">
+                                    <div class="campo">
+                                        <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                                            [(indeterminate)]="indeterminate" (change)="setChange($event.checked)"
+                                            labelPosition="before">
+                                            Estado: </mat-checkbox>
+                                    </div>
+                                    <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                                    <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
+                                    <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="direccion" [class.is-invalid]="direccionNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Dirección:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="direccionNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+                        <div class="img-dimension separacion">
+                            <div class="img-content">
+                                <div class="campo-seleccion">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Área de Mercadeo:</mat-label>
+                                        <mat-select formControlName="areaMercadeo" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let am of areamercadeo" [value]="am.codigo">
+                                                {{am.codigo}} - {{am.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="areaMercadeoNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+
+                                <div class="campo-seleccion">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Dirección Inen:</mat-label>
+                                        <mat-select formControlName="direccionInen" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let di of direccioninen" [value]="di.codigo">
+                                                {{di.codigo}} - {{di.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="direccionInenNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="identificacionRL" [class.is-invalid]="identificacionRLNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Identeficación Representante Legal:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="identificacionRLNotValid" class="text-danger notification-inbound">Campo invalido.
+                        </div>
+
+                        <div class="form__div form-group">
+                            <div class="campo">
+                                <input type="text" class="form__input form-control" placeholder=" "
+                                    formControlName="nombreRL" [class.is-invalid]="nombreRLNotValid"
+                                    oninput="this.value = this.value.toUpperCase()">
+                                <label for="" class="form__label">Nombre Representante Legal:</label>
+                            </div>
+                        </div>
+                        <div *ngIf="nombreRLNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+
+                        <!-- <div class="file-upload">
+                            <div class="file-upload-btn">
+                                <button type="button" (click)="fileInput.click()" class="file-upload-button">
+                                    <span>Cargar Logo</span>
+                                    <input #fileInput type="file" (change)="uploadFile($event)"
+                                        class="file-upload-input" />
+                                </button>
+                            </div>
+
+                            <div class="loading" *ngIf="loading else carga">
+                                <div class="title">Cargando Imagen...</div>
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden"></span>
+                                </div>
+                            </div>
+
+                            <ng-template #carga>
+                                <div class="file-upload-label">{{msgImage}}</div>
+                            </ng-template>
+
+                        </div> -->
+
+                        <div class="row">
+                            <div class="col">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <!-- <th>ID</th> -->
+                                            <th>Correo</th>
+                                            <th>Telefono</th>
+                                            <th>Borrar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody formArrayName="datosContactos">
+                                        <tr *ngFor="let control of datosContactos.controls; let i = index"
+                                            [formGroupName]="i" class="group-datacontacto">
+                                            <!-- <td>{{i + 1}}</td> -->
+                                            <td>
+                                                <input type="text" class="from-control datocontacto"
+                                                    formControlName="correo">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="from-control datocontacto"
+                                                    formControlName="telefono">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger" type="button"
+                                                    (click)="eliminarDatoContacto(i)"><i
+                                                        class="far fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <button class="btn btn-primary" type="button" (click)="agregarDatosContactos()">+
+                                    Agregar Campos</button>
+                            </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Información Comercial
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                <mat-icon>work</mat-icon>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha Inicio Operación:</mat-label>
+                                    <input matInput [matDatepicker]="picker" formControlName="fechaInicioOperacion">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="fechaInicioOperacionNotValid" class="text-danger notification-inbound">Campo
+                            invalido.
+                        </div>
+
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha Inscripción Cliente:</mat-label>
+                                    <input matInput [matDatepicker]="picker1" formControlName="fechaInscripcionCliente">
+                                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="fechaInscripcionClienteNotValid" class="text-danger notification-inbound">Campo
+                            invalido.
+                        </div>
+
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha Registro ARCH:</mat-label>
+                                    <input matInput [matDatepicker]="picker2" formControlName="fechaRegistroARCH">
+                                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="fechaRegistroARCHNotValid" class="text-danger notification-inbound">Campo invalido.
+                        </div>
+
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha Registro Abastecedora:</mat-label>
+                                    <input matInput [matDatepicker]="picker3"
+                                        formControlName="fechaRegistroAbastecedora">
+                                    <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="fechaRegistroAbastecedoraNotValid" class="text-danger notification-inbound">Campo
+                            invalido.
+                        </div>
+
+                        <div class="form__div form-group form-fecha">
+                            <div class="campo">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Fecha Vencimiento Contrato:</mat-label>
+                                    <input matInput [matDatepicker]="picker4"
+                                        formControlName="fechaVencimientoContrato">
+                                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker4></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div *ngIf="fechaVencimientoContratoNotValid" class="text-danger notification-inbound">Campo
+                            invalido.
+                        </div>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Es Contribuyente Especial:</mat-label>
+                                        <mat-select formControlName="contEspecial" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let ece of eces" [value]="ece.codigo">
+                                                {{ece.codigo}} - {{ece.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="contEspecialNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Comercializadora:</mat-label>
+                                        <mat-select formControlName="comercializadoraId" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let comer of comercializadora" [value]="comer.codigo">
+                                                {{comer.codigo}} - {{comer.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="comercializadoraIdNotValid" class="text-danger notification-check">Campo
+                                        no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Forma de Pago:</mat-label>
+                                        <mat-select formControlName="formaPago" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let fp of formapagos" [value]="fp.codigo"
+                                                (click)="camposFormaPago(fp)">
+                                                {{fp.codigo}} - {{fp.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="formaPagoNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="cfp">
+                            <div class="img-dimension separacion">
+                                <div class="img-content">
+                                    <div class="campo-seleccion">
+                                        <mat-form-field appearance="outline">
+                                            <mat-label>Tipo Días Plazo:</mat-label>
+                                            <mat-select formControlName="tipoDiasPlazo">
+                                                <mat-option>Opciones</mat-option>
+                                                <mat-option *ngFor="let tdpc of tdpcs" [value]="tdpc.codigo">
+                                                    {{tdpc.codigo}} - {{tdpc.nombre}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                        <div *ngIf="tipoDiasPlazoNotValid" class="text-danger notification-check">
+                                            Campo no seleccionado.
+                                        </div>
+                                    </div>
+                                    <div class="form__div form-group so">
+                                        <div class="campo">
+                                            <input type="number" class="form__input form-control" placeholder=" "
+                                                formControlName="diasPlazoCredito"
+                                                [class.is-invalid]="diasPlazoCreditoNotValid">
+                                            <label for="" class="form__label">Días Plazo Credito:</label>
+                                        </div>
+                                        <div *ngIf="diasPlazoCreditoNotValid" class="text-danger notification-outbound">
+                                            Campo invalido.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form__div form-group">
+                                <div class="campo">
+                                    <input type="text" class="form__input form-control" placeholder=" "
+                                        formControlName="cuentaDebitar" [class.is-invalid]="cuentaDebitarNotValid"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <label for="" class="form__label">Cuenta a Debitar:</label>
+                                </div>
+                            </div>
+                            <div *ngIf="cuentaDebitarNotValid" class="text-danger notification-inbound">Campo invalido.
+                            </div>
+
+                            <div class="form__div form-group">
+                                <div class="campo">
+                                    <input type="text" class="form__input form-control" placeholder=" "
+                                        formControlName="codigoBancoDebitar"
+                                        [class.is-invalid]="codigoBancoDebitarNotValid"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <label for="" class="form__label">Código Banco a Debitar:</label>
+                                </div>
+                            </div>
+                            <div *ngIf="codigoBancoDebitarNotValid" class="text-danger notification-inbound">
+                                Campo invalido.
+                            </div>
+
+                            <div class="form__div form-group">
+                                <div class="campo">
+                                    <input type="text" class="form__input form-control" placeholder=" "
+                                        formControlName="tasaInteresCreditoDias"
+                                        [class.is-invalid]="tasaInteresCreditoDiasNotValid"
+                                        oninput="this.value = this.value.toUpperCase()">
+                                    <label for="" class="form__label">Tasa Interes Crédito Días:</label>
+                                </div>
+                            </div>
+                            <div *ngIf="tasaInteresCreditoDiasNotValid" class="text-danger notification-inbound">Campo
+                                invalido.</div>
+                        </ng-container>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Controlar Grantía Bancaria:</mat-label>
+                                        <mat-select formControlName="controlarGrarantiaBancaria" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let cgb of controlargarantiabanacaria"
+                                                [value]="cgb.estado">
+                                                {{cgb.estado}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="controlarGrarantiaBancariaNotValid"
+                                        class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Tipo Cliente:</mat-label>
+                                        <mat-select formControlName="tipoCliente" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let tp of tipocliente" [value]="tp.codigo">
+                                                {{tp.codigo}} - {{tp.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="tipoClienteNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Lista de Precios:</mat-label>
+                                        <mat-select formControlName="listaPrecios" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let lp of listaprecios" [value]="lp.codigo">
+                                                {{lp.codigo}} - {{lp.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="listaPreciosNotValid" class="text-danger notification-check">
+                                        Campo no seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Código Grupo Flete:</mat-label>
+                                        <mat-select formControlName="codigoGrupoFlete" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let gf of grupoflete" [value]="gf.codigo">
+                                                {{gf.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="codigoGrupoFleteNotValid" class="text-danger notification-check">Campo
+                                        no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="img-dimension separacion">
+                            <div class="img-content">
+                                <div class="campo-seleccion">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Aplica Subsidio:</mat-label>
+                                        <mat-select formControlName="aplicaSubsidio" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let ece of eces" [value]="ece.codigo">
+                                                {{ece.codigo}} - {{ece.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="aplicaSubsidioNotValid" class="text-danger notification-check">Campo no
+                                        seleccionado.
+                                    </div>
+                                </div>
+                                <div class="form__div form-group so">
+                                    <div class="campo">
+                                        <input type="text" class="form__input form-control" placeholder=" "
+                                            formControlName="centroCosto" [class.is-invalid]="centroCostoNotValid">
+                                        <label for="" class="form__label">Centro de Costo:</label>
+                                    </div>
+                                    <div *ngIf="centroCostoNotValid" class="text-danger notification-outbound">Campo
+                                        invalido.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Código Supervisor Zonal:</mat-label>
+                                        <mat-select formControlName="codigoSupervisorZonal" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let csz of codigosupervisorzonal" [value]="csz.codigo">
+                                                {{csz.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="codigoSupervisorZonalNotValid" class="text-danger notification-check">
+                                        Campo no seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="form__div form-group separacion-full">
+                            <div class="campo">
+                                <div class="campo-seleccion-full">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Terminal por Defecto:</mat-label>
+                                        <mat-select formControlName="terminalPorDefecto" required>
+                                            <mat-option>Opciones</mat-option>
+                                            <mat-option *ngFor="let ter of terminal" [value]="ter.codigo">
+                                                {{ter.codigo}} - {{ter.nombre}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                    <div *ngIf="terminalPorDefectoNotValid" class="text-danger notification-check">
+                                        Campo no seleccionado.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+            <div class="btn-container">
+                <button mat-raised-button type="button" (click)="close()">Regresar</button>
+                <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btnName}}</button>
+            </div>
+        </form>
+
+        <!-- <hr>
+        <pre>
+        Estado del formulario: {{ f.valid }}
+        <br>
+        Status: {{ f.status }}
+        </pre>
+
+        <pre>
+
+        {{ f.value | json }}
+
+        </pre> -->
+    </div>
+</main>

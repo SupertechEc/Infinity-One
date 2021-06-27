@@ -1,0 +1,51 @@
+<main>
+    <div class="contenedor" *ngIf="flag">
+        <div class="title">LISTA PRECIO TERMINAL PRODUCTO</div>
+        <div class="campos-listaprecios">
+            <div class="campo-title">Comercializadora:</div>
+            <div class="campo-valor">{{lptp[0].comercializadoraCodigo}} -
+                {{lptp[0].comercializadoraNombre}}</div>
+        </div>
+        <div class="campos-listaprecios">
+            <div class="campo-title">Tipo Lista Precio:</div>
+            <div class="campo-valor">{{lptp[0].tipoListaPrecio}}</div>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="subtitle">Datos Productos</div>
+        <ng-container *ngFor="let dp of lptp[0].datosProductos; let i = index">
+            <div class="campos-listaprecios" *ngIf="lptp[0].tipoListaPrecio === 'MPO'">
+                <div class="campo-title">Producto {{i+1}}:</div>
+                <div class="campo-valor">{{dp.productoCodigo}} -
+                    {{dp.productoNombre}} - {{dp.medidaAbreviacion}} - MPO: {{dp.margenporcentaje}}</div>
+            </div>
+            <div class="campos-listaprecios" *ngIf="lptp[0].tipoListaPrecio === 'MCO'">
+                <div class="campo-title">Producto {{i+1}}:</div>
+                <div class="campo-valor">{{dp.productoCodigo}} -
+                    {{dp.productoNombre}} - {{dp.medidaAbreviacion}} - MCO: {{dp.margenvalorcomercializadora}}</div>
+            </div>
+            <!-- <div class="campos-listaprecios">
+                <div class="campo-title">Medida Abreviacion:</div>
+                <div class="campo-valor">{{dp.medidaAbreviacion}}</div>
+            </div>
+            <div class="campos-listaprecios">
+                <div class="campo-title">Margen Porcentaje:</div>
+                <div class="campo-valor">{{dp.margenporcentaje}}</div>
+            </div> -->
+        </ng-container>
+        <mat-divider></mat-divider>
+        <div class="subtitle">Terminales</div>
+        <ng-container *ngFor="let ter of lptp; let i = index">
+            <div class="campos-listaprecios">
+                <div class="campo-title">Terminal {{i+1}}:</div>
+                <div class="campo-valor">{{ter.terminalCodigo}} -
+                    {{ter.terminalNombre}}</div>
+            </div>
+        </ng-container>
+
+
+        <div class="btn-container">
+            <button mat-raised-button type="button" (click)="close()">Regresar</button>
+            <!-- <button mat-raised-button class="btn-save" [disabled]="f.invalid" type="submit">{{btname}}</button> -->
+        </div>
+    </div>
+</main>
