@@ -190,15 +190,7 @@ export class InfinityApiService {
   }
 
   // tslint:disable-next-line:max-line-length
-  public getListaPrecios(
-    nombre: string,
-    codComer: any,
-    codTerminal: any,
-    codProducto: any,
-    codMedida: any,
-    codListaPrecio: any,
-    fecha: any
-  ): Observable<any> {
+  public getListaPrecios(nombre: string, codComer: any, codTerminal: any, codProducto: any, codMedida: any, codListaPrecio: any, fecha: any): Observable<any> {
     console.log(this.tokenInfinity);
     this.tokenInfinity = localStorage.getItem('tokenInfinity');
     console.log(this.tokenInfinity);
@@ -212,6 +204,32 @@ export class InfinityApiService {
       .get<any>(
         `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/paraFactura?codigocomercializadora=${codComer}
       &codigoterminal=${codTerminal}&codigoproducto=${codProducto}&codigomedida=${codMedida}&codigolistaprecio=${codListaPrecio}&fechainicio=${fecha}`,
+        {
+          headers,
+        }
+      )
+      .pipe(
+        tap((data: any) => {
+          console.log(data);
+        }),
+        shareReplay(),
+        retry(3)
+      );
+  }
+
+  public getDetallePrecio(nombre: string, codPrecio: any): Observable<any> {
+    console.log(this.tokenInfinity);
+    this.tokenInfinity = localStorage.getItem('tokenInfinity');
+    console.log(this.tokenInfinity);
+    let headers = new HttpHeaders();
+    if (this.tokenInfinity) {
+      headers = headers.set('Content-Type', 'application/json');
+      headers = headers.set('Authorization', this.tokenInfinity);
+      headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
+    }
+    return this.http
+      .get<any>(
+        `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/paraFactura?codigo=${codPrecio}`,
         {
           headers,
         }

@@ -28,6 +28,8 @@ import { ServiceDataService } from '../../../core/services/service-data.service'
 import { map } from 'rxjs/operators';
 import { now } from 'jquery';
 import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
+import { FechasLaborablesService } from 'src/app/core/services/fechas-laborables.service';
+import { debug } from 'console';
 
 @Component({
   selector: 'app-administracionnotapedido',
@@ -93,7 +95,8 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private local: LocalstorageService,
-    private sd: ServiceDataService
+    private sd: ServiceDataService,
+    private fl: FechasLaborablesService,
   ) {
     this.getNotaPedido();
     this.getAbastecedora();
@@ -497,13 +500,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     }
   }
 
-  obtenerNotasPedido(
-    codAbas: any,
-    codComer: any,
-    codTerminal: any,
-    tipoFecha: any,
-    fecha: any
-  ): void {
+  obtenerNotasPedido(codAbas: any, codComer: any, codTerminal: any, tipoFecha: any, fecha: any): void {
     debugger;
     this.k = 0;
     this.notaPedido = [];
@@ -514,29 +511,20 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
       tipoFecha !== undefined &&
       fecha !== ''
     ) {
-      this.ia
-        .getNotasPedidos(
-          'notapedido',
-          codAbas,
-          codComer,
-          codTerminal,
-          tipoFecha,
-          fecha.value
-        )
-        .subscribe((data) => {
-          debugger;
-          if (this.k === 0) {
-            this.k++;
-            this.grid = true;
-            this.notaPedido = data.retorno;
-            console.log(this.notaPedido);
-            this.dataFormArray.clear();
-            this.dataSource.data = this.dataFormArray.controls;
-            this.notaPedido.forEach((r: any) => {
-              this.addRow(r);
-            });
-          }
-        });
+      this.ia.getNotasPedidos('notapedido', codAbas, codComer, codTerminal, tipoFecha, fecha.value).subscribe((data) => {
+        debugger;
+        if (this.k === 0) {
+          this.k++;
+          this.grid = true;
+          this.notaPedido = data.retorno;
+          console.log(this.notaPedido);
+          this.dataFormArray.clear();
+          this.dataSource.data = this.dataFormArray.controls;
+          this.notaPedido.forEach((r: any) => {
+            this.addRow(r);
+          });
+        }
+      });
     } else {
       Swal.fire({
         icon: 'error',
@@ -710,6 +698,79 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         // this.np = this.notaPedido.filter(d => d.numero === e.notaPedidoId);
 
         console.log(this.notaPedido);
+        const estructura = {
+          factura: {
+            codigoAbastecedora: e.codigoabastecedora,
+            codigoComercializadora: e.codigocomercializadora,
+            numeroNotaPedido: e.numero,
+            // numero: this.num.codigo,
+            numero: '0',
+            fechaVenta: e.fechaVenta,
+            // revisar consulta tabla fechafestiva tipoDiasPlazoCliente
+            fechaVencimiento: this.datePipe.transform(this.fl.getDate(new Date(e.fechaDespacho), e.clienteId.diasplazocredito), 'yyyy/MM/dd'),
+            // fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
+            fechaDespacho: e.fechaDespacho,
+            activa: true,
+            valorTotal: 0,
+            ivaTotal: '',
+            observacion: e.comentario,
+            pagada: false,
+            oeenpetro: '',
+            codigoCliente: e.clienteId,
+            codigoTerminal: e.codigoterminal,
+            codigoBanco: e.bancoId,
+            adelantar: e.adelantar,
+            usuarioActual: this.user.email,
+            // nombreComercializadora: this.np[0].nombreComercializadora,
+            nombreComercializadora: this.comerSeleccionada.nombre,
+            // rucComercializadora: this.np[0].rucComercializadora,
+            rucComercializadora: this.comerSeleccionada.ruc,
+            // direccionMatrizComercializadora: this.np[0].direccionComercializadora,
+            direccionMatrizComercializadora: this.comerSeleccionada.direccion,
+            // nombreCliente: this.np[0].nombreCliente,
+            nombreCliente: e.clienteId.nombre,
+            // rucCliente: this.np[0].rucCliente,
+            rucCliente: e.clienteId.ruc,
+            valorSinImpuestos: '',
+            // correoCliente: this.np[0].emailCliente,
+            correoCliente: e.clienteId.correo,
+            // direccionCliente: this.np[0].direccionCliente,
+            direccionCliente: e.clienteId.direccion,
+            // telefonoCliente: this.np[0].telefonoCliente,
+            telefonoCliente: e.clienteId.telefono,
+            numeroAutorizacion: '',
+            fechaAutorizacion: '',
+            // clienteFormaPago: this.np[0].formaPagoCliente,
+            clienteFormaPago: e.clienteId.codigoformapago.codigo,
+            // plazoCliente: this.np[0].tipoDiasPlazoCliente,
+            plazoCliente: e.clienteId.tipoplazocredito,
+            // claveAcceso: this.np[0].claveSTCCliente,
+            claveAcceso: '0',
+            campoAdicionalCampo1: '',
+            campoAdicionalCampo2: '',
+            campoAdicionalCampo3: '',
+            campoAdicionalCampo4: '',
+            campoAdicionalCampo5: '',
+            campoAdicionalCampo6: '',
+            estado: 'NUEVA',
+            errorDocumento: '',
+            hospedado: 0,
+            ambienteSRI: this.comerSeleccionada.ambientesri,
+            tipoEmision: this.comerSeleccionada.tipoemision,
+            codigoDocumento: '01',
+            esAgenteRetencion: this.comerSeleccionada.esagenteretencion, // TOMAR DESDE COMERCIALIZADORA
+            esContribuyenteEspecial:
+              this.comerSeleccionada.escontribuyenteespacial, // TOMAR DESDE COMERCIALIZADORA
+            obligadoContabilidad: this.comerSeleccionada.obligadocontabilidad,
+            tipoComprador: '04',
+            moneda: 'DOLAR',
+            // fechaCreacion: new Date(),
+            // fechaActualizacion: new Date(),
+          },
+          detalle: [
+
+          ]
+        };
 
         const factura = {
           codigoAbastecedora: e.codigoabastecedora,
@@ -719,7 +780,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           numero: '0',
           fechaVenta: e.fechaVenta,
           // revisar consulta tabla fechafestiva tipoDiasPlazoCliente
-          fechaVencimiento: this.addDate(e.fechaDespacho, e.clienteId.diasplazocredito),
+          fechaVencimiento: this.datePipe.transform(this.fl.getDate(new Date(e.fechaDespacho), e.clienteId.diasplazocredito), 'yyyy/MM/dd'),
           // fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
           fechaDespacho: e.fechaDespacho,
           activa: true,
@@ -806,6 +867,10 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           estatus: true,
         };
 
+        //console.log(factura);
+        //console.log(facturaDetalle);
+        //console.log(notaPedido);
+        //console.log(numChange);
         // const filterDetalle = {
         //   codigoComercializadora: e.codigocomercializadora,
         //   codigoTerminal: e.codigoterminal,
@@ -845,8 +910,8 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             return a.secuencial - b.secuencial;
           });*/
           console.log(this.precio[0]);
-          facturaDetalle.codigoPrecio = this.precio[0].codigo;
-          facturaDetalle.precioProducto = this.precio[0].precioProducto;
+          facturaDetalle.codigoPrecio = this.precio[0].precioPK.codigoPrecio;
+          facturaDetalle.precioProducto = this.precio[0].precioproducto;
           // });
           // factura.fechaActualizacion = new Date();
 
@@ -856,7 +921,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             au++;
             console.log('Opción 1');
             // factura.fechaCreacion = new Date();
-            // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+            this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, facturaDetalle.codigoPrecio);
             // return;
           } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
             au++;
@@ -868,12 +933,12 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             au++;
             console.log('Opción 3');
             // factura.fechaCreacion = new Date();
-            // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+            this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, facturaDetalle.codigoPrecio);
             // return;
           }
 
-          console.log(factura);
-          console.log(facturaDetalle);
+          console.log('fac', factura);
+          console.log('facDet', facturaDetalle);
         });
       } else {
         console.log(au);
@@ -890,9 +955,10 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   actionFactura(factura: any, e: any,  notaPedido: any,  num: any,  numChange: any, facturaDetalle: any, d: any): void {
-    factura.fechaCreacion = new Date();
-    this.cf.agregarItem(factura, 'facturas').then((c) => {
-      this.cf.editItem('notapedido', e.notaPedidoId, notaPedido);
+    debugger;
+    // factura.fechaCreacion = new Date();
+    // this.cf.agregarItem(factura, 'facturas').then((c) => {
+      /*this.cf.editItem('notapedido', e.notaPedidoId, notaPedido);
       this.cf.editItem('numero', num.id, numChange);
       this.cf
         .agregarSubItem('facturas', c.id, 'detalleFactura', facturaDetalle)
@@ -905,9 +971,75 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
               positionClass: 'toast-bottom-right',
             }
           );
+        });*/
+
+    this.ia.getDetallePrecio('detalleprecio', d).subscribe((data) => {
+      debugger;
+      this.subPrecio = data.retorno;
+      this.subPrecio = this.subPrecio.filter((v: any) => v.codigogravamen !== '0001');
+      this.subPrecio = this.subPrecio.filter((v: any) => v.codigogravamen !== '0009');
+      console.log('Detalle Precio', this.subPrecio);
+      // this.subPrecio.forEach((elm: any, key: number) => {
+      this.subPrecio.forEach((elm: any) => {
+        debugger;
+        const facDet = {
+          codigoAbastecedora: facturaDetalle.codigoAbastecedora,
+          codigoComercializadora: facturaDetalle.codigoComercializadora,
+          rucComercializadora: factura.rucComercializadora,
+          numeroNotaPedido: facturaDetalle.numeroNotaPedido,
+          numero: facturaDetalle.numero,
+          codigoProducto: '',
+          codigoMedida: '',
+          volumenNaturalRequerido: 0,
+          volumenNaturalAutorizado: 0,
+          codigoPrecio: 0,
+          precioProducto: 0,
+          subTotal: facturaDetalle.volumenNaturalAutorizado * elm.valor,
+          usuarioActual: this.user.email,
+          codigoImpuesto: elm.codigoGravamen,
+          nombreImpuesto: elm.nombreGravamen,
+          seImprime: '',
+          valorDefecto: 0,
+          fechaCreacion: new Date(),
+          usuario: 'dgm',
+        };
+        console.log(facDet);
+        // console.log(key);
+        let h = 0;
+
+        this.ia.getTableInfinity('gravamen').subscribe((data) =>{
+          debugger;
+          console.log(data.retorno);
+          facDet.seImprime = data.retorno[0].imprime;
+          facDet.valorDefecto = data.retorno[0].valorDefecto;
+          console.log('Detalle', facDet);
+            h++;
+            console.log(h);
         });
-      this.subPrecio = this.sd.getDataSub('precio', d[0].id, 'detalleprecio');
-      this.subPrecio.subscribe((r: any) => {
+        /*this.sd.getDataParm('gravamen', 'codigo', elm.codigoGravamen).subscribe((g: any) => {
+            console.log(g);
+            facDet.seImprime = g[0].imprime;
+            facDet.valorDefecto = g[0].valorDefecto;
+            //console.log(key);
+            console.log(facDet);
+            h++;
+            console.log(h);
+            //if (key < this.subPrecio.length) {
+              this.cf;
+              /*.agregarSubItem('facturas', c.id, 'detalleFactura', facDet)
+                  .then((sc) => {
+                    // console.log('Item registrado con exito');
+                    // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
+                    //   positionClass: 'toast-bottom-right'
+                    // });
+                  });
+            //}
+          });*/
+      });
+      return;
+    });
+    // this.subPrecio = this.sd.getDataSub('precio', d[0].id, 'detalleprecio');
+    /* this.subPrecio.subscribe((r: any) => {
         r = r.filter((v: any) => v.codigoGravamen !== '0001');
         r = r.filter((v: any) => v.codigoGravamen !== '0009');
         console.log(r);
@@ -949,7 +1081,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
               console.log(h);
               if (key < r.length) {
                 this.cf
-                  .agregarSubItem('facturas', c.id, 'detalleFactura', facDet)
+                  /*.agregarSubItem('facturas', c.id, 'detalleFactura', facDet)
                   .then((sc) => {
                     // console.log('Item registrado con exito');
                     // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
@@ -960,8 +1092,8 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             });
         });
         return;
-      });
-    });
+      });*/
+    //});
   }
 
   anularBtn(): void {
