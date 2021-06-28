@@ -1,6 +1,20 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, Pipe, PipeTransform } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef,
+  AfterViewInit,
+  Pipe,
+  PipeTransform,
+} from '@angular/core';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,14 +27,14 @@ import { LocalstorageService } from '../../../core/services/localstorage.service
 import { ServiceDataService } from '../../../core/services/service-data.service';
 import { map } from 'rxjs/operators';
 import { now } from 'jquery';
+import { InfinityApiService } from 'src/app/core/services/infinity-api.service';
 
 @Component({
   selector: 'app-administracionnotapedido',
   templateUrl: './administracionnotapedido.component.html',
-  styleUrls: ['./administracionnotapedido.component.css']
+  styleUrls: ['./administracionnotapedido.component.css'],
 })
 export class AdministracionnotapedidoComponent implements AfterViewInit {
-
   abastecedora: any[] = [];
   comercializadora: any[] = [];
   terminal: any[] = [];
@@ -30,8 +44,10 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   np: any[] = [];
   abas: any;
   come: any;
+  comerSeleccionada: any;
   term: any;
   tife: any;
+  codComer: any;
   k = 0;
   user: any;
   num: any;
@@ -45,15 +61,26 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   dataSource = new MatTableDataSource();
-  displayColumns = ['cliente', 'factura', 'numero', 'producto', 'volSolicitado', 'volAutorizado',
-    'fechaVenta', 'fechaDespacho', 'adelantar', 'autorizar', 'anular'];
+  displayColumns = [
+    'cliente',
+    'factura',
+    'numero',
+    'producto',
+    'volSolicitado',
+    'volAutorizado',
+    'fechaVenta',
+    'fechaDespacho',
+    'adelantar',
+    'autorizar',
+    'anular',
+  ];
   f: FormGroup = this.fb.group({
-    abastecedoraId: ['', [Validators.required]],
-    comercializadoraId: ['', [Validators.required]],
-    terminalId: ['', [Validators.required]],
+    codigoabastecedora: ['', [Validators.required]],
+    codigocomercializadora: ['', [Validators.required]],
+    codigoterminal: ['', [Validators.required]],
     fecha: ['', [Validators.required]],
     porProcesar: [''],
-    datosNotaPedido: this.fb.array([])
+    datosNotaPedido: this.fb.array([]),
   });
 
   constructor(
@@ -61,11 +88,12 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     private cd: ChangeDetectorRef,
     private router: Router,
     private aRoute: ActivatedRoute,
+    private ia: InfinityApiService,
     private cf: ConectionFirebaseService,
     private datePipe: DatePipe,
     private toastr: ToastrService,
     private local: LocalstorageService,
-    private sd: ServiceDataService,
+    private sd: ServiceDataService
   ) {
     this.getNotaPedido();
     this.getAbastecedora();
@@ -80,54 +108,46 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   addDate(fe: string, n: number): Date {
+    debugger;
     console.log(fe);
     const f = new Date(fe);
     f.setDate(f.getDate() + n);
+    console.log('f', f);
     return f;
   }
 
   getAbastecedora(): void {
-    this.cf.getItems('abastecedora', 'nombre').subscribe(data => {
+    this.ia.getTableInfinity('abastecedora').subscribe((data) => {
       this.abastecedora = [];
-      data.forEach((element: any) => {
-        this.abastecedora.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.abastecedora);
+      this.abastecedora = data.retorno;
     });
   }
 
   getComercializadora(): void {
-    this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
+    debugger;
+    this.ia.getTableInfinity('comercializadora').subscribe((data) => {
+      debugger;
       this.comercializadora = [];
-      data.forEach((element: any) => {
-        this.comercializadora.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.comercializadora);
+      this.comercializadora = data.retorno;
     });
   }
 
   getTerminal(): void {
-    this.cf.getItems('terminal', 'nombre').subscribe(data => {
+    this.ia.getTableInfinity('terminal').subscribe((data) => {
       this.terminal = [];
-      data.forEach((element: any) => {
-        this.terminal.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data()
-        });
-      });
-      console.log(this.terminal);
+      this.terminal = data.retorno;
     });
   }
 
   getNotaPedido(): void {
     this.notaPedido = [];
-    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+    this.ia.getTableInfinity('notapedido').subscribe((data) => {
+      if (this.k === 0) {
+        this.k++;
+        this.notaPedido = data.retorno;
+      }
+    });
+    /*this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -141,12 +161,12 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         //   this.addRow(r);
         // });
       }
-    });
+    });*/
   }
 
   getNumero(): void {
     this.numero = [];
-    this.cf.getItems('numero', 'secuencial').subscribe(n => {
+    /*this.cf.getItems('numero', 'secuencial').subscribe(n => {
       n.forEach((element: any) => {
         this.numero.push({
           id: element.payload.doc.id,
@@ -159,32 +179,46 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
       });
       this.num = this.numero[0];
       console.log(this.num);
+    });*/
+    this.ia.getTableInfinity('numeracion').subscribe((data) => {
+      this.numero = data.retorno;
+      this.numero = this.numero.filter((d) => d.activo === false);
+      this.numero.sort((a, b) => {
+        return a.secuencial - b.secuencial;
+      });
+      this.num = this.numero[0];
+      console.log(this.num);
     });
   }
 
   get dataFormArray(): FormArray {
+    debugger;
     return this.f.get('datosNotaPedido') as FormArray;
   }
 
   addRow(item: any): void {
+    debugger;
+    item.productoCodigo = '0101';
+    item.volNatural = '2000';
+    item.medidaId = '01';
     // console.log(item);
-    const fv = this.datePipe.transform(item.fechaVenta.toDate(), 'yyyy/MM/dd');
-    const fd = this.datePipe.transform(item.fechaDespacho.toDate(), 'yyyy/MM/dd');
+    const fv = this.datePipe.transform(item.fechaventa, 'yyyy/MM/dd');
+    const fd = this.datePipe.transform(item.fechadespacho, 'yyyy/MM/dd');
     const ade = false;
     const aut = false;
     const anu = false;
     const row = this.fb.group({
-      notaPedidoId: [item.id],
-      abastecedoraId: [item.abastecedoraId],
-      comercializadoraId: [item.comercializadoraId],
-      cliente: [item.clienteId],
-      bancoId: [item.bancoId],
-      clienteId: [item.clienteId],
-      factura: [item.numeroFactura],
-      numero: [item.codigo],
-      comentario: [item.comentario],
-      terminalId: [item.terminalId],
-      productoCodigo: [item.productoId],
+      notaPedidoId: [item.notapedidoPK.numero],
+      codigoabastecedora: [item.notapedidoPK.codigoabastecedora],
+      codigocomercializadora: [item.notapedidoPK.codigocomercializadora],
+      cliente: [item.codigocliente.nombre],
+      bancoId: [item.codigobanco],
+      clienteId: [item.codigocliente],
+      factura: [item.numerofacturasri],
+      numero: [item.notapedidoPK.numero],
+      //comentario: [item.comentario],
+      codigoterminal: [item.codigoterminal],
+      productoCodigo: [item.productoCodigo],
       medidaId: [item.medidaId],
       volSolicitado: [item.volNatural],
       volAutorizado: [item.volNatural, [Validators.required]],
@@ -192,7 +226,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
       fechaDespacho: [fd],
       adelantar: [ade, [Validators.required]],
       autorizar: [aut, [Validators.required]],
-      anular: [anu, [Validators.required]]
+      anular: [anu, [Validators.required]],
     });
     this.dataFormArray.push(row);
     this.dataSource.data = this.dataFormArray.controls;
@@ -203,51 +237,84 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   get abastecedoraIdNotValid(): any {
-    return this.f.get('abastecedoraId')?.invalid && this.f.get('abastecedoraId')?.touched;
+    return (
+      this.f.get('codigoabastecedora')?.invalid &&
+      this.f.get('codigoabastecedora')?.touched
+    );
   }
 
   get comercializadoraIdNotValid(): any {
-    return this.f.get('comercializadoraId')?.invalid && this.f.get('comercializadoraId')?.touched;
+    return (
+      this.f.get('codigocomercializadora')?.invalid &&
+      this.f.get('codigocomercializadora')?.touched
+    );
   }
 
   get terminalIdNotValid(): any {
-    return this.f.get('comercializadoraId')?.invalid && this.f.get('comercializadoraId')?.touched;
+    return (
+      this.f.get('codigoterminal')?.invalid &&
+      this.f.get('codigoterminal')?.touched
+    );
   }
 
   filterAbas(item: any): void {
+    debugger;
     console.log(item);
     this.k = 0;
     this.notaPedido = [];
     this.abas = item.codigo;
     console.log(this.abas);
-    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+    this.ia
+      .getNotasPedidos('notapedido', this.abas, null, null, null, new Date())
+      .subscribe((data) => {
+        this.notaPedido = data.retorno;
+        console.log(this.notaPedido);
+      });
+    /*this.ia.getTableInfinity('notapedido').subscribe((data) => {
+      debugger;
       if (this.k === 0) {
         this.k++;
-        data.forEach((element: any) => {
-          this.notaPedido.push({
-            id: element.payload.doc.id,
-            ...element.payload.doc.data()
-          });
-        });
+        this.notaPedido = data.retorno;
         console.log(this.notaPedido);
         this.dataFormArray.clear();
         this.dataSource.data = this.dataFormArray.controls;
-        this.notaPedido = this.notaPedido.filter(d => d.abastecedoraId === this.abas);
-        // this.notaPedido.forEach((r: any) => {
-        //   this.addRow(r);
-        // });
+        this.notaPedido = this.notaPedido.filter(d => d.codigoabastecedora.codigo === this.abas);
       }
-    });
+    });*/
   }
 
   filterCome(item: any): void {
+    debugger;
     console.log(item);
+    this.comerSeleccionada = item;
     this.come = item.codigo;
     this.k = 0;
     this.notaPedido = [];
     console.log(this.abas);
     console.log(this.come);
-    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+    console.log('Comercializadora Seleccionada', this.comerSeleccionada);
+    this.ia.getTableInfinity('notapedido').subscribe((data) => {
+      if (this.k === 0) {
+        this.k++;
+        this.notaPedido = data.retorno;
+        this.dataFormArray.clear();
+        this.dataSource.data = this.dataFormArray.controls;
+        if (this.abas) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoabastecedora.codigo === this.abas
+          );
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigocomercializadora.codigo === this.come
+          );
+        } else {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigocomercializadora.codigo === this.come
+          );
+        }
+        console.log(this.notaPedido);
+      }
+    });
+    /*this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -260,20 +327,21 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         this.dataFormArray.clear();
         this.dataSource.data = this.dataFormArray.controls;
         if (this.abas) {
-          this.notaPedido = this.notaPedido.filter(d => d.abastecedoraId === this.abas);
-          this.notaPedido = this.notaPedido.filter(d => d.comercializadoraId === this.come);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoabastecedora === this.abas);
+          this.notaPedido = this.notaPedido.filter(d => d.codigocomercializadora === this.come);
         } else {
-          this.notaPedido = this.notaPedido.filter(d => d.comercializadoraId === this.come);
+          this.notaPedido = this.notaPedido.filter(d => d.codigocomercializadora === this.come);
         }
         console.log(this.notaPedido);
         // this.notaPedido.forEach((r: any) => {
         //   this.addRow(r);
         // });
       }
-    });
+    });*/
   }
 
   filterTerm(item: any): void {
+    debugger;
     console.log(item);
     this.term = item.codigo;
     console.log(this.abas);
@@ -281,7 +349,46 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     console.log(this.term);
     this.k = 0;
     this.notaPedido = [];
-    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+    this.ia.getTableInfinity('notapedido').subscribe((data) => {
+      if (this.k === 0) {
+        this.k++;
+        this.notaPedido = [];
+        console.log(this.notaPedido);
+        this.dataFormArray.clear();
+        this.dataSource.data = this.dataFormArray.controls;
+        if (this.abas && this.come) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoabastecedora === this.abas
+          );
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigocomercializadora === this.come
+          );
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoterminal === this.term
+          );
+        } else if (this.abas && !this.come) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoabastecedora === this.abas
+          );
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoterminal === this.term
+          );
+        } else if (!this.abas && this.come) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigocomercializadora === this.come
+          );
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoterminal === this.term
+          );
+        } else {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.codigoterminal === this.term
+          );
+        }
+        console.log(this.notaPedido);
+      }
+    });
+    /*this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -294,24 +401,24 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         this.dataFormArray.clear();
         this.dataSource.data = this.dataFormArray.controls;
         if (this.abas && this.come) {
-          this.notaPedido = this.notaPedido.filter(d => d.abastecedoraId === this.abas);
-          this.notaPedido = this.notaPedido.filter(d => d.comercializadoraId === this.come);
-          this.notaPedido = this.notaPedido.filter(d => d.terminalId === this.term);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoabastecedora === this.abas);
+          this.notaPedido = this.notaPedido.filter(d => d.codigocomercializadora === this.come);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === this.term);
         } else if (this.abas && !this.come) {
-          this.notaPedido = this.notaPedido.filter(d => d.abastecedoraId === this.abas);
-          this.notaPedido = this.notaPedido.filter(d => d.terminalId === this.term);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoabastecedora === this.abas);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === this.term);
         } else if (!this.abas && this.come) {
-          this.notaPedido = this.notaPedido.filter(d => d.comercializadoraId === this.come);
-          this.notaPedido = this.notaPedido.filter(d => d.terminalId === this.term);
+          this.notaPedido = this.notaPedido.filter(d => d.codigocomercializadora === this.come);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === this.term);
         } else {
-          this.notaPedido = this.notaPedido.filter(d => d.terminalId === this.term);
+          this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === this.term);
         }
         console.log(this.notaPedido);
         // this.notaPedido.forEach((r: any) => {
         //   this.addRow(r);
         // });
       }
-    });
+    });*/
   }
 
   changeFilter(num: number): void {
@@ -320,13 +427,42 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   getFecha(event: MatDatepickerInputEvent<Date>): void {
+    debugger;
     const valores = this.f.value;
     if (this.tife) {
       const fecha = this.datePipe.transform(event.value, 'yyyy/MM/dd');
       console.log(fecha);
       this.k = 0;
       this.notaPedido = [];
-      this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+      this.ia.getTableInfinity('notapedido').subscribe((data) => {
+        if (this.k === 0) {
+          this.k++;
+          this.grid = true;
+          this.notaPedido = data.retorno;
+          console.log(this.notaPedido);
+          this.dataFormArray.clear();
+          this.dataSource.data = this.dataFormArray.controls;
+          if (this.tife === 1) {
+            this.notaPedido = this.notaPedido.filter(
+              (d) =>
+                this.datePipe.transform(d.fechaVenta.toDate(), 'yyyy/MM/dd') ===
+                fecha
+            );
+          } else {
+            this.notaPedido = this.notaPedido.filter(
+              (d) =>
+                this.datePipe.transform(
+                  d.fechaDespacho.toDate(),
+                  'yyyy/MM/dd'
+                ) === fecha
+            );
+          }
+          this.notaPedido.forEach((r: any) => {
+            this.addRow(r);
+          });
+        }
+      });
+      /*this.cf.getItems('notapedido', 'codigo').subscribe(data => {
         if (this.k === 0) {
           this.k++;
           this.grid = true;
@@ -352,7 +488,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             this.addRow(r);
           });
         }
-      });
+      });*/
     } else {
       Swal.fire({
         icon: 'error',
@@ -361,13 +497,104 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     }
   }
 
+  obtenerNotasPedido(
+    codAbas: any,
+    codComer: any,
+    codTerminal: any,
+    tipoFecha: any,
+    fecha: any
+  ): void {
+    debugger;
+    this.k = 0;
+    this.notaPedido = [];
+    if (
+      codAbas !== undefined &&
+      codComer !== undefined &&
+      codTerminal !== undefined &&
+      tipoFecha !== undefined &&
+      fecha !== ''
+    ) {
+      this.ia
+        .getNotasPedidos(
+          'notapedido',
+          codAbas,
+          codComer,
+          codTerminal,
+          tipoFecha,
+          fecha.value
+        )
+        .subscribe((data) => {
+          debugger;
+          if (this.k === 0) {
+            this.k++;
+            this.grid = true;
+            this.notaPedido = data.retorno;
+            console.log(this.notaPedido);
+            this.dataFormArray.clear();
+            this.dataSource.data = this.dataFormArray.controls;
+            this.notaPedido.forEach((r: any) => {
+              this.addRow(r);
+            });
+          }
+        });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        text: 'Seleccione todos los campos',
+      });
+    }
+  }
+
   filterSave(): void {
+    debugger;
     const valores = this.f.value;
     console.log(valores);
     this.k = 0;
     this.notaPedido = [];
     const fecha = this.datePipe.transform(valores.fecha, 'yyyy/MM/dd');
-    this.cf.getItems('notapedido', 'codigo').subscribe(data => {
+
+    this.ia.getTableInfinity('notapedido').subscribe((data) => {
+      if (this.k === 0) {
+        this.k++;
+        this.notaPedido = data.retorno;
+        console.log(this.notaPedido);
+        this.dataFormArray.clear();
+        this.notaPedido = this.notaPedido.filter(
+          (d) => d.codigoabastecedora === valores.codigoabastecedora
+        );
+        this.notaPedido = this.notaPedido.filter(
+          (d) => d.codigocomercializadora === valores.codigocomercializadora
+        );
+        this.notaPedido = this.notaPedido.filter(
+          (d) => d.codigoterminal === valores.codigoterminal
+        );
+        if (this.tife === 1) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) =>
+              this.datePipe.transform(d.fechaVenta.toDate(), 'yyyy/MM/dd') ===
+              fecha
+          );
+        } else {
+          this.notaPedido = this.notaPedido.filter(
+            (d) =>
+              this.datePipe.transform(
+                d.fechaDespacho.toDate(),
+                'yyyy/MM/dd'
+              ) === fecha
+          );
+        }
+        if (this.pp) {
+          this.notaPedido = this.notaPedido.filter(
+            (d) => d.numeroFactura === '0'
+          );
+        }
+        console.log(this.notaPedido);
+        this.notaPedido.forEach((r: any) => {
+          this.addRow(r);
+        });
+      }
+    });
+    /*this.cf.getItems('notapedido', 'codigo').subscribe(data => {
       if (this.k === 0) {
         this.k++;
         data.forEach((element: any) => {
@@ -379,9 +606,9 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         console.log(this.notaPedido);
         this.dataFormArray.clear();
         this.dataSource.data = this.dataFormArray.controls;
-        this.notaPedido = this.notaPedido.filter(d => d.abastecedoraId === valores.abastecedoraId);
-        this.notaPedido = this.notaPedido.filter(d => d.comercializadoraId === valores.comercializadoraId);
-        this.notaPedido = this.notaPedido.filter(d => d.terminalId === valores.terminalId);
+        this.notaPedido = this.notaPedido.filter(d => d.codigoabastecedora === valores.codigoabastecedora);
+        this.notaPedido = this.notaPedido.filter(d => d.codigocomercializadora === valores.codigocomercializadora);
+        this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === valores.codigoterminal);
         if (this.tife === 1) {
           this.notaPedido = this.notaPedido.filter(d =>
             this.datePipe.transform(d.fechaVenta.toDate(), 'yyyy/MM/dd') === fecha
@@ -399,10 +626,11 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           this.addRow(r);
         });
       }
-    });
+    });*/
   }
 
   porProcesar(event: MatCheckboxChange): void {
+    debugger;
     console.log(event.checked);
     if (event.checked) {
       this.pp = true;
@@ -415,10 +643,11 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   autorizar(event: MatCheckboxChange, item: any): void {
+    debugger;
     console.log(event.checked);
     if (event.checked) {
       console.log(item.value.factura);
-      if (item.value.factura !== '0') {
+      if (item.value.factura.trim() !== '0') {
         Swal.fire({
           icon: 'error',
           text: 'La nota de pedido tiene una factura autorizada',
@@ -428,6 +657,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   anular(event: MatCheckboxChange, item: any): void {
+    debugger;
     console.log(event.checked);
     if (event.checked) {
       console.log(item.value.factura);
@@ -437,7 +667,7 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           text: 'No tiene factura asignada',
         });
       }
-      // this.notaPedido = this.notaPedido.filter(d => d.terminalId === this.term);
+      // this.notaPedido = this.notaPedido.filter(d => d.codigoterminal === this.term);
     }
   }
 
@@ -446,10 +676,13 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
   }
 
   back(): void {
-    this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'NOTA DE PEDIDO' } });
+    this.router.navigate(['/dashboard/detalle-opciones'], {
+      queryParams: { nombre: 'NOTA DE PEDIDO' },
+    });
   }
 
   save(): void {
+    debugger;
     console.log(this.f.value);
     this.user = this.local.get('user');
     console.log(this.user.email);
@@ -463,188 +696,222 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
     console.log(this.precio);
 
     this.f.value.datosNotaPedido.forEach((e: any) => {
-      this.getNumero();
+      debugger;
+      // this.getNumero();
       console.log(this.num);
       console.log(e);
       console.log(this.notaPedido);
       // console.log(this.numero);
       this.np = this.notaPedido;
 
-      if (e.factura === '0') {
-        if (e.autorizar) {
-          au++;
-          this.np = this.notaPedido.filter(d => d.id === e.notaPedidoId);
-          console.log(this.notaPedido);
+      // if (e.factura === '0') {
+      if (e.autorizar) {
+        au++;
+        // this.np = this.notaPedido.filter(d => d.numero === e.notaPedidoId);
 
-          const factura = {
-            codigoAbastecedora: e.abastecedoraId,
-            codigoComercializadora: e.comercializadoraId,
-            numeroNotaPedido: e.numero,
-            numero: this.num.codigo,
-            fechaVenta: e.fechaVenta,
-            fechaVencimiento: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
-            fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
-            fechaDespacho: e.fechaDespacho,
-            activa: true,
-            valorTotal: 0,
-            ivaTotal: '',
-            observacion: e.comentario,
-            pagada: false,
-            oeenpetro: '',
-            codigoCliente: e.clienteId,
-            codigoTerminal: e.terminalId,
-            codigoBanco: e.bancoId,
-            adelantar: e.adelantar,
-            usuarioActual: this.user.email,
-            nombreComercializadora: this.np[0].nombreComercializadora,
-            rucComercializadora: this.np[0].rucComercializadora,
-            direccionMatrizComercializadora: this.np[0].direccionComercializadora,
-            nombreCliente: this.np[0].nombreCliente,
-            rucCliente: this.np[0].rucCliente,
-            valorSinImpuestos: '',
-            correoCliente: this.np[0].emailCliente,
-            direccionCliente: this.np[0].direccionCliente,
-            telefonoCliente: this.np[0].telefonoCliente,
-            numeroAutorizacion: '',
-            fechaAutorizacion: '',
-            clienteFormaPago: this.np[0].formaPagoCliente,
-            plazoCliente: this.np[0].tipoDiasPlazoCliente,
-            claveAcceso: this.np[0].claveSTCCliente,
-            campoAdicionalCampo1: '',
-            campoAdicionalCampo2: '',
-            campoAdicionalCampo3: '',
-            campoAdicionalCampo4: '',
-            campoAdicionalCampo5: '',
-            campoAdicionalCampo6: '',
-            estado: 'Nueva',
-            errorDocumento: '',
-            hospedado: 0,
-            ambienteSRI: 1,
-            tipoEmision: 1,
-            codigoDocumento: '01',
-            esAgenteRetencion: false, // TOMAR DESDE COMERCIALIZADORA
-            esContribuyenteEspecial: false, // TOMAR DESDE COMERCIALIZADORA
-            obligadoContabilidad: '',
-            tipoComprador: '04',
-            moneda: 'DOLAR',
-            fechaCreacion: new Date(),
-            fechaActualizacion: new Date(),
-          };
+        console.log(this.notaPedido);
 
-          const facturaDetalle = {
-            codigoAbastecedora: e.abastecedoraId,
-            codigoComercializadora: e.comercializadoraId,
-            rucComercializadora: this.np[0].rucComercializadora,
-            numeroNotaPedido: e.numero,
-            numero: '',
-            codigoProducto: e.productoCodigo,
-            codigoMedida: e.medidaId,
-            volumenNaturalRequerido: e.volSolicitado,
-            volumenNaturalAutorizado: e.volAutorizado,
-            codigoPrecio: 0,
-            precioProducto: 0,
-            subTotal: 0,
-            usuarioActual: this.user.email,
-            usuario: 'dgm'
-          };
+        const factura = {
+          codigoAbastecedora: e.codigoabastecedora,
+          codigoComercializadora: e.codigocomercializadora,
+          numeroNotaPedido: e.numero,
+          // numero: this.num.codigo,
+          numero: '0',
+          fechaVenta: e.fechaVenta,
+          // revisar consulta tabla fechafestiva tipoDiasPlazoCliente
+          fechaVencimiento: this.addDate(e.fechaDespacho, e.clienteId.diasplazocredito),
+          // fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
+          fechaDespacho: e.fechaDespacho,
+          activa: true,
+          valorTotal: 0,
+          ivaTotal: '',
+          observacion: e.comentario,
+          pagada: false,
+          oeenpetro: '',
+          codigoCliente: e.clienteId,
+          codigoTerminal: e.codigoterminal,
+          codigoBanco: e.bancoId,
+          adelantar: e.adelantar,
+          usuarioActual: this.user.email,
+          // nombreComercializadora: this.np[0].nombreComercializadora,
+          nombreComercializadora: this.comerSeleccionada.nombre,
+          // rucComercializadora: this.np[0].rucComercializadora,
+          rucComercializadora: this.comerSeleccionada.ruc,
+          // direccionMatrizComercializadora: this.np[0].direccionComercializadora,
+          direccionMatrizComercializadora: this.comerSeleccionada.direccion,
+          // nombreCliente: this.np[0].nombreCliente,
+          nombreCliente: e.clienteId.nombre,
+          // rucCliente: this.np[0].rucCliente,
+          rucCliente: e.clienteId.ruc,
+          valorSinImpuestos: '',
+          // correoCliente: this.np[0].emailCliente,
+          correoCliente: e.clienteId.correo,
+          // direccionCliente: this.np[0].direccionCliente,
+          direccionCliente: e.clienteId.direccion,
+          // telefonoCliente: this.np[0].telefonoCliente,
+          telefonoCliente: e.clienteId.telefono,
+          numeroAutorizacion: '',
+          fechaAutorizacion: '',
+          // clienteFormaPago: this.np[0].formaPagoCliente,
+          clienteFormaPago: e.clienteId.codigoformapago.codigo,
+          // plazoCliente: this.np[0].tipoDiasPlazoCliente,
+          plazoCliente: e.clienteId.tipoplazocredito,
+          // claveAcceso: this.np[0].claveSTCCliente,
+          claveAcceso: '0',
+          campoAdicionalCampo1: '',
+          campoAdicionalCampo2: '',
+          campoAdicionalCampo3: '',
+          campoAdicionalCampo4: '',
+          campoAdicionalCampo5: '',
+          campoAdicionalCampo6: '',
+          estado: 'NUEVA',
+          errorDocumento: '',
+          hospedado: 0,
+          ambienteSRI: this.comerSeleccionada.ambientesri,
+          tipoEmision: this.comerSeleccionada.tipoemision,
+          codigoDocumento: '01',
+          esAgenteRetencion: this.comerSeleccionada.esagenteretencion, // TOMAR DESDE COMERCIALIZADORA
+          esContribuyenteEspecial:
+            this.comerSeleccionada.escontribuyenteespacial, // TOMAR DESDE COMERCIALIZADORA
+          obligadoContabilidad: this.comerSeleccionada.obligadocontabilidad,
+          tipoComprador: '04',
+          moneda: 'DOLAR',
+          // fechaCreacion: new Date(),
+          // fechaActualizacion: new Date(),
+        };
 
-          const notaPedido = {
-            numeroFactura: ''
-          };
+        const facturaDetalle = {
+          codigoAbastecedora: e.codigoabastecedora,
+          codigoComercializadora: e.codigocomercializadora,
+          // rucComercializadora: this.np[0].rucComercializadora,
+          rucComercializadora: this.comerSeleccionada.ruc,
+          numeroNotaPedido: e.numero,
+          numero: '0',
+          codigoProducto: e.productoCodigo,
+          codigoMedida: e.medidaId,
+          volumenNaturalRequerido: e.volSolicitado,
+          volumenNaturalAutorizado: e.volAutorizado,
+          codigoPrecio: 0,
+          precioProducto: 0,
+          subTotal: 0,
+          usuarioActual: this.user.email,
+          usuario: 'dgm',
+        };
 
-          const numChange = {
-            estatus: true
-          };
+        const notaPedido = {
+          numeroFactura: '',
+        };
 
-          // const filterDetalle = {
-          //   codigoComercializadora: e.comercializadoraId,
-          //   codigoTerminal: e.terminalId,
-          //   codigoProducto: e.productoCodigo,
-          //   codigoMedida: e.medidaId,
-          //   codigoListaPrecio: 'A0000000001',
-          //   fechaVenta: e.fechaVenta,
-          // };
+        const numChange = {
+          estatus: true,
+        };
 
-          // console.log(filterDetalle);
-          console.log(new Date(e.fechaVenta));
+        // const filterDetalle = {
+        //   codigoComercializadora: e.codigocomercializadora,
+        //   codigoTerminal: e.codigoterminal,
+        //   codigoProducto: e.productoCodigo,
+        //   codigoMedida: e.medidaId,
+        //   codigoListaPrecio: 'A0000000001',
+        //   fechaVenta: e.fechaVenta,
+        // };
 
-          this.precio = this.sd.getData('precio', 'codigo');
-          this.precio.subscribe((d: any) => {
-            this.price = d;
-            d = d.filter((v: any) => v.listaPrecioCodigo === 'A0000000001');
-            d = d.filter((v: any) => v.comercializadoraCodigo === e.comercializadoraId);
-            // d = d.filter((v: any) => v.medidaCodigo = items.codigoMedida);
-            d = d.filter((v: any) => v.medidaAbreviacion === 'GLS');
-            d = d.filter((v: any) => v.activo === true);
-            // d = d.filter((v: any) => v.productoCodigo === e.productoCodigo);
-            d = d.filter((v: any) => this.datePipe.transform(v.fechaInicio.toDate(), 'yyyy/MM/dd') === e.fechaVenta);
-            d.sort((a: any, b: any) => {
-              return a.secuencial - b.secuencial;
-            });
-            console.log(d[0]);
-            facturaDetalle.codigoPrecio = d[0].codigo;
-            facturaDetalle.precioProducto = d[0].precioProducto;
-            factura.fechaActualizacion = new Date();
+        // console.log(filterDetalle);
+        console.log(new Date(e.fechaVenta));
 
-            notaPedido.numeroFactura = factura.numero;
+        // this.precio = this.sd.getData('precio', 'codigo');
+        this.ia.getListaPrecios('precio', e.codigocomercializadora, e.codigoterminal.codigo, e.productoCodigo,
+        e.medidaId, e.clienteId.codigolistaprecio, e.fechaVenta).subscribe((data) => {
+          debugger;
+          this.precio = data.retorno;
+          console.log('Precios', this.precio);
+          // this.precio.subscribe((d: any) => {
+          /*this.price = data.retorno;
+          data.retorno = data.retorno.filter(
+            (v: any) => v.precioPK.codigocomercializadora === e.codigocomercializadora
+          );
+          data.retorno = data.retorno.filter((v: any) => v.precioPK.codigoterminal === e.codigoterminal.codigo);
+          data.retorno = data.retorno.filter((v: any) => v.precioPK.codigoproducto === e.productoCodigo);
+          data.retorno = data.retorno.filter((v: any) => v.precioPK.codigomedida === e.medidaId);
+          data.retorno = data.retorno.filter((v: any) => v.precioPK.codigolistaprecio === e.clienteId.codigolistaprecio);
+          // d = d.filter((v: any) => v.medidaAbreviacion === 'GLS');
+          data.retorno = data.retorno.filter((v: any) => v.activo === true);
+          // d = d.filter((v: any) => v.productoCodigo === e.productoCodigo);
+          data.retorno = data.retorno.filter(
+            (v: any) =>
+              this.datePipe.transform(v.precioPK.fechainicio, 'yyyy/MM/dd') ===
+              e.fechaVenta
+          );*/
+          /*this.precio.sort((a: any, b: any) => {
+            return a.secuencial - b.secuencial;
+          });*/
+          console.log(this.precio[0]);
+          facturaDetalle.codigoPrecio = this.precio[0].codigo;
+          facturaDetalle.precioProducto = this.precio[0].precioProducto;
+          // });
+          // factura.fechaActualizacion = new Date();
 
-            if (e.fechaDespacho === e.fechaVenta && e.adelantar) {
-              au++;
-              console.log('Opción 1');
-              factura.fechaCreacion = new Date();
-              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
-              // return;
-            } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
-              au++;
-              console.log('Opción 2');
-              factura.fechaCreacion = new Date();
-              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
-              // return;
-            } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
-              au++;
-              console.log('Opción 3');
-              factura.fechaCreacion = new Date();
-              // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
-              // return;
-            }
+          // notaPedido.numeroFactura = factura.numero;
 
-            console.log(factura);
-            console.log(facturaDetalle);
-
-          });
-
-        } else {
-          console.log(au);
-          if (au === 0) {
-            Swal.fire({
-              icon: 'error',
-              text: 'Debe seleccionar una Nota de Pedido',
-            });
+          if (e.fechaDespacho === e.fechaVenta && e.adelantar) {
+            au++;
+            console.log('Opción 1');
+            // factura.fechaCreacion = new Date();
+            // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+            // return;
+          } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
+            au++;
+            console.log('Opción 2');
+            // factura.fechaCreacion = new Date();
+            // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+            // return;
+          } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
+            au++;
+            console.log('Opción 3');
+            // factura.fechaCreacion = new Date();
+            // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
+            // return;
           }
+
+          console.log(factura);
+          console.log(facturaDetalle);
+        });
+      } else {
+        console.log(au);
+        if (au === 0) {
+          Swal.fire({
+            icon: 'error',
+            text: 'Debe seleccionar una Nota de Pedido',
+          });
         }
       }
+      //}
     });
     // this.filterSave();
   }
 
-  actionFactura(factura: any, e: any, notaPedido: any, num: any, numChange: any, facturaDetalle: any, d: any): void {
+  actionFactura(factura: any, e: any,  notaPedido: any,  num: any,  numChange: any, facturaDetalle: any, d: any): void {
     factura.fechaCreacion = new Date();
-    this.cf.agregarItem(factura, 'facturas').then(c => {
+    this.cf.agregarItem(factura, 'facturas').then((c) => {
       this.cf.editItem('notapedido', e.notaPedidoId, notaPedido);
       this.cf.editItem('numero', num.id, numChange);
-      this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facturaDetalle).then(sc => {
-        console.log('Item registrado con exito');
-        this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
-          positionClass: 'toast-bottom-right'
+      this.cf
+        .agregarSubItem('facturas', c.id, 'detalleFactura', facturaDetalle)
+        .then((sc) => {
+          console.log('Item registrado con exito');
+          this.toastr.success(
+            'Item registrado con exito Op3',
+            'Item Registrado',
+            {
+              positionClass: 'toast-bottom-right',
+            }
+          );
         });
-      });
       this.subPrecio = this.sd.getDataSub('precio', d[0].id, 'detalleprecio');
       this.subPrecio.subscribe((r: any) => {
         r = r.filter((v: any) => v.codigoGravamen !== '0001');
         r = r.filter((v: any) => v.codigoGravamen !== '0009');
         console.log(r);
         r.forEach((elm: any, key: number) => {
-
           const facDet = {
             codigoAbastecedora: facturaDetalle.codigoAbastecedora,
             codigoComercializadora: facturaDetalle.codigoComercializadora,
@@ -657,41 +924,43 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             volumenNaturalAutorizado: 0,
             codigoPrecio: 0,
             precioProducto: 0,
-            subTotal: (facturaDetalle.volumenNaturalAutorizado * elm.valor),
+            subTotal: facturaDetalle.volumenNaturalAutorizado * elm.valor,
             usuarioActual: this.user.email,
             codigoImpuesto: elm.codigoGravamen,
             nombreImpuesto: elm.nombreGravamen,
             seImprime: '',
             valorDefecto: 0,
             fechaCreacion: new Date(),
-            usuario: 'dgm'
+            usuario: 'dgm',
           };
           // console.log(facDet);
           // console.log(key);
           let h = 0;
 
-          this.sd.getDataParm('gravamen', 'codigo', elm.codigoGravamen).subscribe((g: any) => {
-            console.log(g);
-            facDet.seImprime = g[0].imprime;
-            facDet.valorDefecto = g[0].valorDefecto;
-            console.log(key);
-            console.log(facDet);
-            h++;
-            console.log(h);
-            if (key < r.length) {
-              this.cf.agregarSubItem('facturas', c.id, 'detalleFactura', facDet).then(sc => {
-                // console.log('Item registrado con exito');
-                // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
-                //   positionClass: 'toast-bottom-right'
-                // });
-              });
-            }
-          });
-
+          this.sd
+            .getDataParm('gravamen', 'codigo', elm.codigoGravamen)
+            .subscribe((g: any) => {
+              console.log(g);
+              facDet.seImprime = g[0].imprime;
+              facDet.valorDefecto = g[0].valorDefecto;
+              console.log(key);
+              console.log(facDet);
+              h++;
+              console.log(h);
+              if (key < r.length) {
+                this.cf
+                  .agregarSubItem('facturas', c.id, 'detalleFactura', facDet)
+                  .then((sc) => {
+                    // console.log('Item registrado con exito');
+                    // this.toastr.success('Item registrado con exito Op3', 'Item Registrado', {
+                    //   positionClass: 'toast-bottom-right'
+                    // });
+                  });
+              }
+            });
         });
         return;
       });
-
     });
   }
 
@@ -707,7 +976,5 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         });
       }
     });
-
   }
-
 }

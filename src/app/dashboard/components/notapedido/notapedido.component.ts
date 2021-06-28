@@ -50,7 +50,6 @@ export class NotapedidoComponent implements OnInit {
   clipro: any[] = [];
   numnp: any[] = [];
   ondp: any[] = [];
-
   abastecedora: any;
   comercializadora: any;
   cliente: any;
@@ -59,9 +58,10 @@ export class NotapedidoComponent implements OnInit {
   producto: any;
   medida: any;
 
-  numeroNotaPedido = 0;
+  numeroNotaPedido = '';
   nnp = 54000000;
   numeroNP = '';
+  numeroFG = '';
   fechaventa = new Date();
   user = this.local.get('user');
   params: any;
@@ -504,13 +504,13 @@ export class NotapedidoComponent implements OnInit {
       value.tramarecibidaaoe = '';
       value.codigoautotanque = '';
       value.cedulaconductor = '';
-      value.numerofacturasri = '';
+      value.numerofacturasri = '0';
       value.respuestageneracionoeepp = '';
       value.respuestaanulacionoeepp = '';
-      value.numero = '0';
+      value.numero = '';
       const valores = {
         notapedido: {
-            notapedidoPK: {
+          notapedidoPK: {
             codigoabastecedora: value.codigoabastecedora,
             codigocomercializadora: value.codigocomercializadora,
             numero: value.numero,
@@ -590,23 +590,24 @@ export class NotapedidoComponent implements OnInit {
             text: 'La fecha de Despacho no puede ser mayor a 7 días de la fecha de Venta',
           });
         } else {
-          this.numero();
+          /*this.numero();
           if (this.numnp.length !== 0) {
             this.numeroNP = this.numnp[0].codigo + 1;
             value.prefijo = this.numeroNP;
           } else {
             value.prefijo = this.numeroNP;
-          }
+          }*/
           console.log(value);
           this.addItems('notapedido', valores, 'postgres');
+          //this.numeroNP = this.numeroNotaPedido;
           this.f.setValue({
             codigoabastecedora: value.codigoabastecedora,
             codigocomercializadora: value.codigocomercializadora,
             codigocliente: value.codigocliente,
             fechaventa: value.fechaventa,
-            fechadespacho: value.fechadespacho,
-            codigobanco: value.codigobanco,
-            observacion: value.observacion,
+            fechadespacho: '',
+            codigobanco: '',
+            observacion: '',
             codigoproducto: '',
             codigomedida: '',
             volumennaturalrequerido: '',
@@ -634,13 +635,15 @@ export class NotapedidoComponent implements OnInit {
       // items.usuarioactual = this.user.email;
       this.ia.addDataTable(table, items, 2).subscribe(
         d => {
+          this.numeroFG = d.developerMessage;
+          console.log('NPE', this.numeroFG);
           console.log(d);
           console.log('Item registrado con exito');
           this.toastr.success('Item registrado con exito', 'Item Registrado', {
             positionClass: 'toast-bottom-right'
           });
           this.registro = false;
-          this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'NOTA DE PEDIDO' } });
+          //this.router.navigate(['/dashboard/detalle-opciones'], { queryParams: { nombre: 'NOTA DE PEDIDO' } });
         },
         err => console.log('HTTP Error', err),
       );

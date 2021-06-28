@@ -141,9 +141,81 @@ export class InfinityApiService {
       headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
     }
     return this.http
-      .get<any>(`${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/porCliente?codigocliente=${item}`, {
-        headers,
-      })
+      .get<any>(
+        `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/porCliente?codigocliente=${item}`,
+        {
+          headers,
+        }
+      )
+      .pipe(
+        tap((data: any) => {
+          console.log(data);
+        }),
+        shareReplay(),
+        retry(3)
+      );
+  }
+
+  public getNotasPedidos(
+    nombre: string,
+    codAbas: any,
+    codComer: any,
+    codTerminal: any,
+    tipoFecha: any,
+    fecha: any
+  ): Observable<any> {
+    console.log(this.tokenInfinity);
+    this.tokenInfinity = localStorage.getItem('tokenInfinity');
+    console.log(this.tokenInfinity);
+    let headers = new HttpHeaders();
+    if (this.tokenInfinity) {
+      headers = headers.set('Content-Type', 'application/json');
+      headers = headers.set('Authorization', this.tokenInfinity);
+      headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
+    }
+    return this.http
+      .get<any>(
+        `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/paraFactura?codigoabastecedora=${codAbas}&codigocomercializadora=${codComer}&codigoterminal=${codTerminal}&tipofecha=${tipoFecha}&fecha=${fecha}`,
+        {
+          headers,
+        }
+      )
+      .pipe(
+        tap((data: any) => {
+          console.log(data);
+        }),
+        shareReplay(),
+        retry(3)
+      );
+  }
+
+  // tslint:disable-next-line:max-line-length
+  public getListaPrecios(
+    nombre: string,
+    codComer: any,
+    codTerminal: any,
+    codProducto: any,
+    codMedida: any,
+    codListaPrecio: any,
+    fecha: any
+  ): Observable<any> {
+    console.log(this.tokenInfinity);
+    this.tokenInfinity = localStorage.getItem('tokenInfinity');
+    console.log(this.tokenInfinity);
+    let headers = new HttpHeaders();
+    if (this.tokenInfinity) {
+      headers = headers.set('Content-Type', 'application/json');
+      headers = headers.set('Authorization', this.tokenInfinity);
+      headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
+    }
+    return this.http
+      .get<any>(
+        `${this.urlInfinity}/ec.com.infinity.modelo.${nombre}/paraFactura?codigocomercializadora=${codComer}
+      &codigoterminal=${codTerminal}&codigoproducto=${codProducto}&codigomedida=${codMedida}&codigolistaprecio=${codListaPrecio}&fechainicio=${fecha}`,
+        {
+          headers,
+        }
+      )
       .pipe(
         tap((data: any) => {
           console.log(data);
