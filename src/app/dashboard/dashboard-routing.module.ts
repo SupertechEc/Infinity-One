@@ -35,11 +35,12 @@ import { GarantiaComponent } from './components/garantia/garantia.component';
 import { NumeracionComponent } from './components/numeracion/numeracion.component';
 import { AdministracionnotapedidoComponent } from './components/administracionnotapedido/administracionnotapedido.component';
 import { TestComponent } from './components/test/test.component';
+import { MainComponent } from './components/main/main.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent,
+    component: MainComponent,
   },
   {
     path: 'catálogo',

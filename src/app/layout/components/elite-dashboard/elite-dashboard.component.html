@@ -1,1 +1,89 @@
-<p>elite-dashboard works!</p>
+<mat-drawer-container>
+    <input type="checkbox" id="nav-toggle">
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <!-- <h2><span class="lab la-accusoft"></span> <span> Infinity</span></h2> -->
+            <div class="brand-logo">
+                <img src="../../../../assets/images/INFINITY.png" alt="">
+            </div>
+            <div class="brand-title">
+                <span> Infinity</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <ul>
+                <li *ngFor="let menu of menus; index as i" (click)="goPage(menu)">
+                    <a>
+                        <span>
+                            <fa-icon [icon]="[menu.library, menu.icono]"></fa-icon>
+                        </span>
+                        <span> {{menu.nombre | titlecase}}</span>
+                    </a>
+                </li>
+                <li (click)="exit()">
+                    <a>
+                        <span>
+                            <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+                        </span>
+                        <span> Salir</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="main-content">
+        <header>
+            <div class="page-wrapper">
+                <div class="icon-menu">
+                    <h2>
+                        <label for="nav-toggle">
+                            <span class="icon">
+                                <fa-icon [icon]="['fas', 'bars']"></fa-icon>
+                            </span>
+                        </label>
+                    </h2>
+                </div>
+                <div [routerLink]="['/dashboard']" class="title">Dashboard</div>
+            </div>
+            <div class="search-wrapper">
+                <span>
+                    <fa-icon [icon]="['fas', 'search']"></fa-icon>
+                </span>
+                <input type="search" placeholder="Buscar Aquí...">
+            </div>
+            <div class="user-wrapper">
+                <!-- <img src="../../../../assets/images/AVATAR.svg" width="40px" height="40px" alt=""> -->
+                <span>
+                    <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+                </span>
+
+                <!-- <div class="nav-container">
+                    <ul>
+                        <li>
+                            <button mat-button [matMenuTriggerFor]="menu">
+                                <span class="icon-user">
+                                    <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+                                </span>
+                            </button>
+                            <mat-menu #menu="matMenu">
+                                <button mat-menu-item (click)="exit()">
+                                    <span class="icon-exit">
+                                        <fa-icon [icon]="['fas', 'sign-out-alt']"></fa-icon>
+                                    </span> Salir
+                                </button>
+                            </mat-menu>
+                        </li>
+                    </ul>
+                </div> -->
+
+                <div class="user-data">
+                    <h4>{{user[0].firstname}} {{user[0].firstlastname}}</h4>
+                    <small>{{user[0].profile}}</small>
+                </div>
+            </div>
+        </header>
+
+        <router-outlet></router-outlet>
+
+    </div>
+</mat-drawer-container>

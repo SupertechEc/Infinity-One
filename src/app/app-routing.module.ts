@@ -24,7 +24,7 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: DashboardComponent,
+    component: EliteDashboardComponent,
     canActivate: [AuthGuard],
     children: [
       {
@@ -33,16 +33,16 @@ const routes: Routes = [
       },
     ]
   },
-  {
-    path: 'dash',
-    component: EliteDashboardComponent,
-    children: [
-      {
-        path: '',
-        loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule),
-      },
-    ]
-  },
+  // {
+  //   path: 'dash',
+  //   component: EliteDashboardComponent,
+  //   children: [
+  //     {
+  //       path: '',
+  //       loadChildren: () => import('./cuadromando/cuadromando.module').then(m => m.CuadromandoModule),
+  //     },
+  //   ]
+  // },
   {
     path: '**',
     loadChildren: () => import('./page-not-found/page-not-found.module').then(m => m.PageNotFoundModule)

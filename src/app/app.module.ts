@@ -25,6 +25,11 @@ import { MainComponent } from './layout/components/main/main.component';
 import { DataTablesModule } from 'angular-datatables';
 import { DatePipe } from '@angular/common';
 import { EliteDashboardComponent } from './layout/components/elite-dashboard/elite-dashboard.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+import { far } from '@fortawesome/free-regular-svg-icons';
+import { fab } from '@fortawesome/free-brands-svg-icons';
+
 // import { HTTP_INTERCEPTORS } from '@angular/common/http';
 // import { AuthInterceptor } from './core/auth.interceptor';
 
@@ -50,7 +55,8 @@ import { EliteDashboardComponent } from './layout/components/elite-dashboard/eli
     AngularFirestoreModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    DataTablesModule
+    DataTablesModule,
+    FontAwesomeModule
   ],
   providers: [
     DatePipe,
@@ -62,4 +68,10 @@ import { EliteDashboardComponent } from './layout/components/elite-dashboard/eli
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(
+    library: FaIconLibrary
+  ) {
+    library.addIconPacks(fas, far, fab)
+  }
+}

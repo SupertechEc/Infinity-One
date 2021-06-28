@@ -44,6 +44,8 @@ import { AdministracionnotapedidoComponent } from './components/administracionno
 import { DataTablesModule } from 'angular-datatables';
 import { DialogFacturasComponent } from './components/dialog-facturas/dialog-facturas.component';
 import { TestComponent } from './components/test/test.component';
+import { MainComponent } from './components/main/main.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -85,7 +87,8 @@ import { TestComponent } from './components/test/test.component';
     NumeracionComponent,
     AdministracionnotapedidoComponent,
     DialogFacturasComponent,
-    TestComponent
+    TestComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,
@@ -94,7 +97,8 @@ import { TestComponent } from './components/test/test.component';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    DataTablesModule
+    DataTablesModule,
+    FontAwesomeModule
   ]
 })
 export class DashboardModule { }

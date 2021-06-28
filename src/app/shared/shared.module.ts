@@ -8,13 +8,15 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MaterialModule } from './../material/material.module';
 import { FooterAdminComponent } from './components/footer-admin/footer-admin.component';
 import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [FooterComponent, HeaderComponent, HeaderAdminComponent, SidebarComponent, FooterAdminComponent],
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
+    RouterModule,
+    FontAwesomeModule
   ],
   exports: [
     HeaderComponent,

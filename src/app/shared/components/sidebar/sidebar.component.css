@@ -1,5 +1,5 @@
 .mat-list-item {
-    color: black;
+    color: #505050 !important;
 }
 
 .loading {
@@ -65,6 +65,10 @@
 .links span {
     font-size: 18px;
     /* font-weight: 500; */
+}
+
+.icon {
+    margin-right: 1rem;
 }
 
 @media only screen and (max-width: 500px) {
