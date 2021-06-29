@@ -3,28 +3,25 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, timer } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import {
-  catchError,
-  delayWhen,
-  map,
-  retry,
-  retryWhen,
-  shareReplay,
-  tap,
-} from 'rxjs/operators';
+import { catchError, delayWhen, map, retry, retryWhen, shareReplay, tap } from 'rxjs/operators';
 import { InfinityTokenService } from './infinity-token.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class InfinityApiService {
+
   url = '';
   urlToken = '';
   value: any;
   tokenInfinity: any;
   urlInfinity = 'https://www.supertech.ec:8443/infinityone1/resources';
 
-  constructor(private http: HttpClient, private its: InfinityTokenService) {}
+  constructor(
+    private http: HttpClient,
+    private its: InfinityTokenService,
+  ) {
+  }
 
   public getDataInfinity(): Observable<any> {
     let headers = new HttpHeaders();
@@ -37,36 +34,31 @@ export class InfinityApiService {
 
   getDataF(): Observable<any> {
     this.url = environment.urlGarantia;
-    return this.http.get<any>(
-      `${this.url}/webresources/consultarfacturaunica?codcom=2&fecha=20210512`
-    );
+    return this.http.get<any>(`${this.url}/webresources/consultarfacturaunica?codcom=2&fecha=20210512`);
   }
 
   public ConsultaDireccionTodos(fecha: any): Observable<any> {
     this.url = environment.urlGarantia;
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    const params = new HttpParams().set('codcom', '2').set('fecha', fecha);
-    return this.http.get(`${this.url}/webresources/consultarfacturaunica`, {
-      headers,
-      params,
-    });
+    const params = new HttpParams()
+      .set('codcom', '2')
+      .set('fecha', fecha);
+    return this.http.get(`${this.url}/webresources/consultarfacturaunica`, { headers, params });
   }
 
   public faturasPorTipo(fecha: any, tipo: any): Observable<any> {
     this.url = environment.urlGarantia;
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    const params = new HttpParams().set('codcom', '2').set('fecha', fecha);
-    return this.http
-      .get(`${this.url}/webresources/consultarfacturaunica`, {
-        headers,
-        params,
-      })
+    const params = new HttpParams()
+      .set('codcom', '2')
+      .set('fecha', fecha);
+    return this.http.get(`${this.url}/webresources/consultarfacturaunica`, { headers, params })
       .pipe(
         map((res: any) => {
           return res.filter((post: any) => {
-            return (post.estadoPago = tipo);
+            return post.estadoPago = tipo;
           });
         })
       );
@@ -82,8 +74,7 @@ export class InfinityApiService {
     headers = headers.set('Content-Type', 'application/json');
     headers = headers.set('Authorization', '');
     headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
-    this.http
-      .get(urlext, { headers })
+    this.http.get(urlext, { headers })
       .pipe(
         tap((data: any) => {
           const token = data;
@@ -92,17 +83,10 @@ export class InfinityApiService {
         }),
         shareReplay(),
         retry(3)
-      )
-      .subscribe(
-        (re: any) => {
-          console.log('HTTP response', re);
-        },
-        (err: any) => {
-          console.log('HTTP Error', err);
-        },
-        () => {
-          console.log('HTTP request completed.');
-        }
+      ).subscribe(
+        (re: any) => { console.log('HTTP response', re); },
+        (err: any) => { console.log('HTTP Error', err); },
+        () => { console.log('HTTP request completed.'); }
       );
   }
 
@@ -253,7 +237,7 @@ export class InfinityApiService {
     headers = headers.set('Authorization', this.tokenInfinity);
     headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
 
-    let params = new HttpParams();
+    let params = new HttpParams()
     for (let key in item) {
       console.log('Etiqueta: ' + key + ' valor: ' + item[key]);
       params = params.set(key, item[key]);
@@ -353,17 +337,12 @@ export class InfinityApiService {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         Authorization: '' + this.tokenInfinity,
-        'Access-Control-Allow-Headers': 'Authorization',
-      }),
+        'Access-Control-Allow-Headers': 'Authorization'
+      })
     };
 
-    return this.http
-      .put<any>(
-        `${this.urlInfinity}/ec.com.infinity.modelo.${tabla}/porId`,
-        data,
-        httpOptions
-      )
-      .pipe(
+    return this.http.put<any>(
+      `${this.urlInfinity}/ec.com.infinity.modelo.${tabla}/porId`, data, httpOptions).pipe(
         tap((d: any) => {
           console.log(d);
         }),
@@ -383,24 +362,19 @@ export class InfinityApiService {
       headers = headers.set('Access-Control-Allow-Headers', 'Authorization');
     }
 
-    let params = new HttpParams();
-    // tslint:disable-next-line:forin
+    let params = new HttpParams()
     for (let key in data) {
-      console.log(key.indexOf('codigo'));
+      console.log(key.indexOf('codigo'))
       if (key.indexOf('codigo') >= 0) {
         console.log('Etiqueta: ' + key + ' valor: ' + data[key]);
         params = params.set(key, data[key]);
       }
     }
 
-    console.log(params);
+    console.log(params)
 
-    return this.http
-      .delete(`${this.urlInfinity}/ec.com.infinity.modelo.${tabla}/porId`, {
-        headers,
-        params,
-      })
-      .pipe(
+    return this.http.delete(
+      `${this.urlInfinity}/ec.com.infinity.modelo.${tabla}/porId`, { headers, params }).pipe(
         tap((d: any) => {
           console.log(d);
         }),

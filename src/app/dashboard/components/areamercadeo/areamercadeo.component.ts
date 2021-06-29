@@ -39,7 +39,7 @@ export class AreamercadeoComponent implements OnInit {
     private afs: AngularFireStorage,
     private router: Router,
     private toastr: ToastrService,
-    private aRoute: ActivatedRoute,
+    private aRoute: ActivatedRoute
   ) {
     this.makeForm();
     this.aRoute.queryParams.subscribe(params => {

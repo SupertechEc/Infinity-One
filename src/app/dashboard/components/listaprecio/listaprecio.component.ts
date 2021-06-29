@@ -158,7 +158,6 @@ export class ListaprecioComponent implements OnInit {
     return this.f.get('tipo')?.invalid && this.f.get('tipo')?.touched;
   }
 
-
   makeForm(): void {
     this.f = this.fb.group({
       nombre: ['', [

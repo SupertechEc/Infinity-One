@@ -23,7 +23,10 @@
         <div class="links" *ngFor="let menu of menus; index as i" (click)="goPage(menu)">
             <a mat-list-item>
                 <!-- <mat-icon>{{menu.icon}}</mat-icon>{{menu.name | titlecase}} -->
-                <i [class]="menu.icono"></i><span>{{menu.nombre | titlecase}}</span>
+                <!-- <i [class]="menu.icono"></i><span>{{menu.nombre | titlecase}}</span> -->
+                <span class="icon">
+                    <fa-icon [icon]="[menu.library, menu.icono]"></fa-icon>
+                </span><span> {{menu.nombre | titlecase}}</span>
             </a>
         </div>
 

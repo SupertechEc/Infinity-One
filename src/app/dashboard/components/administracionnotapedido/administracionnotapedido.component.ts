@@ -1,20 +1,6 @@
 import { DatePipe } from '@angular/common';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ChangeDetectorRef,
-  AfterViewInit,
-  Pipe,
-  PipeTransform,
-} from '@angular/core';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, Pipe, PipeTransform } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatPaginator } from '@angular/material/paginator';
@@ -34,9 +20,10 @@ import { debug } from 'console';
 @Component({
   selector: 'app-administracionnotapedido',
   templateUrl: './administracionnotapedido.component.html',
-  styleUrls: ['./administracionnotapedido.component.css'],
+  styleUrls: ['./administracionnotapedido.component.css']
 })
 export class AdministracionnotapedidoComponent implements AfterViewInit {
+
   abastecedora: any[] = [];
   comercializadora: any[] = [];
   terminal: any[] = [];

@@ -113,7 +113,7 @@ export class GravamenComponent implements OnInit {
 
   getCom(): void {
     this.cf.getItems('comercializadora', 'nombre').subscribe(data => {
-      console.log('ale', data);
+      console.log(data);
       this.comercializadora = [];
       data.forEach((element: any) => {
         this.comercializadora.push({

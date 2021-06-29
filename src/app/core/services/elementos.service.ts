@@ -14,7 +14,7 @@ export class ElementosService {
 
   getNotaPedido(nameCol: string): any {
 
-    if (nameCol === 'notapedido') {
+    if (nameCol === 'notadepedido') {
 
       return new Promise(resolve => {
         let numram = Math.random();

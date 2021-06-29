@@ -38,11 +38,12 @@ import { TestComponent } from './components/test/test.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
 import { ClienteRubrosComponent } from './components/cliente-rubros/cliente-rubros.component';
 import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-cliente.component';
+import { MainComponent } from './components/main/main.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: AdminComponent,
+    component: MainComponent,
   },
   {
     path: 'catálogo',

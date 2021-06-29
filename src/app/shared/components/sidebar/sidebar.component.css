@@ -1,5 +1,5 @@
 .mat-list-item {
-    color: black;
+    color: #505050 !important;
 }
 
 .loading {
@@ -67,6 +67,13 @@
     /* font-weight: 500; */
 }
 
+<<<<<<< HEAD
+=======
+.icon {
+    margin-right: 1rem;
+}
+
+>>>>>>> cf3760b6f091d5b1e88d357043f06a249e6b2e49
 @media only screen and (max-width: 500px) {
     .avatar-data {
         margin: 0 0 0 5px;

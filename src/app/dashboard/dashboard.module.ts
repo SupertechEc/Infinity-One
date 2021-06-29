@@ -47,6 +47,8 @@ import { TestComponent } from './components/test/test.component';
 import { RubrosComponent } from './components/rubros/rubros.component';
 import { ClienteRubrosComponent } from './components/cliente-rubros/cliente-rubros.component';
 import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-cliente.component';
+import { MainComponent } from './components/main/main.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 
 @NgModule({
@@ -92,6 +94,7 @@ import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-clien
     RubrosComponent,
     ClienteRubrosComponent,
     CuotasClienteComponent,
+    MainComponent
   ],
   imports: [
     CommonModule,
@@ -100,7 +103,8 @@ import { CuotasClienteComponent } from './components/cuotas-cliente/cuotas-clien
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    DataTablesModule
+    DataTablesModule,
+    FontAwesomeModule
   ]
 })
 export class DashboardModule { }

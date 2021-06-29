@@ -11,7 +11,6 @@ export class FechasLaborablesService {
   ) { }
 
   getDate(fecha: Date, plazo: number): Date {
-    debugger;
     console.log(fecha.getDay());
     console.log(fecha.getDate());
     fecha.setDate(fecha.getDate() + plazo);

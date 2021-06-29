@@ -25,20 +25,16 @@
             </div>
             <div *ngIf="nombreNotValid" class="text-danger notification-inbound">Campo invalido.</div>
 
-            <div class="form__div">
+            <div class="select-check form-group">
                 <div class="campo">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Área Mercadéo:</mat-label>
-                        <mat-select formControlName="codigoareamercadeo" required>
-                            <mat-option>Opciones</mat-option>
-                            <mat-option *ngFor="let area of areamercadeo" [value]="area.codigo">
-                                {{area.codigo}} - {{area.nombre}}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
+                    <mat-checkbox class="mat-check" formControlName="estatus" [color]="color"
+                        [(indeterminate)]="indeterminate" (change)="setChange($event.checked)" labelPosition="before">
+                        Estado: </mat-checkbox>
                 </div>
+                <div class="check-name" *ngIf="activo" [style.color]="stylecolor">Activo</div>
+                <div class="check-name" *ngIf="inactivo" [style.color]="stylecolor">Inactivo</div>
             </div>
-            <div *ngIf="codigoAreaNotValid" class="text-danger notification-inbound">Campo invalido.</div>
+            <div *ngIf="estatusNotValid" class="text-danger notification-check">Campo no seleccionado.</div>
 
             <!-- <div class="form__div form-group">
                 <div class="campo">
@@ -107,7 +103,7 @@
                     <div class="form__div form-group">
                         <div class="campo">
                             <input type="text" class="form__input form-control" placeholder=" "
-                                formControlName="codigostc" [class.is-invalid]="codigoSTCNotValid">
+                                formControlName="codigoSTC" [class.is-invalid]="codigoSTCNotValid">
                             <label for="" class="form__label">Código STC:</label>
                         </div>
                         <div *ngIf="codigoSTCNotValid" class="text-danger notification-outbound">Campo invalido.</div>
@@ -115,7 +111,7 @@
                     <div class="form__div form-group">
                         <div class="campo">
                             <input type="text" class="form__input form-control" placeholder=" "
-                                formControlName="codigoarch" [class.is-invalid]="codigoARCHNotValid">
+                                formControlName="codigoARCH" [class.is-invalid]="codigoARCHNotValid">
                             <label for="" class="form__label">Código ARCH:</label>
                         </div>
                         <div *ngIf="codigoARCHNotValid" class="text-danger notification-outbound">Campo invalido.</div>
