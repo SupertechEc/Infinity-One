@@ -476,59 +476,65 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           this.np = this.notaPedido.filter(d => d.id === e.notaPedidoId);
           console.log(this.notaPedido);
 
+          // Estructura de Factura
           const factura = {
-            codigoAbastecedora: e.abastecedoraId,
-            codigoComercializadora: e.comercializadoraId,
-            numeroNotaPedido: e.numero,
-            numero: this.num.codigo,
-            fechaVenta: e.fechaVenta,
-            fechaVencimiento: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
-            fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
-            fechaDespacho: e.fechaDespacho,
-            activa: true,
-            valorTotal: 0,
-            ivaTotal: '',
-            observacion: e.comentario,
-            pagada: false,
-            oeenpetro: '',
-            codigoCliente: e.clienteId,
-            codigoTerminal: e.terminalId,
-            codigoBanco: e.bancoId,
-            adelantar: e.adelantar,
-            usuarioActual: this.user.email,
-            nombreComercializadora: this.np[0].nombreComercializadora,
-            rucComercializadora: this.np[0].rucComercializadora,
-            direccionMatrizComercializadora: this.np[0].direccionComercializadora,
-            nombreCliente: this.np[0].nombreCliente,
-            rucCliente: this.np[0].rucCliente,
-            valorSinImpuestos: '',
-            correoCliente: this.np[0].emailCliente,
-            direccionCliente: this.np[0].direccionCliente,
-            telefonoCliente: this.np[0].telefonoCliente,
-            numeroAutorizacion: '',
-            fechaAutorizacion: '',
-            clienteFormaPago: this.np[0].formaPagoCliente,
-            plazoCliente: this.np[0].tipoDiasPlazoCliente,
-            claveAcceso: this.np[0].claveSTCCliente,
-            campoAdicionalCampo1: '',
-            campoAdicionalCampo2: '',
-            campoAdicionalCampo3: '',
-            campoAdicionalCampo4: '',
-            campoAdicionalCampo5: '',
-            campoAdicionalCampo6: '',
-            estado: 'Nueva',
-            errorDocumento: '',
-            hospedado: 0,
-            ambienteSRI: 1,
-            tipoEmision: 1,
-            codigoDocumento: '01',
-            esAgenteRetencion: false, // TOMAR DESDE COMERCIALIZADORA
-            esContribuyenteEspecial: false, // TOMAR DESDE COMERCIALIZADORA
-            obligadoContabilidad: '',
-            tipoComprador: '04',
-            moneda: 'DOLAR',
-            fechaCreacion: new Date(),
-            fechaActualizacion: new Date(),
+            factura: {
+              facturaPK: {
+                codigoAbastecedora: e.abastecedoraId,
+                codigoComercializadora: e.comercializadoraId,
+                numeroNotaPedido: e.numero,
+                numero: this.num.codigo,
+              },
+              fechaVenta: e.fechaVenta,
+              fechaVencimiento: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
+              fechaAcreditacion: this.addDate(e.fechaDespacho, this.np[0].tipoDiasPlazoCliente),
+              fechaDespacho: e.fechaDespacho,
+              activa: true,
+              valorTotal: 0,
+              ivaTotal: '',
+              observacion: e.comentario,
+              pagada: false,
+              oeenpetro: '',
+              codigoCliente: e.clienteId,
+              codigoTerminal: e.terminalId,
+              codigoBanco: e.bancoId,
+              adelantar: e.adelantar,
+              usuarioActual: this.user.email,
+              nombreComercializadora: this.np[0].nombreComercializadora,
+              rucComercializadora: this.np[0].rucComercializadora,
+              direccionMatrizComercializadora: this.np[0].direccionComercializadora,
+              nombreCliente: this.np[0].nombreCliente,
+              rucCliente: this.np[0].rucCliente,
+              valorSinImpuestos: '',
+              correoCliente: this.np[0].emailCliente,
+              direccionCliente: this.np[0].direccionCliente,
+              telefonoCliente: this.np[0].telefonoCliente,
+              numeroAutorizacion: '',
+              fechaAutorizacion: '',
+              clienteFormaPago: this.np[0].formaPagoCliente,
+              plazoCliente: this.np[0].tipoDiasPlazoCliente,
+              claveAcceso: this.np[0].claveSTCCliente,
+              campoAdicionalCampo1: '',
+              campoAdicionalCampo2: '',
+              campoAdicionalCampo3: '',
+              campoAdicionalCampo4: '',
+              campoAdicionalCampo5: '',
+              campoAdicionalCampo6: '',
+              estado: 'Nueva',
+              errorDocumento: '',
+              hospedado: 0,
+              ambienteSRI: 1,
+              tipoEmision: 1,
+              codigoDocumento: '01',
+              esAgenteRetencion: false, // TOMAR DESDE COMERCIALIZADORA
+              esContribuyenteEspecial: false, // TOMAR DESDE COMERCIALIZADORA
+              obligadoContabilidad: '',
+              tipoComprador: '04',
+              moneda: 'DOLAR',
+              fechaCreacion: new Date(),
+              fechaActualizacion: new Date(),
+            },
+            detalle: [],
           };
 
           const facturaDetalle = {
@@ -584,26 +590,26 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
             console.log(d[0]);
             facturaDetalle.codigoPrecio = d[0].codigo;
             facturaDetalle.precioProducto = d[0].precioProducto;
-            factura.fechaActualizacion = new Date();
+            factura.factura.fechaActualizacion = new Date();
 
-            notaPedido.numeroFactura = factura.numero;
+            notaPedido.numeroFactura = factura.factura.facturaPK.numero;
 
             if (e.fechaDespacho === e.fechaVenta && e.adelantar) {
               au++;
               console.log('Opción 1');
-              factura.fechaCreacion = new Date();
+              factura.factura.fechaCreacion = new Date();
               // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
               // return;
             } else if (e.fechaDespacho !== e.fechaVenta && e.adelantar) {
               au++;
               console.log('Opción 2');
-              factura.fechaCreacion = new Date();
+              factura.factura.fechaCreacion = new Date();
               // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
               // return;
             } else if (e.fechaDespacho !== e.fechaVenta && !e.adelantar) {
               au++;
               console.log('Opción 3');
-              factura.fechaCreacion = new Date();
+              factura.factura.fechaCreacion = new Date();
               // this.actionFactura(factura, e, notaPedido, this.num, numChange, facturaDetalle, d);
               // return;
             }
@@ -629,6 +635,9 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
 
   actionFactura(factura: any, e: any, notaPedido: any, num: any, numChange: any, facturaDetalle: any, d: any): void {
     factura.fechaCreacion = new Date();
+    const arr: any[] = [];
+
+
     this.cf.agregarItem(factura, 'facturas').then(c => {
       this.cf.editItem('notadepedido', e.notaPedidoId, notaPedido);
       this.cf.editItem('numero', num.id, numChange);
@@ -645,27 +654,53 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
         console.log(r);
         r.forEach((elm: any, key: number) => {
 
+          // Estructura detalle
           const facDet = {
-            codigoAbastecedora: facturaDetalle.codigoAbastecedora,
-            codigoComercializadora: facturaDetalle.codigoComercializadora,
-            rucComercializadora: factura.rucComercializadora,
-            numeroNotaPedido: facturaDetalle.numeroNotaPedido,
-            numero: facturaDetalle.numero,
-            codigoProducto: '',
-            codigoMedida: '',
-            volumenNaturalRequerido: 0,
-            volumenNaturalAutorizado: 0,
-            codigoPrecio: 0,
-            precioProducto: 0,
+            detallefacturaPK: {
+              codigoAbastecedora: facturaDetalle.codigoAbastecedora,
+              codigoComercializadora: facturaDetalle.codigoComercializadora,
+              numeroNotaPedido: facturaDetalle.numeroNotaPedido,
+              numero: facturaDetalle.numero,
+              codigoProducto: '',
+            },
+            volumennaturalrequerido: 100000,
+            volumennaturalautorizado: 100000,
+            precioproducto: 1000000,
             subTotal: (facturaDetalle.volumenNaturalAutorizado * elm.valor),
             usuarioActual: this.user.email,
+            rucComercializadora: factura.rucComercializadora,
+            nombreproducto: 'GASOLINA EXTRA',
             codigoImpuesto: elm.codigoGravamen,
             nombreImpuesto: elm.nombreGravamen,
             seImprime: '',
             valorDefecto: 0,
-            fechaCreacion: new Date(),
-            usuario: 'dgm'
+            codigomedida: {
+              codigo: '01',
+              nombre: 'Galones',
+              abreviacion: 'Gls',
+              activo: true,
+              usuarioactual: this.user.email
+            },
+            producto: {
+              codigo: '0101',
+              nombre: 'Gasolina extra',
+              codigostc: '202001',
+              codigoarch: 'pu1',
+              usuarioactual: 'fernandoTapia',
+              codigoareamercadeo: {
+                codigo: '01',
+                nombre: 'PRODUCTOS LIMPIOS 3',
+                activo: true,
+                usuarioactual: this.user.email
+              }
+            },
           };
+
+          // Ingresa el detalla en el array
+          arr.push({
+            ...facDet
+          });
+
           // console.log(facDet);
           // console.log(key);
           let h = 0;
@@ -689,6 +724,10 @@ export class AdministracionnotapedidoComponent implements AfterViewInit {
           });
 
         });
+
+        // Agrega los detalles a la factura
+        factura.detalle = arr;
+        console.log(factura);
         return;
       });
 
